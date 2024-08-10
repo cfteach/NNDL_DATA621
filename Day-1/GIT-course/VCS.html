@@ -1,0 +1,746 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1.1. Version Control System (VCS) &#8212; AID2E-Boot-Camp-2024</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "aid2e/boot-camp-2024");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+                window.addEventListener("load", function () {
+                  var svgs = d3.selectAll(".mermaid#id-2bc68a9c-2a19-4794-ac2e-9b79ddef1318 svg, .mermaid#id-1c6d3ccb-151f-49cb-abe7-4f1d1115f572 svg");
+                  svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                      inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                  });
+                });
+                </script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Day-1/GIT-course/VCS';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="canonical" href="https://aid2e.github.io/boot-camp-2024/Day-1/GIT-course/VCS.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="1.2. What is Git?" href="git_basics.html" />
+    <link rel="prev" title="1. Brief course on git" href="intro_to_git.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">This page is being updated</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/AID2E-logo.png" class="logo__image only-light" alt="AID2E-Boot-Camp-2024 - Home"/>
+    <script>document.write(`<img src="../../_static/AID2E-logo.png" class="logo__image only-dark" alt="AID2E-Boot-Camp-2024 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to AID2E Boot Camp 2024
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../schedule.html">Schedule</a></li>
+
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1tX2W2Da_BaM49ca3nh4lWQOfEdUpRFapFDqD3EWLNME/edit?usp=sharing">Introduction to AID2E Boot Camp 2024</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to git</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro_to_git.html">1. Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1.1. Version Control System (VCS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="git_basics.html">1.2. What is Git?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="git_configure.html">1.3. Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="git_exercises.html">2. Exercises on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-1.html">2.1. Exercise 1: Basic Git Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-2.html">2.2. Exercise 2: Commits, push and branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-3.html">2.3. Advanced exercises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-4.html">2.4. GitHub Actions and Workflow Tutorial</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to High Performance Computing (HPC)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../HPC-course/intro_to_HPC_HTC.html">3. Introduction to High Perforamance Computing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/intro_to_HPC.html">3.1. High Performance Computing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/ssh_login.html">3.2. SSH into a Front-End Node Using Proxy Jump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/file_systems_WM.html">3.3. William &amp; Mary Research Computing: File Systems Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/SLURM_commands.html">3.4. Introduction to SLURM</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using VS-Code</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../VS-code.html">Installing Visual Studio Code</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 2 - Introduction to Optimization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Day-2/intro_to_optimization.html">4. Introduction to Optimization Theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference external" href="https://docs.google.com/presentation/d/1OnpTlpBe1f4drPrxcwOtPvsSgdYvCnwvGVohH9kKbR8/edit?usp=sharing">Optimization Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Day-2/MOO_concepts.html">4.1. Concepts in MOO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Day-2/MC_integration.html">4.2. Montecarlo based integration methods and applications</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 3 - Multi Objective Evolutionary Algorithm</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/19ptTXZaTtMGgB7DfTX-0T-6_72H31itSdtbuR7dQiJs/edit?usp=sharing">Introduction to MOEA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Day-3/TestProblem_MOEA.html">5. MOEA of a test problem</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../Day-3/problem_description.html">10. Toy tracker problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Day-3/Design_MOEA.html">11. MOEA</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 4 - Bayesian Optimization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Day-4/intro.html">12. Bayesian Optimization</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference external" href="https://docs.google.com/presentation/d/1wwgS_6ehIZy7XXEZDdEq24s-2fXEzD7SsXo68QkDoHc/edit?usp=sharing">Introduction to Bayesian Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Day-4/Design_BO.html">12.1. Bayesian Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Day-4/Design_MOBO2.html">12.2. MOBO</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 5 - Introduction EIC software framework</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Day-5/intro_EIC-software.html">13. Introduction to EIC Software stack.</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Day-5/pre_requisities.html">13.1. Prerequisities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Day-5/eic-shell.html">13.2. EIC installation and geometry</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/aid2e/boot-camp-2024" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/aid2e/boot-camp-2024/edit/webpage-src/AID2E-2024/AID2E-2024/Day-1/GIT-course/VCS.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/aid2e/boot-camp-2024/issues/new?title=Issue%20on%20page%20%2FDay-1/GIT-course/VCS.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/Day-1/GIT-course/VCS.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Version Control System (VCS)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-example-documentation">1.1.1. An example documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-github-copilot-in-your-terminal">1.1.2. Installing GitHub Copilot in your Terminal</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="version-control-system-vcs">
+<h1><span class="section-number">1.1. </span>Version Control System (VCS)<a class="headerlink" href="#version-control-system-vcs" title="Link to this heading">#</a></h1>
+<p>Imagine you are working on a large and complex project. Over time, you make numerous changes, updates, and modifications. Now, what if you want to revert to a previous state of your project or track who made specific changes and why? This is where a Version Control System (VCS) comes into play.</p>
+<p>A Version Control System (VCS) is a powerful tool that helps you manage changes to a collection of files. It tracks every modification, allowing you to recall earlier versions of individual files or even the entire project with ease. This capability is crucial for maintaining the integrity and history of your work.</p>
+<p>One of the primary goals of a VCS is to facilitate collaborative work. Imagine a team of developers working on the same project, perhaps even the same files, simultaneously. Without a VCS, their changes could easily conflict, leading to confusion and potential loss of work. A VCS allows multiple team members to collaborate seamlessly, ensuring that each person’s contributions are preserved and integrated without affecting others’ work.</p>
+<p>Another term often used interchangeably with VCS is Software Configuration Management (SCM) system. While version control is a critical component of SCM, SCM encompasses a broader range of practices and tools. Git, one of the most popular VCS tools, highlights this interchangeability in its official documentation, which can be found at <a class="reference external" href="http://git-scm.com">git-scm.com</a>. Although VCSs are predominantly used for software projects, their utility extends to other types of projects, such as books and online tutorials.</p>
+<div class="full-width docutils">
+<div id="id-2bc68a9c-2a19-4794-ac2e-9b79ddef1318" class="mermaid">
+            graph TD
+    subgraph Local VCS
+        A[Local Repository]
+    end
+
+    subgraph Centralized VCS
+        B[Central Repository]
+    end
+
+    subgraph Distributed VCS
+        C[Remote Repository 1]
+        D[Remote Repository 2]
+        E[Remote Repository 3]
+    end
+
+    A --&gt; B
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E
+        </div>
+        </div>
+<p>With a VCS, you gain several powerful capabilities:</p>
+<ol class="arabic simple">
+<li><p><strong>Change Tracking</strong>: See all changes made to your project, including when they were made and who made them. This historical record is invaluable for understanding the evolution of your project.</p></li>
+<li><p><strong>Descriptive Changes</strong>: Each change can include a message explaining the reasoning behind it. This makes it easier to understand the context and purpose of each modification.</p></li>
+<li><p><strong>Version Retrieval</strong>: Retrieve past versions of the entire project or individual files. This feature is essential for reverting to a known good state if something goes wrong or for simply reviewing past work.</p></li>
+<li><p><strong>Branching and Merging</strong>: Create branches to experiment with changes. Branching allows multiple sets of changes (such as new features or bug fixes) to be developed simultaneously, possibly by different team members. Once the changes are tested and validated, they can be merged back into the main branch.</p></li>
+<li><p><strong>Tagging</strong>: Attach tags to specific versions, such as marking a new release. Tags provide an easy way to identify and reference significant points in your project’s history.</p></li>
+</ol>
+<p>By using a VCS, you not only maintain a comprehensive history of your project but also enhance collaboration and streamline your workflow. Whether you are working alone or as part of a team, a VCS is an indispensable tool for managing and preserving the integrity of your work.</p>
+<div class="full-width docutils">
+<div id="id-1c6d3ccb-151f-49cb-abe7-4f1d1115f572" class="mermaid">
+            graph LR
+    VCS(Version Control System)
+    VCS --&gt; CT(Change Tracking)
+    VCS --&gt; DC(Descriptive Changes)
+    VCS --&gt; VR(Version Retrieval)
+    VCS --&gt; BM(Branching and Merging)
+    VCS --&gt; T(Tagging)
+    CT --&gt; C1{See all changes}
+    C1 --&gt; C2(When they were made)
+    C1 --&gt; C3(Who made them)
+    DC --&gt; D1{Each change can include a message}
+    D1 --&gt; D2(Explaining the reasoning)
+    VR --&gt; V1{Retrieve past versions}
+    V1 --&gt; V2(Of the entire project)
+    V1 --&gt; V3(Of individual files)
+    BM --&gt; B1{Create branches to experiment}
+    B1 --&gt; B2(Multiple sets of changes)
+    B2 --&gt; B3(New features)
+    B2 --&gt; B4(Bug fixes)
+    B1 --&gt; B5{Once changes are tested and validated}
+    B5 --&gt; B6(Merge back into the main branch)
+    T --&gt; T1{Attach tags to specific versions}
+    T1 --&gt; T2(Marking a new release)
+        </div>
+        </div>
+<section id="an-example-documentation">
+<h2><span class="section-number">1.1.1. </span>An example documentation<a class="headerlink" href="#an-example-documentation" title="Link to this heading">#</a></h2>
+</section>
+<section id="installing-github-copilot-in-your-terminal">
+<h2><span class="section-number">1.1.2. </span>Installing GitHub Copilot in your Terminal<a class="headerlink" href="#installing-github-copilot-in-your-terminal" title="Link to this heading">#</a></h2>
+<p>To install GitHub Copilot in your terminal, follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Open your terminal application. The steps to open the terminal may vary depending on your operating system. For example, on macOS, you can use the Spotlight search or navigate to the “Applications” folder and open the “Terminal” application.</p></li>
+<li><p>Ensure that you have a compatible code editor installed on your system. GitHub Copilot currently supports popular code editors such as Visual Studio Code, Atom, and JetBrains IDEs. If you don’t have a compatible code editor installed, visit the official website of your preferred code editor and follow the installation instructions.</p></li>
+<li><p>Install the GitHub Copilot extension for your code editor. Open your code editor and navigate to the extension marketplace. Search for “GitHub Copilot” and locate the official extension. Click on the “Install” button to begin the installation process. Follow any additional prompts or instructions provided by your code editor to complete the installation.</p></li>
+<li><p>Once the installation is complete, restart your code editor to ensure that the GitHub Copilot extension is properly activated.</p></li>
+<li><p>Configure GitHub Copilot. After restarting your code editor, you may need to configure GitHub Copilot with your GitHub account. Follow the prompts or instructions provided by the extension to authenticate with your GitHub account. This step is necessary to enable the full functionality of GitHub Copilot, including accessing code suggestions and completing code snippets.</p></li>
+<li><p>Start using GitHub Copilot. With the extension installed and configured, you can now start using GitHub Copilot in your code editor. As you write code, GitHub Copilot will provide intelligent code suggestions and auto-completions based on the context of your code. Simply accept the suggestions or use the provided snippets to speed up your coding workflow.</p></li>
+</ol>
+<p>Congratulations! You have successfully installed GitHub Copilot in your terminal and can now take advantage of its powerful code generation capabilities. Happy coding!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "aid2e/boot-camp-2024",
+            ref: "webpage-src",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./Day-1/GIT-course"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro_to_git.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="git_basics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">1.2. </span>What is Git?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-example-documentation">1.1.1. An example documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-github-copilot-in-your-terminal">1.1.2. Installing GitHub Copilot in your Terminal</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Karthik Suresh
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  AID2E Boot Camp 2024
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
