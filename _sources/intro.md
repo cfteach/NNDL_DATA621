@@ -1,6 +1,6 @@
-# Welcome to AID2E Boot Camp 2024
+# Welcome to DATA621 - Neural Networks and Deep Learning
 
-This is the landing page for the AID2E Boot camp 2024 held from July 8 2024 to July 19 2024 at College of William & Mary. 
+This is the landing page for the course on Neural Networks and Deep Learning held at William & Mary during Fall 2024
 
 ```{figure} images/GroupPhoto.jpg
 
