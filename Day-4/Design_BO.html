@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>12.1. Bayesian Optimization &#8212; AID2E-Boot-Camp-2024</title>
+    <title>12.1. Bayesian Optimization &#8212; Neural Networks and Deep Learning - DATA621</title>
   
   
   
@@ -54,40 +54,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
-    <script kind="utterances">
-
-    var commentsRunWhenDOMLoaded = cb => {
-    if (document.readyState != 'loading') {
-        cb()
-    } else if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', cb)
-    } else {
-        document.attachEvent('onreadystatechange', function() {
-        if (document.readyState == 'complete') cb()
-        })
-    }
-}
-
-var addUtterances = () => {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "https://utteranc.es/client.js";
-    script.async = "async";
-
-    script.setAttribute("repo", "aid2e/boot-camp-2024");
-    script.setAttribute("issue-term", "pathname");
-    script.setAttribute("theme", "github-light");
-    script.setAttribute("label", "💬 comment");
-    script.setAttribute("crossorigin", "anonymous");
-
-    sections = document.querySelectorAll("div.section");
-    if (sections !== null) {
-        section = sections[sections.length-1];
-        section.appendChild(script);
-    }
-}
-commentsRunWhenDOMLoaded(addUtterances);
-</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -96,7 +62,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Day-4/Design_BO';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <link rel="canonical" href="https://aid2e.github.io/boot-camp-2024/Day-4/Design_BO.html" />
+    <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/Day-4/Design_BO.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="12.2. MOBO" href="Design_MOBO2.html" />
@@ -195,8 +161,8 @@ commentsRunWhenDOMLoaded(addUtterances);
       
     
     
-    <img src="../_static/AID2E-logo.png" class="logo__image only-light" alt="AID2E-Boot-Camp-2024 - Home"/>
-    <script>document.write(`<img src="../_static/AID2E-logo.png" class="logo__image only-dark" alt="AID2E-Boot-Camp-2024 - Home"/>`);</script>
+    <img src="../_static/logowm1.png" class="logo__image only-light" alt="Neural Networks and Deep Learning - DATA621 - Home"/>
+    <script>document.write(`<img src="../_static/logowm1.png" class="logo__image only-dark" alt="Neural Networks and Deep Learning - DATA621 - Home"/>`);</script>
   
   
 </a></div>
@@ -349,7 +315,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://colab.research.google.com/github/aid2e/boot-camp-2024/blob/webpage-src/AID2E-2024/AID2E-2024/Day-4/Design_BO.ipynb" target="_blank"
+      <li><a href="https://colab.research.google.com/github/cfteach/NNDL_DATA621/blob/webpage-src/Day-4/Design_BO.ipynb" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch on Colab"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -398,7 +364,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://github.com/aid2e/boot-camp-2024" target="_blank"
+      <li><a href="https://github.com/cfteach/NNDL_DATA621" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -415,7 +381,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://github.com/aid2e/boot-camp-2024/edit/webpage-src/AID2E-2024/AID2E-2024/Day-4/Design_BO.ipynb" target="_blank"
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/edit/webpage-src/Day-4/Design_BO.ipynb" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -432,7 +398,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://github.com/aid2e/boot-camp-2024/issues/new?title=Issue%20on%20page%20%2FDay-4/Design_BO.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/issues/new?title=Issue%20on%20page%20%2FDay-4/Design_BO.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -1145,7 +1111,7 @@ num_wires:  21
     {
         requestKernel: true,
         binderOptions: {
-            repo: "aid2e/boot-camp-2024",
+            repo: "cfteach/NNDL_DATA621",
             ref: "webpage-src",
         },
         codeMirrorConfig: {
@@ -1235,7 +1201,7 @@ num_wires:  21
   <div class="footer-item">
     
 <p class="component-author">
-By Karthik Suresh
+By Cristiano Fanelli
 </p>
 
   </div>
@@ -1259,7 +1225,7 @@ By Karthik Suresh
   <div class="footer-item">
     
 <div class="extra_footer">
-  AID2E Boot Camp 2024
+  DATA 621
 </div>
   </div>
   
