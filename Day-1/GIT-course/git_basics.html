@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
@@ -54,40 +54,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
-    <script kind="utterances">
-
-    var commentsRunWhenDOMLoaded = cb => {
-    if (document.readyState != 'loading') {
-        cb()
-    } else if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', cb)
-    } else {
-        document.attachEvent('onreadystatechange', function() {
-        if (document.readyState == 'complete') cb()
-        })
-    }
-}
-
-var addUtterances = () => {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "https://utteranc.es/client.js";
-    script.async = "async";
-
-    script.setAttribute("repo", "NNDL_DATA621");
-    script.setAttribute("issue-term", "pathname");
-    script.setAttribute("theme", "github-light");
-    script.setAttribute("label", "💬 comment");
-    script.setAttribute("crossorigin", "anonymous");
-
-    sections = document.querySelectorAll("div.section");
-    if (sections !== null) {
-        section = sections[sections.length-1];
-        section.appendChild(script);
-    }
-}
-commentsRunWhenDOMLoaded(addUtterances);
-</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -99,7 +65,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
     <script>
                 window.addEventListener("load", function () {
-                  var svgs = d3.selectAll(".mermaid#id-9bfd9851-cf64-4182-9e87-22bdd28de4f2 svg");
+                  var svgs = d3.selectAll(".mermaid#id-e300a3d2-d732-495e-a971-745922fc14f4 svg");
                   svgs.each(function() {
                     var svg = d3.select(this);
                     svg.html("<g>" + svg.html() + "</g>");
@@ -234,7 +200,7 @@ commentsRunWhenDOMLoaded(addUtterances);
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../../intro.html">
-                    Welcome to AID2E Boot Camp 2024
+                    Welcome to DATA621 - Neural Networks and Deep Learning
                 </a>
             </li>
         </ul>
@@ -383,7 +349,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://github.com/cfteach/NNDL_DATA621/edit/webpage-src/NNDL_DATA621/Day-1/GIT-course/git_basics.md" target="_blank"
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/edit/webpage-src/DATA621/Day-1/GIT-course/git_basics.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -549,7 +515,7 @@ document.write(`
 <p>Git was created by Linus Torvalds in 2005, the same individual who developed the Linux operating system. Since its inception, Git has been maintained by Junio Hamano, who has played a crucial role in its ongoing development and stability.</p>
 <p>To navigate the world of Git, it’s essential to familiarize yourself with its unique terminology. Here’s a concise glossary of terms that you’ll encounter frequently as you delve into Git. Don’t worry about grasping all the details immediately; these terms will become second nature as you progress through the exercises in this book.</p>
 <figure class="align-center" id="id1">
-<div id="id-9bfd9851-cf64-4182-9e87-22bdd28de4f2" class="mermaid">
+<div id="id-e300a3d2-d732-495e-a971-745922fc14f4" class="mermaid">
                 gitGraph LR:
        commit
        commit
