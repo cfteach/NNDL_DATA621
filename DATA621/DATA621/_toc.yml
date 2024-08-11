@@ -1,0 +1,76 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+root: intro
+format: jb-book
+
+parts:
+- caption: Schedule
+  chapters:
+    - file: schedule
+    - url: https://docs.google.com/presentation/d/1VZAreeSnm4UlclDWmTxmNFoyjgeNEyKqagiV0HgBrR4/edit#slide=id.g2ead0cea83b_0_95
+      title: "Welcome and Intro by Prof. C.Fanelli"
+    - url: https://docs.google.com/presentation/d/1tX2W2Da_BaM49ca3nh4lWQOfEdUpRFapFDqD3EWLNME/edit?usp=sharing
+      title: "Introduction to AID2E Boot Camp 2024"
+- caption: Introduction to git
+  numbered: true
+  chapters:
+    - file: Day-1/GIT-course/intro_to_git
+      sections:
+        - file: Day-1/GIT-course/VCS.md
+        - file: Day-1/GIT-course/git_basics.md
+        - file: Day-1/GIT-course/git_configure.md
+    - file: Day-1/GIT-course/git_exercises
+      sections:
+        - file: Day-1/GIT-course/Exercise-1
+        - file: Day-1/GIT-course/Exercise-2
+        - file: Day-1/GIT-course/Exercise-3
+        - file: Day-1/GIT-course/Exercise-4
+- caption: "Introduction to High Performance Computing (HPC)"
+  numbered: true
+  chapters:
+    - file: Day-1/HPC-course/intro_to_HPC_HTC
+      sections:
+        - file: Day-1/HPC-course/intro_to_HPC.md
+        - file: Day-1/HPC-course/ssh_login
+        - file: Day-1/HPC-course/file_systems_WM
+        - file: Day-1/HPC-course/SLURM_commands
+- caption: Using VS-Code
+  chapters:
+    - file: Day-1/VS-code
+- caption: "Day 2 - Introduction to Optimization"
+  numbered: true
+  chapters:
+    - file: Day-2/intro_to_optimization
+      sections:
+        - url: https://docs.google.com/presentation/d/1OnpTlpBe1f4drPrxcwOtPvsSgdYvCnwvGVohH9kKbR8/edit?usp=sharing
+          title: "Optimization Theory"
+        - file: Day-2/MOO_concepts.ipynb
+        - file: Day-2/MC_integration.ipynb
+- caption: "Day 3 - Multi Objective Evolutionary Algorithm"
+  numbered: true
+  chapters:
+    - file: Day-3/intro
+      sections:
+        - url: https://docs.google.com/presentation/d/19ptTXZaTtMGgB7DfTX-0T-6_72H31itSdtbuR7dQiJs/edit?usp=sharing
+          title: "Introduction to MOEA"
+        - file: Day-3/TestProblem_MOEA.ipynb
+        - file: Day-3/problem_description
+        - file: Day-3/Design_MOEA.ipynb
+- caption: "Day 4 - Bayesian Optimization"
+  numbered: true
+  chapters:
+    - file: Day-4/intro
+      sections:
+        - url: https://docs.google.com/presentation/d/1wwgS_6ehIZy7XXEZDdEq24s-2fXEzD7SsXo68QkDoHc/edit?usp=sharing
+          title: "Introduction to Bayesian Optimization"
+        - file: Day-4/Design_BO.ipynb
+        - file: Day-4/Design_MOBO2.ipynb
+- caption: "Day 5 - Introduction EIC software framework"
+  numbered: true
+  chapters:
+  - file: Day-5/intro_EIC-software
+    sections:
+    - file: Day-5/pre_requisities
+    - file: Day-5/eic-shell
+        
