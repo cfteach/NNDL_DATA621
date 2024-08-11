@@ -1,0 +1,39 @@
+name: Build and Deploy Jupyter Book
+
+on:
+  push:
+    branches:
+      - webpage-src
+
+permissions:
+  id-token: write
+  contents: read
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12.4'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install jupyter-book ghp-import
+
+    - name: Build Jupyter Book
+      run: |
+        jupyter-book build DATA621/DATA621 --path-output ./
+        ls _build/html/
+
+    - name: Deploy to GitHub Pages
+      run: ghp-import -n -p -f _build/html -b webpage -r origin
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAGE_DEPLOY }}
