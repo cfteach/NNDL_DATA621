@@ -2,7 +2,7 @@
 
 This is the landing page for the course on Neural Networks and Deep Learning held at William & Mary during Fall 2024
 
-```{figure} images/GroupPhoto.jpg
+```{figure} images/nndl_image.pdf
 
 Boot Camp 2024 Group Picture. Outside the Department of Science at College of William & Mary
 ```
