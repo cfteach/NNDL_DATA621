@@ -99,7 +99,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
     <script>
                 window.addEventListener("load", function () {
-                  var svgs = d3.selectAll(".mermaid#id-8265b264-547b-4f57-976a-0704bd5086b0 svg, .mermaid#id-28a59157-339a-4d23-9942-1a29b2222448 svg");
+                  var svgs = d3.selectAll(".mermaid#id-8ad65ee2-5dc6-4592-a7bd-35514bc9a1aa svg, .mermaid#id-df512e36-9f95-44fa-9bdb-fc94b16102fe svg");
                   svgs.each(function() {
                     var svg = d3.select(this);
                     svg.html("<g>" + svg.html() + "</g>");
@@ -275,43 +275,6 @@ commentsRunWhenDOMLoaded(addUtterances);
 <li class="toctree-l1"><a class="reference internal" href="../VS-code.html">Installing Visual Studio Code</a></li>
 
 
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 2 - Introduction to Optimization</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Day-2/intro_to_optimization.html">4. Introduction to Optimization Theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference external" href="https://docs.google.com/presentation/d/1OnpTlpBe1f4drPrxcwOtPvsSgdYvCnwvGVohH9kKbR8/edit?usp=sharing">Optimization Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Day-2/MOO_concepts.html">4.1. Concepts in MOO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Day-2/MC_integration.html">4.2. Montecarlo based integration methods and applications</a></li>
-</ul>
-</details></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 3 - Multi Objective Evolutionary Algorithm</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/19ptTXZaTtMGgB7DfTX-0T-6_72H31itSdtbuR7dQiJs/edit?usp=sharing">Introduction to MOEA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Day-3/TestProblem_MOEA.html">5. MOEA of a test problem</a></li>
-
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="../../Day-3/problem_description.html">10. Toy tracker problem</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Day-3/Design_MOEA.html">11. MOEA</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 4 - Bayesian Optimization</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Day-4/intro.html">12. Bayesian Optimization</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference external" href="https://docs.google.com/presentation/d/1wwgS_6ehIZy7XXEZDdEq24s-2fXEzD7SsXo68QkDoHc/edit?usp=sharing">Introduction to Bayesian Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Day-4/Design_BO.html">12.1. Bayesian Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Day-4/Design_MOBO2.html">12.2. MOBO</a></li>
-</ul>
-</details></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Day 5 - Introduction EIC software framework</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Day-5/intro_EIC-software.html">13. Introduction to EIC Software stack.</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../Day-5/pre_requisities.html">13.1. Prerequisities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Day-5/eic-shell.html">13.2. EIC installation and geometry</a></li>
-</ul>
-</details></li>
 </ul>
 
     </div>
@@ -544,7 +507,7 @@ document.write(`
 <p>One of the primary goals of a VCS is to facilitate collaborative work. Imagine a team of developers working on the same project, perhaps even the same files, simultaneously. Without a VCS, their changes could easily conflict, leading to confusion and potential loss of work. A VCS allows multiple team members to collaborate seamlessly, ensuring that each person’s contributions are preserved and integrated without affecting others’ work.</p>
 <p>Another term often used interchangeably with VCS is Software Configuration Management (SCM) system. While version control is a critical component of SCM, SCM encompasses a broader range of practices and tools. Git, one of the most popular VCS tools, highlights this interchangeability in its official documentation, which can be found at <a class="reference external" href="http://git-scm.com">git-scm.com</a>. Although VCSs are predominantly used for software projects, their utility extends to other types of projects, such as books and online tutorials.</p>
 <div class="full-width docutils">
-<div id="id-8265b264-547b-4f57-976a-0704bd5086b0" class="mermaid">
+<div id="id-8ad65ee2-5dc6-4592-a7bd-35514bc9a1aa" class="mermaid">
             graph TD
     subgraph Local VCS
         A[Local Repository]
@@ -576,7 +539,7 @@ document.write(`
 </ol>
 <p>By using a VCS, you not only maintain a comprehensive history of your project but also enhance collaboration and streamline your workflow. Whether you are working alone or as part of a team, a VCS is an indispensable tool for managing and preserving the integrity of your work.</p>
 <div class="full-width docutils">
-<div id="id-28a59157-339a-4d23-9942-1a29b2222448" class="mermaid">
+<div id="id-df512e36-9f95-44fa-9bdb-fc94b16102fe" class="mermaid">
             graph LR
     VCS(Version Control System)
     VCS --&gt; CT(Change Tracking)
