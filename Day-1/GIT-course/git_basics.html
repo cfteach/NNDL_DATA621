@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>1.2. What is Git? &#8212; Neural Networks and Deep Learning - DATA621</title>
+    <title>What is Git? &#8212; Neural Networks and Deep Learning - DATA621</title>
   
   
   
@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
@@ -99,7 +99,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
     <script>
                 window.addEventListener("load", function () {
-                  var svgs = d3.selectAll(".mermaid#id-d940a3e5-1f63-4a48-89e1-d761bdcf7e02 svg");
+                  var svgs = d3.selectAll(".mermaid#id-d822098a-6641-4f31-a183-e619df79b51d svg");
                   svgs.each(function() {
                     var svg = d3.select(this);
                     svg.html("<g>" + svg.html() + "</g>");
@@ -116,8 +116,8 @@ commentsRunWhenDOMLoaded(addUtterances);
     <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/Day-1/GIT-course/git_basics.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="1.3. Configuring your git" href="git_configure.html" />
-    <link rel="prev" title="1.1. Version Control System (VCS)" href="VCS.html" />
+    <link rel="next" title="Configuring your git" href="git_configure.html" />
+    <link rel="prev" title="Version Control System (VCS)" href="VCS.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -238,43 +238,55 @@ commentsRunWhenDOMLoaded(addUtterances);
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Syllabus</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/16QLlR1hVMFaLHwbiSZLhf_xUP_Lf4xgJ/view?usp=share_link">Syllabus (last update 8/29/2024)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../schedule.html">Schedule</a></li>
-
-<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1tX2W2Da_BaM49ca3nh4lWQOfEdUpRFapFDqD3EWLNME/edit?usp=sharing">Introduction to AID2E Boot Camp 2024</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing">(Lec 1) Welcome and Intro by Prof. C.Fanelli</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to git</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Introduction to git</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro_to_git.html">1. Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="VCS.html">1.1. Version Control System (VCS)</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">1.2. What is Git?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="git_configure.html">1.3. Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro_to_git.html">Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="VCS.html">Version Control System (VCS)</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">What is Git?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="git_configure.html">Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="git_exercises.html">2. Exercises on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="Exercise-1.html">2.1. Exercise 1: Basic Git Commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Exercise-2.html">2.2. Exercise 2: Commits, push and branches</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Exercise-3.html">2.3. Advanced exercises</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Exercise-4.html">2.4. GitHub Actions and Workflow Tutorial</a></li>
-</ul>
-</details></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to High Performance Computing (HPC)</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../HPC-course/intro_to_HPC_HTC.html">3. Introduction to High Perforamance Computing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../HPC-course/intro_to_HPC.html">3.1. High Performance Computing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../HPC-course/ssh_login.html">3.2. SSH into a Front-End Node Using Proxy Jump</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../HPC-course/file_systems_WM.html">3.3. William &amp; Mary Research Computing: File Systems Tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../HPC-course/SLURM_commands.html">3.4. Introduction to SLURM</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="git_exercises.html">Exercises on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-1.html">Exercise 1: Basic Git Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-2.html">Exercise 2: Commits, push and branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-3.html">Advanced exercises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exercise-4.html">GitHub Actions and Workflow Tutorial</a></li>
 </ul>
 </details></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using VS-Code</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Using VS-Code</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../VS-code.html">Installing Visual Studio Code</a></li>
 
 
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[8/29/2024] Introduction to High Performance Computing (HPC)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../HPC-course/intro_to_HPC_HTC.html">Introduction to High Performance Computing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/intro_to_HPC.html">High Performance Computing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/ssh_login.html">SSH into a Front-End Node Using Proxy Jump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/file_systems_WM.html">William &amp; Mary Research Computing: File Systems Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../HPC-course/SLURM_commands2.html">Introduction to SLURM</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/3/2024] Linear Classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1rEUGMhcfUyC5YCgrIRnqoRU6jNgzaO9EuvnxePEfo8k/edit?usp=sharing">Perceptrons (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1mU67w6GAhIWNFoO98AF7u8in2C-Op4Ag/view?usp=sharing">Perceptron - Proof of Convergence</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../referencesmc.html">References</a></li>
 </ul>
 
     </div>
@@ -487,15 +499,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-tree">1.2.1. <strong>Working Tree</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-repo">1.2.2. <strong>Repository (Repo)</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hash">1.2.3. <strong>Hash</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#object">1.2.4. <strong>Object</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">1.2.5. <strong>Commit</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#branch">1.2.6. <strong>Branch</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remote">1.2.7. <strong>Remote</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commands-subcommands-and-options">1.2.8. <strong>Commands, Subcommands, and Options</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-git">1.2.9. Installing <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-tree"><strong>Working Tree</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-repo"><strong>Repository (Repo)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hash"><strong>Hash</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#object"><strong>Object</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit"><strong>Commit</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#branch"><strong>Branch</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remote"><strong>Remote</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commands-subcommands-and-options"><strong>Commands, Subcommands, and Options</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-git">Installing <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -508,11 +520,11 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="what-is-git">
-<h1><span class="section-number">1.2. </span>What is Git?<a class="headerlink" href="#what-is-git" title="Link to this heading">#</a></h1>
+<h1>What is Git?<a class="headerlink" href="#what-is-git" title="Link to this heading">#</a></h1>
 <p>Git was created by Linus Torvalds in 2005, the same individual who developed the Linux operating system. Since its inception, Git has been maintained by Junio Hamano, who has played a crucial role in its ongoing development and stability.</p>
 <p>To navigate the world of Git, it’s essential to familiarize yourself with its unique terminology. Here’s a concise glossary of terms that you’ll encounter frequently as you delve into Git. Don’t worry about grasping all the details immediately; these terms will become second nature as you progress through the exercises in this book.</p>
 <figure class="align-center" id="id1">
-<div id="id-d940a3e5-1f63-4a48-89e1-d761bdcf7e02" class="mermaid">
+<div id="id-d822098a-6641-4f31-a183-e619df79b51d" class="mermaid">
                 gitGraph LR:
        commit
        commit
@@ -527,23 +539,23 @@ document.write(`
        commit
         </div>
         <figcaption>
-<p><span class="caption-number">Fig. 1.1 </span><span class="caption-text">Example Git diagram</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Example Git diagram</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="working-tree">
-<h2><span class="section-number">1.2.1. </span><strong>Working Tree</strong><a class="headerlink" href="#working-tree" title="Link to this heading">#</a></h2>
+<h2><strong>Working Tree</strong><a class="headerlink" href="#working-tree" title="Link to this heading">#</a></h2>
 <p>The working tree consists of the nested directories and files that make up the project you are currently working on. Think of it as the active workspace where all your changes and edits occur.</p>
 </section>
 <section id="repository-repo">
-<h2><span class="section-number">1.2.2. </span><strong>Repository (Repo)</strong><a class="headerlink" href="#repository-repo" title="Link to this heading">#</a></h2>
+<h2><strong>Repository (Repo)</strong><a class="headerlink" href="#repository-repo" title="Link to this heading">#</a></h2>
 <p>The repository, or repo, is the directory at the top level of your working tree where Git stores all the project’s history and metadata. A bare repository is a special type of repo that doesn’t include a working tree; it’s typically used for sharing or backups. Bare repos usually have names ending in <code class="docutils literal notranslate"><span class="pre">.git</span></code>, such as <code class="docutils literal notranslate"><span class="pre">project.git</span></code>.</p>
 </section>
 <section id="hash">
-<h2><span class="section-number">1.2.3. </span><strong>Hash</strong><a class="headerlink" href="#hash" title="Link to this heading">#</a></h2>
+<h2><strong>Hash</strong><a class="headerlink" href="#hash" title="Link to this heading">#</a></h2>
 <p>A hash is a unique number generated by a hash function, representing the contents of a file or another object as a fixed number of digits. Git uses 160-bit hashes (SHA-1) to track changes. By hashing a file’s contents and comparing it to a previous hash, Git can determine if the file has changed, regardless of its timestamp.</p>
 </section>
 <section id="object">
-<h2><span class="section-number">1.2.4. </span><strong>Object</strong><a class="headerlink" href="#object" title="Link to this heading">#</a></h2>
+<h2><strong>Object</strong><a class="headerlink" href="#object" title="Link to this heading">#</a></h2>
 <p>In a Git repository, there are four types of objects, each identified by a unique SHA-1 hash:</p>
 <ul class="simple">
 <li><p><strong>Blob Object</strong>: Contains the content of an ordinary file.</p></li>
@@ -553,24 +565,24 @@ document.write(`
 </ul>
 </section>
 <section id="commit">
-<h2><span class="section-number">1.2.5. </span><strong>Commit</strong><a class="headerlink" href="#commit" title="Link to this heading">#</a></h2>
+<h2><strong>Commit</strong><a class="headerlink" href="#commit" title="Link to this heading">#</a></h2>
 <p>To commit, in Git terminology, means to create a commit object. This action is akin to committing changes to a database; it records your changes so that others can eventually see them. A commit in Git is a fundamental concept that represents a snapshot of your repository at a specific point in time. Each commit records changes to the files in your repository and includes metadata such as the author, date, and a commit message. Each commit has a unique identifier (SHA-1 hash)</p>
 </section>
 <section id="branch">
-<h2><span class="section-number">1.2.6. </span><strong>Branch</strong><a class="headerlink" href="#branch" title="Link to this heading">#</a></h2>
+<h2><strong>Branch</strong><a class="headerlink" href="#branch" title="Link to this heading">#</a></h2>
 <p>A branch is a named series of linked commits. The most recent commit in a branch is known as the head. When you initialize a repository, Git creates a default branch called <code class="docutils literal notranslate"><span class="pre">main</span></code>, though it is often named <code class="docutils literal notranslate"><span class="pre">master</span></code>. The head of the current branch is named <code class="docutils literal notranslate"><span class="pre">HEAD</span></code>. Branches enable developers to work independently (or collaboratively) on separate lines of development and later merge their changes into the main branch.</p>
 </section>
 <section id="remote">
-<h2><span class="section-number">1.2.7. </span><strong>Remote</strong><a class="headerlink" href="#remote" title="Link to this heading">#</a></h2>
+<h2><strong>Remote</strong><a class="headerlink" href="#remote" title="Link to this heading">#</a></h2>
 <p>A remote is a named reference to another Git repository. When you create a repo, Git sets up a default remote named <code class="docutils literal notranslate"><span class="pre">origin</span></code> for push and pull operations. This can be changed as well.</p>
 </section>
 <section id="commands-subcommands-and-options">
-<h2><span class="section-number">1.2.8. </span><strong>Commands, Subcommands, and Options</strong><a class="headerlink" href="#commands-subcommands-and-options" title="Link to this heading">#</a></h2>
+<h2><strong>Commands, Subcommands, and Options</strong><a class="headerlink" href="#commands-subcommands-and-options" title="Link to this heading">#</a></h2>
 <p>Git operations are executed through commands like <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code>. Here, <code class="docutils literal notranslate"><span class="pre">git</span></code> is the command, and <code class="docutils literal notranslate"><span class="pre">push</span></code> or <code class="docutils literal notranslate"><span class="pre">pull</span></code> is the subcommand specifying the operation you want Git to perform. These subcommands are often accompanied by options, which are indicated with hyphens (-) or double hyphens (–), such as <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span> <span class="pre">--hard</span></code>.</p>
 <p>These terms and others, like <code class="docutils literal notranslate"><span class="pre">push</span></code> and <code class="docutils literal notranslate"><span class="pre">pull</span></code>, will become clearer as you continue learning. Refer back to this glossary as needed to reinforce your understanding while you work through the module.</p>
 </section>
 <section id="installing-git">
-<h2><span class="section-number">1.2.9. </span>Installing <code class="docutils literal notranslate"><span class="pre">git</span></code><a class="headerlink" href="#installing-git" title="Link to this heading">#</a></h2>
+<h2>Installing <code class="docutils literal notranslate"><span class="pre">git</span></code><a class="headerlink" href="#installing-git" title="Link to this heading">#</a></h2>
 <div class="tab-set docutils">
 <input checked="True" class="tab-input" id="tab-set--0-input--1" name="tab-set--0" type="radio"><label class="tab-label" for="tab-set--0-input--1">Linux</label><div class="tab-content docutils">
 <p><code class="docutils literal notranslate"><span class="pre">git</span></code> comes default in Linux systems. In a terminal try out</p>
@@ -644,7 +656,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">1.1. </span>Version Control System (VCS)</p>
+        <p class="prev-next-title">Version Control System (VCS)</p>
       </div>
     </a>
     <a class="right-next"
@@ -652,7 +664,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">1.3. </span>Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></p>
+        <p class="prev-next-title">Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -672,15 +684,15 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-tree">1.2.1. <strong>Working Tree</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-repo">1.2.2. <strong>Repository (Repo)</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hash">1.2.3. <strong>Hash</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#object">1.2.4. <strong>Object</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">1.2.5. <strong>Commit</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#branch">1.2.6. <strong>Branch</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remote">1.2.7. <strong>Remote</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commands-subcommands-and-options">1.2.8. <strong>Commands, Subcommands, and Options</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-git">1.2.9. Installing <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-tree"><strong>Working Tree</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-repo"><strong>Repository (Repo)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hash"><strong>Hash</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#object"><strong>Object</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit"><strong>Commit</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#branch"><strong>Branch</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remote"><strong>Remote</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commands-subcommands-and-options"><strong>Commands, Subcommands, and Options</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-git">Installing <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
 </ul>
   </nav></div>
 

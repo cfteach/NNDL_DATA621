@@ -2,6 +2,8 @@
 
 The course schedule is updated regularly. Please check it frequently for the latest information.
 
+Last update: (8/31/2024)
+
 ## Week 1 (Mon, Aug 26 - Sun, Sep 1)
 
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
@@ -51,7 +53,7 @@ The course schedule is updated regularly. Please check it frequently for the lat
 | 2:00pm-3:20pm  | |  **Lecture:** Parallelizing a NN with PyTorch <br> **What to learn:** Manipulating tensors, DataLoader, model training, optimization  |  | **Lecture:** PyTorch Computation Graphs  <br>  **What to learn:** Understanding computation graphs; creating a graph in PyTorch; computing gradients; understanding autodifferentiation. <br> **What to submit (due Sep 29):** Assignment 1 - Building a NN from Scratch | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 1 due Sep 29</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 1 due Sep 29</strong></span></td>
 </tr>
 </table>
 
@@ -84,7 +86,7 @@ The course schedule is updated regularly. Please check it frequently for the lat
 | 2:00pm-3:20pm  | | **Lecture:**  (Continue) CNN; intro to GradCAM  <br> **What to learn:** practical understanding of GradCAM, case studies and applications |  |  **Lecture:** GradCAM for explainability of CNN <br> **What to learn:** practical understanding of GradCAM, case studies and applications | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 2 due Oct 20</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 2 due Oct 20</strong></span></td>
 </tr>
 </table>
 
@@ -124,7 +126,7 @@ The course schedule is updated regularly. Please check it frequently for the lat
 | 2:00pm-3:20pm  | | **Lecture:**  Graph Neural Networks <br> **What to learn:** Undirected graphs, directed graphs, understanding graph convolutions |  |  **Lecture:** Graph Neural Networks <br> **What to learn:** Implementation of a GNN from scratch using Pytorch | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 3 due Nov 14</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 3 due Nov 14</strong></span></td>
 </tr>
 </table>
 <table>
@@ -149,7 +151,7 @@ The course schedule is updated regularly. Please check it frequently for the lat
 | 2:00pm-3:20pm  | | **Lecture:** Intro to Transformers (tentative) |  |  **Lecture:**  Intro to Normalizing Flows  (tentative) | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 4 due Nov 26</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 4 due Nov 26</strong></span></td>
 </tr>
 </table>
 
