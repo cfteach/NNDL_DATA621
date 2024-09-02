@@ -1,1 +1,3 @@
-# NNDL_DATA621 8/10/2024
+# Neural Networks Deep Learning  - DATA621
+
+website: https://cfteach.github.io/NNDL_DATA621
