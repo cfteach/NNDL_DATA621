@@ -76,6 +76,10 @@ latex:
 bibtex_bibfiles:
   - references.bib
 
+sphinx:
+  config:
+    bibtex_reference_style: author_year
+
 #######################################################################################
 # Launch button settings
 launch_buttons:
