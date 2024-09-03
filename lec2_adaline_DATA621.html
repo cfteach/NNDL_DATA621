@@ -644,7 +644,7 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return class label after unit step&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net_input</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net_input</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -679,7 +679,7 @@ document.write(`
 </pre></div>
 </div>
 <div class="output text_html">
-  <div id="df-5e12f52b-2e88-480b-9ee5-094d292e0131" class="colab-df-container">
+  <div id="df-d06679fb-9b81-46f7-9171-3bd2145e75d5" class="colab-df-container">
     <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -752,7 +752,7 @@ document.write(`
     <div class="colab-df-buttons">
 
   <div class="colab-df-container">
-    <button class="colab-df-convert" onclick="convertToInteractive('df-5e12f52b-2e88-480b-9ee5-094d292e0131')"
+    <button class="colab-df-convert" onclick="convertToInteractive('df-d06679fb-9b81-46f7-9171-3bd2145e75d5')"
             title="Convert this dataframe to an interactive table."
             style="display:none;">
 
@@ -804,12 +804,12 @@ document.write(`
 
     <script>
       const buttonEl =
-        document.querySelector('#df-5e12f52b-2e88-480b-9ee5-094d292e0131 button.colab-df-convert');
+        document.querySelector('#df-d06679fb-9b81-46f7-9171-3bd2145e75d5 button.colab-df-convert');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
       async function convertToInteractive(key) {
-        const element = document.querySelector('#df-5e12f52b-2e88-480b-9ee5-094d292e0131');
+        const element = document.querySelector('#df-d06679fb-9b81-46f7-9171-3bd2145e75d5');
         const dataTable =
           await google.colab.kernel.invokeFunction('convertToInteractive',
                                                     [key], {});
@@ -829,8 +829,8 @@ document.write(`
   </div>
 
 
-<div id="df-08ce79c3-02fa-4755-9cff-389c2f42644b">
-  <button class="colab-df-quickchart" onclick="quickchart('df-08ce79c3-02fa-4755-9cff-389c2f42644b')"
+<div id="df-67c5f1f6-f325-49cf-ae0c-20ad6a59424c">
+  <button class="colab-df-quickchart" onclick="quickchart('df-67c5f1f6-f325-49cf-ae0c-20ad6a59424c')"
             title="Suggest charts"
             style="display:none;">
 
@@ -949,7 +949,7 @@ document.write(`
     }
     (() => {
       let quickchartButtonEl =
-        document.querySelector('#df-08ce79c3-02fa-4755-9cff-389c2f42644b button');
+        document.querySelector('#df-67c5f1f6-f325-49cf-ae0c-20ad6a59424c button');
       quickchartButtonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
     })();
@@ -1022,7 +1022,7 @@ document.write(`
 (50, 2)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe4445ee110&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe443663100&gt;
 </pre></div>
 </div>
 <img alt="_images/54a90bb904dd49c858ffe74e67d40c3eb83bdd7003214ce70aa6578001b228dd.png" src="_images/54a90bb904dd49c858ffe74e67d40c3eb83bdd7003214ce70aa6578001b228dd.png" />
