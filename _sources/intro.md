@@ -1,6 +1,6 @@
 # Welcome to DATA621 - Neural Networks and Deep Learning
 
-(last update 8/31/2024)
+(last update 9/2/2024)
 
 This is the landing page for the course on Neural Networks and Deep Learning held at William & Mary during Fall 2024
 
