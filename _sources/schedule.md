@@ -30,6 +30,12 @@ Last update: (8/31/2024)
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
 | 2:00pm-3:20pm  | | **Lecture:** Data Preprocessing  <br> **What to learn:**  Building good training datasets, dealing with missing data, handling categorical data, partitioning training/test datasets, assessing feature importance |  |  **Lecture:** Regularization <br> **What to learn:**  regularization, problem complexity and feature importance | |
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings for Sep 10 and Sep 12 Lectures: Raschka, Chap. 4</strong></span></td>
+</tr>
+</table>
+
 
 
 ## Week 4 (Mon, Sep 16 - Sun, Sep 22)
@@ -41,6 +47,16 @@ Last update: (8/31/2024)
 <table>
 <tr>
 <td colspan="7" align="center"><span style="color:red"><strong>Assignment 1 (assigned Sep 19; due Sep 29)</strong></span></td>
+</tr>
+</table>
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings for Sep 17 Lecture: Main concepts from Raschka, Chap. 6</strong></span></td>
+</tr>
+</table>
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings for Sep 19 Lecture: Based on Raschka, Chap. 11</strong></span></td>
 </tr>
 </table>
 
