@@ -72,6 +72,11 @@ Last update: (8/31/2024)
 <td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 1 due Sep 29</strong></span></td>
 </tr>
 </table>
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings for Sep 24 and 26 Lectures: Based on Raschka, Chap. 12</strong></span></td>
+</tr>
+</table>
 
 
 ## Week 6 (Mon, Sep 30 - Sun, Oct 6)
