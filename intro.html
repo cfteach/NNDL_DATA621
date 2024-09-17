@@ -94,6 +94,8 @@ commentsRunWhenDOMLoaded(addUtterances);
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/intro.html" />
@@ -282,9 +284,14 @@ commentsRunWhenDOMLoaded(addUtterances);
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1uPs3MhCrPNDglKWcaRBWm8ay_7EtlPWNzmQN6exYSDM/edit?usp=sharing">Building Training Datasets (lecture slides)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lec4_datapreprocessing.html">8. Data Preprocessing (Jupyter notebook)</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparamter Tuning: Examples and Discussion</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparameter Tuning: Examples and Discussion</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">9. Model Evaluation, Hyperparamter Tuning (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">9. Model Evaluation, Hyperparameter Tuning (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/17/2024] Building Multi-Layer Neural Networks from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1AmB1djkmLFcwzgfBoY0l1xe-gLEPx8wFj4OHZuqFg_Y/edit?usp=sharing"> Adding hidden layers + Math of Backprop (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec6_MLP_DATA621_sol.html">10. Multi-Layer Perceptron (Jupyter notebook)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional resources</span></p>
 <ul class="nav bd-sidenav">
@@ -593,9 +600,16 @@ document.write(`
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparamter Tuning: Examples and Discussion</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparameter Tuning: Examples and Discussion</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">9. Model Evaluation, Hyperparamter Tuning (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">9. Model Evaluation, Hyperparameter Tuning (Jupyter notebook)</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/17/2024] Building Multi-Layer Neural Networks from scratch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1AmB1djkmLFcwzgfBoY0l1xe-gLEPx8wFj4OHZuqFg_Y/edit?usp=sharing"> Adding hidden layers + Math of Backprop (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec6_MLP_DATA621_sol.html">10. Multi-Layer Perceptron (Jupyter notebook)</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
