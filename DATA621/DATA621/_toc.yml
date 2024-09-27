@@ -12,7 +12,6 @@ parts:
 - caption: Schedule
   chapters:
     - file: schedule
-    #- url: https://docs.google.com/presentation/d/1VZAreeSnm4UlclDWmTxmNFoyjgeNEyKqagiV0HgBrR4/edit#slide=id.g2ead0cea83b_0_95
     - url: https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing
       title: "(Lec 1) Welcome and Intro by Prof. C.Fanelli"
     #- url: https://docs.google.com/presentation/d/1tX2W2Da_BaM49ca3nh4lWQOfEdUpRFapFDqD3EWLNME/edit?usp=sharing
@@ -20,29 +19,29 @@ parts:
 - caption: "[Pre-flight] Introduction to git"
   numbered: false
   chapters:
-    - file: Day-1/GIT-course/intro_to_git
+    - file: Preflight/GIT-course/intro_to_git
       sections:
-        - file: Day-1/GIT-course/VCS.md
-        - file: Day-1/GIT-course/git_basics.md
-        - file: Day-1/GIT-course/git_configure.md
-    - file: Day-1/GIT-course/git_exercises
+        - file: Preflight/GIT-course/VCS.md
+        - file: Preflight/GIT-course/git_basics.md
+        - file: Preflight/GIT-course/git_configure.md
+    - file: Preflight/GIT-course/git_exercises
       sections:
-        - file: Day-1/GIT-course/Exercise-1
-        - file: Day-1/GIT-course/Exercise-2
-        - file: Day-1/GIT-course/Exercise-3
-        - file: Day-1/GIT-course/Exercise-4
+        - file: Preflight/GIT-course/Exercise-1
+        - file: Preflight/GIT-course/Exercise-2
+        - file: Preflight/GIT-course/Exercise-3
+        - file: Preflight/GIT-course/Exercise-4
 - caption: "[Pre-flight] Using VS-Code"
   chapters:
-    - file: Day-1/VS-code        
+    - file: Preflight/VS-code        
 - caption: "[8/29/2024] Introduction to High Performance Computing (HPC)"
   numbered: false
   chapters:
-    - file: Day-1/HPC-course/intro_to_HPC_HTC
+    - file: Preflight/HPC-course/intro_to_HPC_HTC
       sections:
-        - file: Day-1/HPC-course/intro_to_HPC.md
-        - file: Day-1/HPC-course/ssh_login
-        - file: Day-1/HPC-course/file_systems_WM
-        - file: Day-1/HPC-course/SLURM_commands2
+        - file: Preflight/HPC-course/intro_to_HPC.md
+        - file: Preflight/HPC-course/ssh_login
+        - file: Preflight/HPC-course/file_systems_WM
+        - file: Preflight/HPC-course/SLURM_commands2
 - caption: "[9/3/2024] Linear Classifiers"
   numbered: false 
   chapters:
@@ -50,44 +49,58 @@ parts:
       title: "Perceptrons (lecture slides)"
     - url: https://drive.google.com/file/d/1mU67w6GAhIWNFoO98AF7u8in2C-Op4Ag/view?usp=sharing
       title: "Perceptron - Proof of Convergence"
+    - file: lecture_notebooks/lec2_perceptron_DATA621.ipynb
+      title: "Training a Perceptron (Jupyter notebook)"
+    - url: "https://docs.google.com/presentation/d/1Ep46Bmw_bIr8PLAVPNzVlB0bExEvobGinLnNzCBHS7o"
+      title: "Adaline (lecture slides)" 
+    - file: lecture_notebooks/lec2_adaline_DATA621.ipynb
+      title: "Training an Adaline (Jupyter notebook)"
 
+- caption: "[9/5/2024] Gradient Descent, stochastic GD, Logistic Regression and Other classifiers"
+  numbered: false
+  chapters:
+    - url: "https://docs.google.com/presentation/d/1osZ2o-DtNNHuUGjDkurYuyrg439WBoucJrvMK5c4ibg/"
+      title: "Stochastic Gradient Descent, Logistic Regression (lecture slides)"
+    - file: lecture_notebooks/lec3_GDvsSGD_DATA621.ipynb
+      title: "Gradient Descent, Stochastic Gradient Descent, Mini-batch GD (Jupyter notebook)"
+    - file: lecture_notebooks/lec3_logistic_reg_DATA621.ipynb
+      title: "Logistic Regression, Regularization, linear (and non-linear) boundaries"
 
-#- caption: "Day 2 - Introduction to Optimization"
-#  numbered: true
-#  chapters:
-#    - file: Day-2/intro_to_optimization
-#      sections:
-#        - url: https://docs.google.com/presentation/d/1OnpTlpBe1f4drPrxcwOtPvsSgdYvCnwvGVohH9kKbR8/edit?usp=sharing
-#          title: "Optimization Theory"
-#        - file: Day-2/MOO_concepts.ipynb
-#        - file: Day-2/MC_integration.ipynb
-#- caption: "Day 3 - Multi Objective Evolutionary Algorithm"
-#  numbered: true
-#  chapters:
-#    - file: Day-3/intro
-#      sections:
-#        - url: https://docs.google.com/presentation/d/19ptTXZaTtMGgB7DfTX-0T-6_72H31itSdtbuR7dQiJs/edit?usp=sharing
-#          title: "Introduction to MOEA"
-#        - file: Day-3/TestProblem_MOEA.ipynb
-#        - file: Day-3/problem_description
-#        - file: Day-3/Design_MOEA.ipynb
-#- caption: "Day 4 - Bayesian Optimization"
-#  numbered: true
-#  chapters:
-#    - file: Day-4/intro
-#      sections:
-#        - url: https://docs.google.com/presentation/d/1wwgS_6ehIZy7XXEZDdEq24s-2fXEzD7SsXo68QkDoHc/edit?usp=sharing
-#          title: "Introduction to Bayesian Optimization"
-#        - file: Day-4/Design_BO.ipynb
-#        - file: Day-4/Design_MOBO2.ipynb
-#- caption: "Day 5 - Introduction EIC software framework"
-#  numbered: true
-#  chapters:
-#  - file: Day-5/intro_EIC-software
-#    sections:
-#    - file: Day-5/pre_requisities
-#    - file: Day-5/eic-shell
-      
+- caption: "[9/10/2024] Building Training Datasets"
+  numbered: false
+  chapters:
+    - url: "https://docs.google.com/presentation/d/1uPs3MhCrPNDglKWcaRBWm8ay_7EtlPWNzmQN6exYSDM/edit?usp=sharing"
+      title: "Building Training Datasets (lecture slides)"
+    - file: lecture_notebooks/lec4_datapreprocessing.ipynb
+      title: "Data Preprocessing (Jupyter notebook)"
+
+- caption: "[9/12/2024] Model Evaluation, Hyperparameter Tuning: Examples and Discussion"
+  numbered: false
+  chapters:
+    - file: lecture_notebooks/lec5_modeleval.ipynb
+      title: "Model Evaluation, Hyperparameter Tuning (Jupyter notebook)"
+
+- caption: "[9/17/2024, 9/19/2024] Building Multi-Layer Neural Networks from scratch + discussion on assignment"
+  numbered: false
+  chapters:
+    - url: "https://docs.google.com/presentation/d/1AmB1djkmLFcwzgfBoY0l1xe-gLEPx8wFj4OHZuqFg_Y"
+      title: "Adding hidden layers + Math of Backprop (lecture slides)"
+    - file: lecture_notebooks/lec6_MLP_DATA621_sol.ipynb
+      title: "Multi-Layer Perceptron (Jupyter notebook)"
+
+- caption: "[9/24/2024] Building Multi-Layer Neural Networks with PyTorch"
+  numbered: false
+  chapters:
+    - file: lecture_notebooks/lec8_NN_preflight.ipynb
+      title: " Using PyTorch preflight (Jupyter notebook)"
+    - file: lecture_notebooks/lec8_NN_pytorch_sol.ipynb
+      title: "Using torch.nn (Jupyter notebook)"
+
+- caption: "[9/26/2024] Deep Dive into `pytorch` and `autograd`"
+  numbered: false
+  chapters:
+    - file: lecture_notebooks/lec9_autograd_pytorch.ipynb
+      title: "Deep Dive into `pytorch` and `autograd` (Jupyter notebook)"
 
 - caption: Additional resources
   numbered: false
