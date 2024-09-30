@@ -90,6 +90,11 @@ Last update: (8/31/2024)
 <td colspan="7" align="center"><span style="color:red"><strong>Assignment 2 (assigned Oct 3; due Oct 20)</strong></span></td>
 </tr>
 </table>
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings for October 1 and 3 Lectures: Based on Raschka, Chap. 14</strong></span></td>
+</tr>
+</table>
 
 ## Week 7 (Mon, Oct 7 - Sun, Oct 13)
 
