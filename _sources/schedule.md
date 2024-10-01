@@ -2,7 +2,7 @@
 
 The course schedule is updated regularly. Please check it frequently for the latest information.
 
-Last update: (8/31/2024)
+Last update: (9/30/2024)
 
 ## Week 1 (Mon, Aug 26 - Sun, Sep 1)
 
