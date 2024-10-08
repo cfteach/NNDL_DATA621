@@ -87,7 +87,7 @@ Last update: (9/30/2024)
 </table>
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 2 (assigned Oct 3; due Oct 20)</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Assignment 2 (assigned Oct 3; due Oct 22)</strong></span></td>
 </tr>
 </table>
 <table>
@@ -101,7 +101,7 @@ Last update: (9/30/2024)
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | No office hours  | 
-| 2:00pm-3:20pm  | | **Lecture:** Convolutional Neural Networ  <br> **What to learn:** Hands-on with classification problem |  |  No lecture  |  |
+| 2:00pm-3:20pm  | | **Lecture:** Convolutional Neural Network  <br> **What to learn:** Hands-on with classification problem |  |  No lecture  |  |
 
 
 ## Week 8 (Mon, Oct 14 - Sun, Oct 20)
@@ -110,11 +110,7 @@ Last update: (9/30/2024)
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
 | 2:00pm-3:20pm  | | **Lecture:**  (Continue) CNN; intro to GradCAM  <br> **What to learn:** practical understanding of GradCAM, case studies and applications |  |  **Lecture:** GradCAM for explainability of CNN <br> **What to learn:** practical understanding of GradCAM, case studies and applications | |
-<table>
-<tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 2 due Oct 20</strong></span></td>
-</tr>
-</table>
+
 
 
 ## Week 9 (Mon, Oct 21 - Sun, Oct 27)
@@ -123,6 +119,11 @@ Last update: (9/30/2024)
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
 | 2:00pm-3:20pm  | | **Lecture:**   Recurrent Neural Network <br> **What to learn:** modeling sequential data using RNN  |  |  **Lecture:** Recurrent Neural Network  <br> **What to learn:** Building an RNN model | |
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 2 due Oct 22</strong></span></td>
+</tr>
+</table>
 
 
 ## Week 10 (Mon, Oct 28 - Sun, Nov 3)

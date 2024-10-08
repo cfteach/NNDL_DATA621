@@ -101,7 +101,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/lec9_autograd_pytorch.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="References" href="referencesmc.html" />
+    <link rel="next" title="15. Convolutional Neural Network - Part 1" href="lec10_CNN_DATA621.html" />
     <link rel="prev" title="13. Using PyTorch to build Neural Networks" href="lec8_NN_pytorch_nosol.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -225,16 +225,23 @@ commentsRunWhenDOMLoaded(addUtterances);
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Syllabus</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/16QLlR1hVMFaLHwbiSZLhf_xUP_Lf4xgJ/view?usp=sharing">Syllabus (last update 9/20/2024)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1ClOsYfLTa0Ts7wpULnnHOvemG2Vk36Nv/view?usp=share_link">Syllabus (last update 10/6/2024)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="schedule.html">Schedule</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing">(Lec 1) Welcome and Intro by Prof. C.Fanelli</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1aW_ZdzN2D5W51rYIujfuqcMYzCYKRZzb/view?usp=sharing">Assignment 1, Deep Neural Networks from Scratch</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intro</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing">Welcome and Intro by Prof. C.Fanelli</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Intro to Modeling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1BV2-N-c1bq4yx1IsPMW4fhC9i1SCdRAU/edit?usp=sharing&amp;ouid=113195593718692427789&amp;rtpof=true&amp;sd=true">Linear Regression(lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1BV2-N-c1bq4yx1IsPMW4fhC9i1SCdRAU/edit?usp=sharing&amp;ouid=113195593718692427789&amp;rtpof=true&amp;sd=true">Linear Regression (lecture slides)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Linear_Regression_1_class.html">1. Linear Regression (Jupyter Notebook)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Introduction to git</span></p>
@@ -304,7 +311,12 @@ commentsRunWhenDOMLoaded(addUtterances);
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/26/2024] PyTorch and Autograd</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">14. Using PyTorch Autograd(Jupyter notebook)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">14. Using PyTorch Autograd (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/1/2024] CNN with PyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec10_CNN_DATA621.html">15. Using PyTorch with CNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec11_cnn2_v2.html">16. Using CNN and Celeb Dataset</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional resources</span></p>
 <ul class="nav bd-sidenav">
@@ -1321,8 +1333,8 @@ f(x, y) = \sin{(x+y)} = Z
 <p><img alt="" src="https://drive.google.com/uc?id=1bB7o16lSObD-Exz9-plMTQsRrxcKDJ1G" /></p>
 <p>One can verify if all works by doing the following
 $$</p>
-<div class="amsmath math notranslate nohighlight" id="equation-dd990cfd-2c92-44c4-937f-ba70f8dd41bc">
-<span class="eqno">(14.1)<a class="headerlink" href="#equation-dd990cfd-2c92-44c4-937f-ba70f8dd41bc" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-a2af691c-7f68-425e-b65c-62c243da47ff">
+<span class="eqno">(14.1)<a class="headerlink" href="#equation-a2af691c-7f68-425e-b65c-62c243da47ff" title="Permalink to this equation">#</a></span>\[\begin{align}
 \vec{\nabla} f(x, y) &amp;=
 \hat{i}\frac{\partial}{\partial x}\sin{(x+y)} + \hat{j} \frac{\partial}{\partial y}\sin{(x + y)}
 \end{align}\]</div>
@@ -2408,11 +2420,11 @@ Epoch 19  Accuracy 0.9839
       </div>
     </a>
     <a class="right-next"
-       href="referencesmc.html"
+       href="lec10_CNN_DATA621.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">References</p>
+        <p class="prev-next-title"><span class="section-number">15. </span>Convolutional Neural Network - Part 1</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
