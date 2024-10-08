@@ -1,0 +1,2556 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>18. U-Net Convolutional Networks for Image Segmentation &#8212; Neural Networks and Deep Learning - DATA621</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "cfteach/NNDL_DATA621");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lec12_UNet';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/lec12_UNet.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="References" href="referencesmc.html" />
+    <link rel="prev" title="17. CNN for Regression - UTKface Dataset" href="lec12_cnn_regr-2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">This page is being updated</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logowm1.png" class="logo__image only-light" alt="Neural Networks and Deep Learning - DATA621 - Home"/>
+    <script>document.write(`<img src="_static/logowm1.png" class="logo__image only-dark" alt="Neural Networks and Deep Learning - DATA621 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to DATA621 - Neural Networks and Deep Learning
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Syllabus</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1ClOsYfLTa0Ts7wpULnnHOvemG2Vk36Nv/view?usp=share_link">Syllabus (last update 10/6/2024)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="schedule.html">Schedule</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1aW_ZdzN2D5W51rYIujfuqcMYzCYKRZzb/view?usp=sharing">Assignment 1, Deep Neural Networks from Scratch</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intro</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing">Welcome and Intro by Prof. C.Fanelli</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Intro to Modeling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1BV2-N-c1bq4yx1IsPMW4fhC9i1SCdRAU/edit?usp=sharing&amp;ouid=113195593718692427789&amp;rtpof=true&amp;sd=true">Linear Regression (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Linear_Regression_1_class.html">1. Linear Regression (Jupyter Notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Introduction to git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/GIT-course/intro_to_git.html">2. Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/VCS.html">2.1. Version Control System (VCS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/git_basics.html">2.2. What is Git?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/git_configure.html">2.3. Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/GIT-course/git_exercises.html">3. Exercises on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-1.html">3.1. Exercise 1: Basic Git Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-2.html">3.2. Exercise 2: Commits, push and branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-3.html">3.3. Advanced exercises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-4.html">3.4. GitHub Actions and Workflow Tutorial</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Using VS-Code</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Day-1/VS-code.html">Installing Visual Studio Code</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[8/29/2024] Introduction to High Performance Computing (HPC)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/HPC-course/intro_to_HPC_HTC.html">4. Introduction to High Performance Computing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/intro_to_HPC.html">4.1. High Performance Computing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/ssh_login.html">4.2. SSH into a Front-End Node Using Proxy Jump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/file_systems_WM.html">4.3. William &amp; Mary Research Computing: File Systems Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/SLURM_commands2.html">4.4. Introduction to SLURM</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/3/2024] Linear Classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1rEUGMhcfUyC5YCgrIRnqoRU6jNgzaO9EuvnxePEfo8k/edit?usp=sharing">Perceptrons (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1mU67w6GAhIWNFoO98AF7u8in2C-Op4Ag/view?usp=sharing">Perceptron - Proof of Convergence (PDF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec2_perceptron_DATA621.html">5. Training a Perceptron (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Ep46Bmw_bIr8PLAVPNzVlB0bExEvobGinLnNzCBHS7o/edit?usp=sharing">Adaline (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec2_adaline_DATA621.html">6. Training Adaline (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/5/2024] Gradient Descent, stochastic GD, Logistic Regression and Other classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1osZ2o-DtNNHuUGjDkurYuyrg439WBoucJrvMK5c4ibg/edit?usp=sharing">Stochastic Gradient Descent, Logistic Regression (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec3_GDvsSGD_DATA621.html">7. Gradient Descent, Stochastic Gradient Descent, Mini-batch GD (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec3_logistic_reg_DATA621.html">8. Logistic Regression, Regularization, linear (and non-linear) boundaries</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/10/2024] Building Training Datasets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1uPs3MhCrPNDglKWcaRBWm8ay_7EtlPWNzmQN6exYSDM/edit?usp=sharing">Building Training Datasets (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec4_datapreprocessing.html">9. Data Preprocessing (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparameter Tuning: Examples and Discussion</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">10. Model Evaluation, Hyperparameter Tuning (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/17/2024, 9/19/2024] Building Multi-Layer Neural Networks from scratch + discussion on assignment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1AmB1djkmLFcwzgfBoY0l1xe-gLEPx8wFj4OHZuqFg_Y/edit?usp=sharing"> Adding hidden layers + Math of Backprop (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec6_MLP_DATA621_sol.html">11. Multi-Layer Perceptron (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/24/2024] Building Multi-Layer Neural Networks with PyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec8_NN_preflight.html">12. Using PyTorch preflight (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec8_NN_pytorch_nosol.html">13. Using torch.nn (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/26/2024] PyTorch and Autograd</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec9_autograd_pytorch.html">14. Using PyTorch Autograd (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/1, 10/3, 10/8/2024] CNN with PyTorch</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec10_CNN_DATA621.html">15. Using PyTorch with CNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec11_cnn2_v2.html">16. Using CNN and Celeb Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec12_cnn_regr-2.html">17. Using CNN for Regression Tasks (age prediction based on images)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">18. Using U-Net for Image Segmentation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="referencesmc.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/cfteach/NNDL_DATA621/blob/webpage-src/DATA621/DATA621/lec12_UNet.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/edit/webpage-src/DATA621/DATA621/lec12_UNet.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/issues/new?title=Issue%20on%20page%20%2Flec12_UNet.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/lec12_UNet.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>U-Net Convolutional Networks for Image Segmentation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-net">18.1. U-Net</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation">18.2. Explanation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-data">18.3. Load the Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiate-the-dataset-and-dataloader">18.4. Instantiate the Dataset and DataLoader</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-u-net-network">18.5. The U-Net Network</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-the-network">18.6. Train the Network</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-loss-curve">18.7. Plot the loss curve</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-an-example">18.8. Plot an Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">18.9. Exercise</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p>Credits: <a class="reference external" href="https://git.lcsr.jhu.edu/cjones96/basic-unet-segmentation">https://git.lcsr.jhu.edu/cjones96/basic-unet-segmentation</a></p>
+<section id="u-net-convolutional-networks-for-image-segmentation">
+<h1><span class="section-number">18. </span>U-Net Convolutional Networks for Image Segmentation<a class="headerlink" href="#u-net-convolutional-networks-for-image-segmentation" title="Link to this heading">#</a></h1>
+<section id="u-net">
+<h2><span class="section-number">18.1. </span>U-Net<a class="headerlink" href="#u-net" title="Link to this heading">#</a></h2>
+<p>U-Net is a widely used deep learning architecture that was first introduced in the “U-Net: Convolutional Networks for Biomedical Image Segmentation” paper. The primary purpose of this architecture was to address the challenge of limited annotated data in the medical field. This network was designed to effectively leverage a smaller amount of data while maintaining speed and accuracy.</p>
+<p>The architecture of U-Net is unique in that it consists of a contracting path and an expansive path. The contracting path contains encoder layers that capture contextual information and reduce the spatial resolution of the input, while the expansive path contains decoder layers that decode the encoded data and use the information from the contracting path via skip connections to generate a segmentation map.</p>
+<p>The contracting path in U-Net is responsible for identifying the relevant features in the input image. The encoder layers perform convolutional operations that reduce the spatial resolution of the feature maps while increasing their depth, thereby capturing increasingly abstract representations of the input. This contracting path is similar to the feedforward layers in other convolutional neural networks. On the other hand, the expansive path works on decoding the encoded data and locating the features while maintaining the spatial resolution of the input. The decoder layers in the expansive path upsample the feature maps, while also performing convolutional operations. The skip connections from the contracting path help to preserve the spatial information lost in the contracting path, which helps the decoder layers to locate the features more accurately.</p>
+<p><img alt="alt text" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*zYrwp34DslR_9wLHMVAITg.png" /></p>
+<p>Source: <a class="reference external" href="https://arxiv.org/pdf/1505.04597">https://arxiv.org/pdf/1505.04597</a></p>
+</section>
+<section id="explanation">
+<h2><span class="section-number">18.2. </span>Explanation<a class="headerlink" href="#explanation" title="Link to this heading">#</a></h2>
+<p>Credits: see blog by <a class="reference external" href="https://medium.com/&#64;alejandro.itoaramendia/decoding-the-u-net-a-complete-guide-810b1c6d56d8">A. Ito Armendia</a></p>
+<p><strong>The Contracting Path of U-Net</strong></p>
+<p><img alt="alt text" src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*Ofmoljm8odP3Od_PHNMdAg.png" /></p>
+<p><strong>Block 1</strong></p>
+<p>An input image with dimensions 572² is fed into the U-Net. This input image consists of only 1 channel, likely a grayscale channel.
+Two 3x3 convolution layers (unpadded) are then applied to the input image, each followed by a ReLU layer. At the same time the number of channels are increased to 64 in order to capture higher level features.
+A 2x2 max pooling layer with a stride of 2 is then applied. This downsamples the feature map to half its size, 284².</p>
+<p><strong>Block 2</strong></p>
+<p>Just like in block 1, two 3x3 convolution layers (unpadded) are applied to the output of block 1, each followed again by a ReLU layer. At each new block the number of feature channels are doubled, now to 128.
+Next a 2x2 max pooling layer is again applied to the resulting feature map reducing the spatial dimensions by half to 140².</p>
+<p><strong>Block 3</strong></p>
+<p>The procedure used in block 1 and 2 is the same as in block 3, so will not be repeated.</p>
+<p><strong>Block 4</strong></p>
+<p>Same as block 3.</p>
+<p><strong>Block 5</strong></p>
+<p>In the final block of the contracting path, the number of feature channels reach 1024 after being doubled at each block.
+This block also contains two 3x3 convolution layers (unpadded), which are each followed by a ReLU layer. However, for symmetry purposes, I have only included one layer and included the second layer in the expanding path.
+After complex features and patterns have been extracted, the feature map moves on to the expanding path.</p>
+<p><strong>The Expanding Path</strong></p>
+<p><img alt="alt text" src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*YezvSRtIOSLEeEwwyOMzgA.png" /></p>
+<p><strong>Block 5</strong></p>
+<ol class="arabic simple">
+<li><p>Continuing on from the contracting path, a second 3x3 convolution (unpadded) is applied with a ReLU layer after it.</p></li>
+<li><p>Then a 2x2 convolution (up-convolution) layer is applied, upsampling the spatial dimensions twofold and also halving the number of channels to 512.</p></li>
+</ol>
+<p><strong>Block 4</strong></p>
+<ol class="arabic simple">
+<li><p>Using skip connections, the corresponding feature map from the contracting path is then concatenated, doubling the feature channels to 1024. Note that this concatenation must be cropped to match the expanding path’s dimensions.</p></li>
+<li><p>Two 3x3 convolution layers (unpadded) are applied, each with a ReLU layer following, reducing the channels to 512.</p></li>
+<li><p>After, a 2x2 convolution (up-convolution) layer is applied, upsampling the spatial dimensions twofold and also halving the number of channels to 256.</p></li>
+</ol>
+<p><strong>Block 3</strong></p>
+<p>The procedure used in block 5 and 4 is the same as in block 3, so will not be repeated.</p>
+<p><strong>Block 2</strong></p>
+<p>Same as block 3.</p>
+<p><strong>Block 1</strong></p>
+<ol class="arabic simple">
+<li><p>In the final block of the expanding path, there are 128 channels after concatenating the skip connection.</p></li>
+<li><p>Next, two 3x3 convolution layers (unpadded) are applied on the feature map, with ReLU layers inbetween reducing the number of feature channels to 64.</p></li>
+<li><p>Finally, a 1x1 convolution layer, followed by an activation layer (sigmoid for binary classification) is used to reduce the number of channels to the desired number of classes. In this case, 2 classes, as binary classification is often used in medical imaging.</p></li>
+</ol>
+<p>After upsampling the feature map in the expanding path, a segmentation map should be generated, with each pixel classified individually.</p>
+<hr class="docutils" />
+<p><strong>N.b.</strong></p>
+<p>i. Skipping connections include cropping.</p>
+<p>ii. The up-conv reduce the number of channels.</p>
+<p>iii. The final ouput has slightly lower resolution, i.e., reduced dimensionality, compared to the input, as a result of the conv operations and cropping. The final number of channels is 2, in that for the problem at hand we have two classes.</p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">matplotlib</span> <span class="n">torch</span> <span class="n">torchvision</span> <span class="n">Pillow</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (1.26.4)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.10/dist-packages (3.7.1)
+Requirement already satisfied: torch in /usr/local/lib/python3.10/dist-packages (2.4.1+cu121)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.10/dist-packages (0.19.1+cu121)
+Requirement already satisfied: Pillow in /usr/local/lib/python3.10/dist-packages (10.4.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (1.3.0)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (4.54.1)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (1.4.7)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (24.1)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (3.1.4)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (2.8.2)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch) (3.16.1)
+Requirement already satisfied: typing-extensions&gt;=4.8.0 in /usr/local/lib/python3.10/dist-packages (from torch) (4.12.2)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch) (1.13.3)
+Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch) (3.3)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from torch) (3.1.4)
+Requirement already satisfied: fsspec in /usr/local/lib/python3.10/dist-packages (from torch) (2024.6.1)
+Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2-&gt;torch) (2.1.5)
+Requirement already satisfied: mpmath&lt;1.4,&gt;=1.1.0 in /usr/local/lib/python3.10/dist-packages (from sympy-&gt;torch) (1.3.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">git</span><span class="o">.</span><span class="n">lcsr</span><span class="o">.</span><span class="n">jhu</span><span class="o">.</span><span class="n">edu</span><span class="o">/</span><span class="n">cjones96</span><span class="o">/</span><span class="n">basic</span><span class="o">-</span><span class="n">unet</span><span class="o">-</span><span class="n">segmentation</span><span class="o">/-/</span><span class="n">raw</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">zip</span><span class="o">&amp;</span><span class="n">inline</span><span class="o">=</span><span class="n">false</span> <span class="o">-</span><span class="n">O</span> <span class="n">train</span><span class="o">.</span><span class="n">zip</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: -O: command not found
+--2024-10-08 17:12:31--  https://git.lcsr.jhu.edu/cjones96/basic-unet-segmentation/-/raw/master/train.zip
+Resolving git.lcsr.jhu.edu (git.lcsr.jhu.edu)... 128.220.253.212
+Connecting to git.lcsr.jhu.edu (git.lcsr.jhu.edu)|128.220.253.212|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 43273606 (41M) [application/octet-stream]
+Saving to: ‘train.zip.1’
+
+train.zip.1         100%[===================&gt;]  41.27M  9.59MB/s    in 4.7s    
+
+2024-10-08 17:12:37 (8.73 MB/s) - ‘train.zip.1’ saved [43273606/43273606]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="n">ls</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sample_data  train.zip
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="n">file</span> <span class="n">train</span><span class="o">.</span><span class="n">zip</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>train.zip: Zip archive data, at least v1.0 to extract, compression method=store
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="p">(</span><span class="n">cd</span> <span class="o">/</span><span class="n">content</span> <span class="o">&amp;</span> <span class="n">unzip</span> <span class="n">train</span><span class="o">.</span><span class="n">zip</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Archive:  train.zip
+replace train/eefc0d8c94f0_08.jpg? [y]es, [n]o, [A]ll, [N]one, [r]ename: 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">git</span><span class="o">.</span><span class="n">lcsr</span><span class="o">.</span><span class="n">jhu</span><span class="o">.</span><span class="n">edu</span><span class="o">/</span><span class="n">cjones96</span><span class="o">/</span><span class="n">basic</span><span class="o">-</span><span class="n">unet</span><span class="o">-</span><span class="n">segmentation</span><span class="o">/-/</span><span class="n">raw</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">train_masks</span><span class="o">.</span><span class="n">zip</span><span class="o">&amp;</span><span class="n">inline</span><span class="o">=</span><span class="n">false</span> <span class="o">-</span><span class="n">O</span> <span class="n">train_masks</span><span class="o">.</span><span class="n">zip</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: -O: command not found
+--2024-10-08 16:01:53--  https://git.lcsr.jhu.edu/cjones96/basic-unet-segmentation/-/raw/master/train_masks.zip
+Resolving git.lcsr.jhu.edu (git.lcsr.jhu.edu)... 128.220.253.212
+Connecting to git.lcsr.jhu.edu (git.lcsr.jhu.edu)|128.220.253.212|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3119864 (3.0M) [application/octet-stream]
+Saving to: ‘train_masks.zip’
+
+train_masks.zip     100%[===================&gt;]   2.97M  1.72MB/s    in 1.7s    
+
+2024-10-08 16:01:56 (1.72 MB/s) - ‘train_masks.zip’ saved [3119864/3119864]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="p">(</span><span class="n">cd</span> <span class="o">/</span><span class="n">content</span> <span class="o">&amp;</span> <span class="n">unzip</span> <span class="n">train_masks</span><span class="o">.</span><span class="n">zip</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Archive:  train_masks.zip
+   creating: train_masks/
+ extracting: train_masks/efaef69e148d_13_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_09_mask.gif  
+ extracting: train_masks/efaef69e148d_12_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_08_mask.gif  
+ extracting: train_masks/fecea3036c59_14_mask.gif  
+ extracting: train_masks/fecea3036c59_15_mask.gif  
+ extracting: train_masks/eeb7eeca738e_16_mask.gif  
+ extracting: train_masks/ef5567efd904_14_mask.gif  
+ extracting: train_masks/ef5567efd904_15_mask.gif  
+ extracting: train_masks/eb91b1c659a0_07_mask.gif  
+ extracting: train_masks/eb91b1c659a0_06_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_14_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_15_mask.gif  
+ extracting: train_masks/feaf59172a01_14_mask.gif  
+  inflating: train_masks/feaf59172a01_15_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_16_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_01_mask.gif  
+  inflating: train_masks/f4cd1286d5f4_13_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_12_mask.gif  
+ extracting: train_masks/fdc2c87853ce_05_mask.gif  
+ extracting: train_masks/fdc2c87853ce_04_mask.gif  
+ extracting: train_masks/f00905abd3d7_07_mask.gif  
+ extracting: train_masks/f00905abd3d7_06_mask.gif  
+ extracting: train_masks/f8b6f4c39204_09_mask.gif  
+ extracting: train_masks/f8b6f4c39204_08_mask.gif  
+ extracting: train_masks/fa613ac8eac5_10_mask.gif  
+ extracting: train_masks/fa613ac8eac5_11_mask.gif  
+ extracting: train_masks/f70052627830_03_mask.gif  
+ extracting: train_masks/f70052627830_02_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_07_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_06_mask.gif  
+ extracting: train_masks/fc237174b128_01_mask.gif  
+ extracting: train_masks/f3eee6348205_01_mask.gif  
+  inflating: train_masks/f7ad86e13ed7_05_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_04_mask.gif  
+ extracting: train_masks/f1eb080c7182_01_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_04_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_05_mask.gif  
+ extracting: train_masks/ed8472086df8_05_mask.gif  
+ extracting: train_masks/ed8472086df8_04_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_12_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_13_mask.gif  
+  inflating: train_masks/fff9b3a5373f_01_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_03_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_02_mask.gif  
+ extracting: train_masks/f70052627830_09_mask.gif  
+ extracting: train_masks/f70052627830_08_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_01_mask.gif  
+ extracting: train_masks/f591b4f2e006_10_mask.gif  
+  inflating: train_masks/f591b4f2e006_11_mask.gif  
+ extracting: train_masks/f3b482e091c0_05_mask.gif  
+ extracting: train_masks/f8b6f4c39204_03_mask.gif  
+ extracting: train_masks/f3b482e091c0_04_mask.gif  
+ extracting: train_masks/f8b6f4c39204_02_mask.gif  
+ extracting: train_masks/fb1b923dd978_07_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_11_mask.gif  
+ extracting: train_masks/fb1b923dd978_06_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_10_mask.gif  
+ extracting: train_masks/fa006be8b6d9_14_mask.gif  
+ extracting: train_masks/eaf9eb0b2293_14_mask.gif  
+ extracting: train_masks/fa006be8b6d9_15_mask.gif  
+ extracting: train_masks/eaf9eb0b2293_15_mask.gif  
+  inflating: train_masks/feaf59172a01_03_mask.gif  
+ extracting: train_masks/feaf59172a01_02_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_03_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_02_mask.gif  
+ extracting: train_masks/ef5567efd904_03_mask.gif  
+ extracting: train_masks/ef5567efd904_02_mask.gif  
+ extracting: train_masks/eb91b1c659a0_10_mask.gif  
+ extracting: train_masks/eb91b1c659a0_11_mask.gif  
+ extracting: train_masks/fecea3036c59_03_mask.gif  
+ extracting: train_masks/fecea3036c59_02_mask.gif  
+ extracting: train_masks/eeb7eeca738e_01_mask.gif  
+ extracting: train_masks/efaef69e148d_04_mask.gif  
+ extracting: train_masks/efaef69e148d_05_mask.gif  
+ extracting: train_masks/f70052627830_14_mask.gif  
+ extracting: train_masks/f70052627830_15_mask.gif  
+ extracting: train_masks/fa613ac8eac5_07_mask.gif  
+ extracting: train_masks/fa613ac8eac5_06_mask.gif  
+ extracting: train_masks/f00905abd3d7_10_mask.gif  
+ extracting: train_masks/f00905abd3d7_11_mask.gif  
+ extracting: train_masks/fa006be8b6d9_09_mask.gif  
+ extracting: train_masks/fa006be8b6d9_08_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_16_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_04_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_05_mask.gif  
+ extracting: train_masks/fdc2c87853ce_12_mask.gif  
+ extracting: train_masks/fdc2c87853ce_13_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_01_mask.gif  
+ extracting: train_masks/fff9b3a5373f_16_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_14_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_15_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_13_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_12_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_05_mask.gif  
+ extracting: train_masks/fecea3036c59_09_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_04_mask.gif  
+ extracting: train_masks/fecea3036c59_08_mask.gif  
+ extracting: train_masks/ed8472086df8_12_mask.gif  
+ extracting: train_masks/ed8472086df8_13_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_12_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_13_mask.gif  
+ extracting: train_masks/f3eee6348205_16_mask.gif  
+ extracting: train_masks/ef5567efd904_09_mask.gif  
+ extracting: train_masks/ef5567efd904_08_mask.gif  
+ extracting: train_masks/f1eb080c7182_16_mask.gif  
+ extracting: train_masks/fc237174b128_16_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_10_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_11_mask.gif  
+ extracting: train_masks/feaf59172a01_09_mask.gif  
+ extracting: train_masks/feaf59172a01_08_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_09_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_08_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_06_mask.gif  
+ extracting: train_masks/fb1b923dd978_10_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_07_mask.gif  
+  inflating: train_masks/fb1b923dd978_11_mask.gif  
+ extracting: train_masks/fa006be8b6d9_03_mask.gif  
+ extracting: train_masks/fa006be8b6d9_02_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_16_mask.gif  
+  inflating: train_masks/f591b4f2e006_07_mask.gif  
+ extracting: train_masks/f591b4f2e006_06_mask.gif  
+ extracting: train_masks/f3b482e091c0_12_mask.gif  
+ extracting: train_masks/f8b6f4c39204_14_mask.gif  
+ extracting: train_masks/f3b482e091c0_13_mask.gif  
+ extracting: train_masks/f8b6f4c39204_15_mask.gif  
+ extracting: train_masks/ef5567efd904_04_mask.gif  
+ extracting: train_masks/ef5567efd904_05_mask.gif  
+ extracting: train_masks/eb91b1c659a0_16_mask.gif  
+  inflating: train_masks/feaf59172a01_04_mask.gif  
+ extracting: train_masks/feaf59172a01_05_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_04_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_05_mask.gif  
+ extracting: train_masks/efaef69e148d_03_mask.gif  
+ extracting: train_masks/efaef69e148d_02_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_08_mask.gif  
+ extracting: train_masks/fecea3036c59_04_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_09_mask.gif  
+ extracting: train_masks/fecea3036c59_05_mask.gif  
+ extracting: train_masks/eeb7eeca738e_06_mask.gif  
+ extracting: train_masks/eeb7eeca738e_07_mask.gif  
+ extracting: train_masks/f00905abd3d7_16_mask.gif  
+  inflating: train_masks/f70052627830_13_mask.gif  
+  inflating: train_masks/f70052627830_12_mask.gif  
+ extracting: train_masks/fa613ac8eac5_01_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_06_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_07_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_11_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_03_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_10_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_02_mask.gif  
+ extracting: train_masks/fdc2c87853ce_15_mask.gif  
+ extracting: train_masks/fdc2c87853ce_14_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_14_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_15_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_02_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_03_mask.gif  
+ extracting: train_masks/ed8472086df8_15_mask.gif  
+ extracting: train_masks/ed8472086df8_14_mask.gif  
+ extracting: train_masks/fff9b3a5373f_11_mask.gif  
+ extracting: train_masks/fff9b3a5373f_10_mask.gif  
+ extracting: train_masks/efaef69e148d_09_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_13_mask.gif  
+ extracting: train_masks/efaef69e148d_08_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_12_mask.gif  
+ extracting: train_masks/fc237174b128_11_mask.gif  
+ extracting: train_masks/fc237174b128_10_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_16_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_15_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_14_mask.gif  
+ extracting: train_masks/f3eee6348205_11_mask.gif  
+ extracting: train_masks/f3eee6348205_10_mask.gif  
+ extracting: train_masks/f1eb080c7182_10_mask.gif  
+ extracting: train_masks/f1eb080c7182_11_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_01_mask.gif  
+ extracting: train_masks/fb1b923dd978_16_mask.gif  
+ extracting: train_masks/fa006be8b6d9_04_mask.gif  
+  inflating: train_masks/fa006be8b6d9_05_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_09_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_08_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_11_mask.gif  
+  inflating: train_masks/f98dbe8a5ee2_10_mask.gif  
+ extracting: train_masks/f591b4f2e006_01_mask.gif  
+ extracting: train_masks/f3b482e091c0_15_mask.gif  
+ extracting: train_masks/f8b6f4c39204_13_mask.gif  
+ extracting: train_masks/f3b482e091c0_14_mask.gif  
+  inflating: train_masks/f8b6f4c39204_12_mask.gif  
+ extracting: train_masks/ed8472086df8_08_mask.gif  
+ extracting: train_masks/ed8472086df8_09_mask.gif  
+ extracting: train_masks/fecea3036c59_13_mask.gif  
+ extracting: train_masks/fecea3036c59_12_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_09_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_08_mask.gif  
+  inflating: train_masks/eeb7eeca738e_11_mask.gif  
+ extracting: train_masks/eeb7eeca738e_10_mask.gif  
+ extracting: train_masks/efaef69e148d_14_mask.gif  
+ extracting: train_masks/efaef69e148d_15_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_13_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_12_mask.gif  
+ extracting: train_masks/feaf59172a01_13_mask.gif  
+ extracting: train_masks/feaf59172a01_12_mask.gif  
+ extracting: train_masks/ef5567efd904_13_mask.gif  
+ extracting: train_masks/ef5567efd904_12_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_08_mask.gif  
+ extracting: train_masks/eb91b1c659a0_01_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_09_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_06_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_14_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_07_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_15_mask.gif  
+ extracting: train_masks/fdc2c87853ce_02_mask.gif  
+ extracting: train_masks/fdc2c87853ce_03_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_11_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_10_mask.gif  
+ extracting: train_masks/fa613ac8eac5_16_mask.gif  
+ extracting: train_masks/f70052627830_04_mask.gif  
+  inflating: train_masks/f70052627830_05_mask.gif  
+ extracting: train_masks/f00905abd3d7_01_mask.gif  
+ extracting: train_masks/f3b482e091c0_08_mask.gif  
+ extracting: train_masks/f3b482e091c0_09_mask.gif  
+ extracting: train_masks/f3eee6348205_06_mask.gif  
+ extracting: train_masks/f3eee6348205_07_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_02_mask.gif  
+  inflating: train_masks/f7ad86e13ed7_03_mask.gif  
+ extracting: train_masks/f1eb080c7182_07_mask.gif  
+ extracting: train_masks/f1eb080c7182_06_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_01_mask.gif  
+ extracting: train_masks/fc237174b128_06_mask.gif  
+  inflating: train_masks/fc237174b128_07_mask.gif  
+ extracting: train_masks/fff9b3a5373f_06_mask.gif  
+ extracting: train_masks/fff9b3a5373f_07_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_04_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_05_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_03_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_02_mask.gif  
+ extracting: train_masks/ed8472086df8_02_mask.gif  
+ extracting: train_masks/ed8472086df8_03_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_15_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_14_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_06_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_07_mask.gif  
+ extracting: train_masks/f591b4f2e006_16_mask.gif  
+ extracting: train_masks/f3b482e091c0_02_mask.gif  
+ extracting: train_masks/f8b6f4c39204_04_mask.gif  
+ extracting: train_masks/f3b482e091c0_03_mask.gif  
+  inflating: train_masks/f8b6f4c39204_05_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_16_mask.gif  
+ extracting: train_masks/fb1b923dd978_01_mask.gif  
+ extracting: train_masks/fdc2c87853ce_08_mask.gif  
+ extracting: train_masks/fdc2c87853ce_09_mask.gif  
+ extracting: train_masks/eaf9eb0b2293_13_mask.gif  
+  inflating: train_masks/fa006be8b6d9_13_mask.gif  
+  inflating: train_masks/fa006be8b6d9_12_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_16_mask.gif  
+ extracting: train_masks/fff9b3a5373f_15_mask.gif  
+ extracting: train_masks/fff9b3a5373f_14_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_06_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_07_mask.gif  
+ extracting: train_masks/ed8472086df8_11_mask.gif  
+ extracting: train_masks/ed8472086df8_10_mask.gif  
+ extracting: train_masks/eeb7eeca738e_08_mask.gif  
+ extracting: train_masks/eeb7eeca738e_09_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_10_mask.gif  
+  inflating: train_masks/fce0ba5b8ed7_11_mask.gif  
+ extracting: train_masks/f1eb080c7182_14_mask.gif  
+ extracting: train_masks/f1eb080c7182_15_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_11_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_10_mask.gif  
+ extracting: train_masks/f3eee6348205_15_mask.gif  
+ extracting: train_masks/f3eee6348205_14_mask.gif  
+ extracting: train_masks/fc237174b128_15_mask.gif  
+ extracting: train_masks/fc237174b128_14_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_13_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_12_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_08_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_09_mask.gif  
+ extracting: train_masks/fa006be8b6d9_01_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_05_mask.gif  
+ extracting: train_masks/fb1b923dd978_13_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_04_mask.gif  
+ extracting: train_masks/fb1b923dd978_12_mask.gif  
+ extracting: train_masks/f3b482e091c0_11_mask.gif  
+ extracting: train_masks/f8b6f4c39204_16_mask.gif  
+ extracting: train_masks/f3b482e091c0_10_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_15_mask.gif  
+ extracting: train_masks/f591b4f2e006_04_mask.gif  
+ extracting: train_masks/f591b4f2e006_05_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_14_mask.gif  
+ extracting: train_masks/feaf59172a01_01_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_01_mask.gif  
+ extracting: train_masks/eb91b1c659a0_13_mask.gif  
+ extracting: train_masks/eb91b1c659a0_12_mask.gif  
+ extracting: train_masks/ef5567efd904_01_mask.gif  
+ extracting: train_masks/eeb7eeca738e_02_mask.gif  
+ extracting: train_masks/eeb7eeca738e_03_mask.gif  
+ extracting: train_masks/fecea3036c59_01_mask.gif  
+ extracting: train_masks/efaef69e148d_07_mask.gif  
+ extracting: train_masks/efaef69e148d_06_mask.gif  
+ extracting: train_masks/f70052627830_16_mask.gif  
+ extracting: train_masks/fa613ac8eac5_04_mask.gif  
+ extracting: train_masks/fa613ac8eac5_05_mask.gif  
+ extracting: train_masks/f00905abd3d7_13_mask.gif  
+ extracting: train_masks/f00905abd3d7_12_mask.gif  
+ extracting: train_masks/fdc2c87853ce_11_mask.gif  
+ extracting: train_masks/fdc2c87853ce_10_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_07_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_15_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_06_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_14_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_02_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_03_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_04_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_05_mask.gif  
+  inflating: train_masks/fc237174b128_02_mask.gif  
+ extracting: train_masks/fc237174b128_03_mask.gif  
+ extracting: train_masks/f1eb080c7182_03_mask.gif  
+ extracting: train_masks/f1eb080c7182_02_mask.gif  
+ extracting: train_masks/f3eee6348205_02_mask.gif  
+ extracting: train_masks/f3eee6348205_03_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_06_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_07_mask.gif  
+ extracting: train_masks/ed8472086df8_06_mask.gif  
+ extracting: train_masks/ed8472086df8_07_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_11_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_10_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_07_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_06_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_01_mask.gif  
+ extracting: train_masks/fff9b3a5373f_02_mask.gif  
+ extracting: train_masks/fff9b3a5373f_03_mask.gif  
+ extracting: train_masks/f3b482e091c0_06_mask.gif  
+  inflating: train_masks/f8b6f4c39204_01_mask.gif  
+ extracting: train_masks/f3b482e091c0_07_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_02_mask.gif  
+  inflating: train_masks/f591b4f2e006_13_mask.gif  
+ extracting: train_masks/f591b4f2e006_12_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_03_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_08_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_09_mask.gif  
+ extracting: train_masks/fa006be8b6d9_16_mask.gif  
+ extracting: train_masks/eaf9eb0b2293_16_mask.gif  
+ extracting: train_masks/fb1b923dd978_04_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_12_mask.gif  
+ extracting: train_masks/fb1b923dd978_05_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_13_mask.gif  
+ extracting: train_masks/fff9b3a5373f_08_mask.gif  
+ extracting: train_masks/fff9b3a5373f_09_mask.gif  
+ extracting: train_masks/efaef69e148d_10_mask.gif  
+ extracting: train_masks/efaef69e148d_11_mask.gif  
+ extracting: train_masks/eeb7eeca738e_15_mask.gif  
+ extracting: train_masks/eeb7eeca738e_14_mask.gif  
+ extracting: train_masks/fecea3036c59_16_mask.gif  
+ extracting: train_masks/f3eee6348205_08_mask.gif  
+ extracting: train_masks/f3eee6348205_09_mask.gif  
+ extracting: train_masks/eb91b1c659a0_04_mask.gif  
+ extracting: train_masks/eb91b1c659a0_05_mask.gif  
+ extracting: train_masks/f1eb080c7182_09_mask.gif  
+ extracting: train_masks/f1eb080c7182_08_mask.gif  
+ extracting: train_masks/ef5567efd904_16_mask.gif  
+ extracting: train_masks/fc237174b128_08_mask.gif  
+ extracting: train_masks/fc237174b128_09_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_16_mask.gif  
+ extracting: train_masks/feaf59172a01_16_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_15_mask.gif  
+  inflating: train_masks/fc5f1a3a66cf_14_mask.gif  
+ extracting: train_masks/fdc2c87853ce_06_mask.gif  
+ extracting: train_masks/fdc2c87853ce_07_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_10_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_02_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_11_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_03_mask.gif  
+  inflating: train_masks/f98dbe8a5ee2_08_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_09_mask.gif  
+ extracting: train_masks/f00905abd3d7_04_mask.gif  
+ extracting: train_masks/f00905abd3d7_05_mask.gif  
+ extracting: train_masks/fa613ac8eac5_13_mask.gif  
+ extracting: train_masks/fa613ac8eac5_12_mask.gif  
+ extracting: train_masks/f70052627830_01_mask.gif  
+ extracting: train_masks/f1eb080c7182_04_mask.gif  
+ extracting: train_masks/f1eb080c7182_05_mask.gif  
+ extracting: train_masks/f3eee6348205_05_mask.gif  
+ extracting: train_masks/f3eee6348205_04_mask.gif  
+ extracting: train_masks/eb91b1c659a0_09_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_01_mask.gif  
+ extracting: train_masks/eb91b1c659a0_08_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_03_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_02_mask.gif  
+  inflating: train_masks/fc237174b128_05_mask.gif  
+ extracting: train_masks/fc237174b128_04_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_07_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_06_mask.gif  
+ extracting: train_masks/fff9b3a5373f_05_mask.gif  
+ extracting: train_masks/fff9b3a5373f_04_mask.gif  
+ extracting: train_masks/ed8472086df8_01_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_16_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_01_mask.gif  
+ extracting: train_masks/f00905abd3d7_09_mask.gif  
+ extracting: train_masks/f00905abd3d7_08_mask.gif  
+  inflating: train_masks/f8b6f4c39204_07_mask.gif  
+ extracting: train_masks/f3b482e091c0_01_mask.gif  
+ extracting: train_masks/f8b6f4c39204_06_mask.gif  
+ extracting: train_masks/f591b4f2e006_14_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_05_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_04_mask.gif  
+ extracting: train_masks/f591b4f2e006_15_mask.gif  
+ extracting: train_masks/fa006be8b6d9_10_mask.gif  
+ extracting: train_masks/fa006be8b6d9_11_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_15_mask.gif  
+ extracting: train_masks/fb1b923dd978_03_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_14_mask.gif  
+ extracting: train_masks/fb1b923dd978_02_mask.gif  
+ extracting: train_masks/eeb7eeca738e_12_mask.gif  
+ extracting: train_masks/eeb7eeca738e_13_mask.gif  
+ extracting: train_masks/fecea3036c59_10_mask.gif  
+ extracting: train_masks/fecea3036c59_11_mask.gif  
+ extracting: train_masks/efaef69e148d_16_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_09_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_08_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_10_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_11_mask.gif  
+ extracting: train_masks/feaf59172a01_10_mask.gif  
+ extracting: train_masks/feaf59172a01_11_mask.gif  
+ extracting: train_masks/eb91b1c659a0_03_mask.gif  
+ extracting: train_masks/eb91b1c659a0_02_mask.gif  
+ extracting: train_masks/ef5567efd904_10_mask.gif  
+ extracting: train_masks/ef5567efd904_11_mask.gif  
+ extracting: train_masks/fb1b923dd978_09_mask.gif  
+ extracting: train_masks/fb1b923dd978_08_mask.gif  
+ extracting: train_masks/fdc2c87853ce_01_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_05_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_16_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_04_mask.gif  
+  inflating: train_masks/fc5f1a3a66cf_12_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_13_mask.gif  
+ extracting: train_masks/fa613ac8eac5_14_mask.gif  
+ extracting: train_masks/fa613ac8eac5_15_mask.gif  
+ extracting: train_masks/f70052627830_07_mask.gif  
+ extracting: train_masks/f70052627830_06_mask.gif  
+ extracting: train_masks/f00905abd3d7_03_mask.gif  
+ extracting: train_masks/f00905abd3d7_02_mask.gif  
+  inflating: train_masks/ebfdf6ec7ede_01_mask.gif  
+ extracting: train_masks/ed8472086df8_16_mask.gif  
+ extracting: train_masks/fce0ba5b8ed7_16_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_10_mask.gif  
+ extracting: train_masks/f707d6fbc0cd_11_mask.gif  
+ extracting: train_masks/fff9b3a5373f_12_mask.gif  
+ extracting: train_masks/fff9b3a5373f_13_mask.gif  
+ extracting: train_masks/fc237174b128_12_mask.gif  
+  inflating: train_masks/fc237174b128_13_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_14_mask.gif  
+ extracting: train_masks/fd9da5d0bb6f_15_mask.gif  
+ extracting: train_masks/f1eb080c7182_13_mask.gif  
+ extracting: train_masks/f1eb080c7182_12_mask.gif  
+ extracting: train_masks/f7ad86e13ed7_16_mask.gif  
+ extracting: train_masks/f3eee6348205_12_mask.gif  
+ extracting: train_masks/f3eee6348205_13_mask.gif  
+ extracting: train_masks/fa006be8b6d9_07_mask.gif  
+ extracting: train_masks/fa006be8b6d9_06_mask.gif  
+ extracting: train_masks/fb1b923dd978_14_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_02_mask.gif  
+ extracting: train_masks/fb1b923dd978_15_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_03_mask.gif  
+ extracting: train_masks/fa613ac8eac5_09_mask.gif  
+ extracting: train_masks/fa613ac8eac5_08_mask.gif  
+ extracting: train_masks/f8b6f4c39204_10_mask.gif  
+ extracting: train_masks/f3b482e091c0_16_mask.gif  
+ extracting: train_masks/f8b6f4c39204_11_mask.gif  
+ extracting: train_masks/f591b4f2e006_03_mask.gif  
+  inflating: train_masks/f98dbe8a5ee2_12_mask.gif  
+ extracting: train_masks/f98dbe8a5ee2_13_mask.gif  
+ extracting: train_masks/f591b4f2e006_02_mask.gif  
+ extracting: train_masks/eb91b1c659a0_14_mask.gif  
+ extracting: train_masks/eb91b1c659a0_15_mask.gif  
+ extracting: train_masks/ef5567efd904_07_mask.gif  
+ extracting: train_masks/ef5567efd904_06_mask.gif  
+  inflating: train_masks/feaf59172a01_07_mask.gif  
+ extracting: train_masks/feaf59172a01_06_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_07_mask.gif  
+ extracting: train_masks/ed13cbcdd5d8_06_mask.gif  
+ extracting: train_masks/efaef69e148d_01_mask.gif  
+ extracting: train_masks/eeb7eeca738e_05_mask.gif  
+ extracting: train_masks/eeb7eeca738e_04_mask.gif  
+ extracting: train_masks/fecea3036c59_07_mask.gif  
+ extracting: train_masks/fecea3036c59_06_mask.gif  
+ extracting: train_masks/f591b4f2e006_09_mask.gif  
+ extracting: train_masks/f591b4f2e006_08_mask.gif  
+ extracting: train_masks/f00905abd3d7_14_mask.gif  
+ extracting: train_masks/f00905abd3d7_15_mask.gif  
+ extracting: train_masks/f70052627830_10_mask.gif  
+ extracting: train_masks/f70052627830_11_mask.gif  
+ extracting: train_masks/fa613ac8eac5_03_mask.gif  
+ extracting: train_masks/fa613ac8eac5_02_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_05_mask.gif  
+ extracting: train_masks/fc5f1a3a66cf_04_mask.gif  
+ extracting: train_masks/fdc2c87853ce_16_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_08_mask.gif  
+  inflating: train_masks/eefc0d8c94f0_09_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_12_mask.gif  
+ extracting: train_masks/f4cd1286d5f4_01_mask.gif  
+  inflating: train_masks/eb07e3f63ad2_13_mask.gif  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">Subset</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span><span class="n">transforms</span><span class="p">,</span> <span class="n">models</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>Set Hyperparameters</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># GPU CPU - nice way to setup the device as it works on any machine</span>
+<span class="c1">#</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Device is </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s1">&#39;cuda&#39;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;CUDA device </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of devices: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Device name: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_name</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Device is cuda
+CUDA device &lt;torch.cuda.device object at 0x7e18ce907640&gt;
+Number of devices: 1
+Device name: Tesla T4
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-the-data">
+<h2><span class="section-number">18.3. </span>Load the Data<a class="headerlink" href="#load-the-data" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">train_transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+                                <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+                                <span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+
+                                <span class="c1"># converts 0-255 to 0-1 and rowxcolxchan to chanxrowxcol</span>
+                                <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Dataset</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CarDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_cars</span><span class="p">,</span> <span class="n">filename_masks</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Store variables we are interested in...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filename_cars</span> <span class="o">=</span> <span class="n">filename_cars</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filename_masks</span> <span class="o">=</span> <span class="n">filename_masks</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transforms</span> <span class="o">=</span> <span class="n">transform</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a single image / label pair.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Read in the image</span>
+        <span class="c1">#</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filename_cars</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># double-check</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Read in the mask</span>
+        <span class="c1">#</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;train/&#39;</span><span class="p">,</span> <span class="s1">&#39;train_masks/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;_mask.gif&#39;</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1">#  Can do further processing here or anything else</span>
+        <span class="c1">#</span>
+
+        <span class="c1"># image = clahe(image)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Do transformations on it (typicalyl data augmentation)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transforms</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transforms</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Return the image mask pair</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span> <span class="c1">#extract channel 0; if pixel &gt;0 set to True</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return length of the dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename_cars</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>  <span class="c1"># double-check</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="instantiate-the-dataset-and-dataloader">
+<h2><span class="section-number">18.4. </span>Instantiate the Dataset and DataLoader<a class="headerlink" href="#instantiate-the-dataset-and-dataloader" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filenames_train</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/content/train/*.jpg&#39;</span><span class="p">)</span>
+<span class="n">filenames_train_mask</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/content/train_masks/*.gif&#39;</span><span class="p">)</span>
+
+<span class="n">train_dataset</span> <span class="o">=</span> <span class="n">CarDataset</span><span class="p">(</span><span class="n">filenames_train</span><span class="p">,</span> <span class="n">filenames_train_mask</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">train_transform</span><span class="p">)</span>
+<span class="n">train_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Show an Example</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>499
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1f705d91cc23a2fa2997075ed15181d841f254a5154a68abc7857a96e3ab2c05.png" src="_images/1f705d91cc23a2fa2997075ed15181d841f254a5154a68abc7857a96e3ab2c05.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert to numpy arrays</span>
+<span class="n">image_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>  <span class="c1"># Image should already be in a 3D array (C, H, W)</span>
+<span class="n">mask_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>    <span class="c1"># Mask should already be in a 2D array (H, W)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">image_np</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">mask_np</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3, 64, 64) (64, 64)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-u-net-network">
+<h2><span class="section-number">18.5. </span>The U-Net Network<a class="headerlink" href="#the-u-net-network" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">contracting</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Conv2d n_channels, out_channels, kernel_size</span>
+        <span class="c1"># In U-Net (and many other CNN architectures), it’s common to use two consecutive convolutional layers before downsampling (with max pooling)</span>
+        <span class="c1"># This contributes to increase feature representation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span> <span class="c1"># input: (3, 64, 64); output: 64x64x64</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span> <span class="c1"># input 64x32x32; output: 128x32x32</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span> <span class="c1"># input 128x16x16; output: 256x16x16</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer4</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span> <span class="c1"># input 256x8x8; output: 512x8x8</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer5</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span> <span class="c1"># input 512x4x4; output: 1024x4x4</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">down_sample</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">X1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">X2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">down_sample</span><span class="p">(</span><span class="n">X1</span><span class="p">))</span>
+        <span class="n">X3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">down_sample</span><span class="p">(</span><span class="n">X2</span><span class="p">))</span>
+        <span class="n">X4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">down_sample</span><span class="p">(</span><span class="n">X3</span><span class="p">))</span>
+        <span class="n">X5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer5</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">down_sample</span><span class="p">(</span><span class="n">X4</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">X5</span><span class="p">,</span> <span class="n">X4</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X1</span>
+
+
+<span class="k">class</span> <span class="nc">expansive</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer4</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer5</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+
+        <span class="c1"># N.b.: for ConvTranspose2d:</span>
+        <span class="c1"># 1. ConvTranspose2d(in_channels, out_channels, kernel_size, stride=1, padding=0, output_padding=0)</span>
+        <span class="c1"># 2. output_dim=(n−1)×s−2p+m+output_padding</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_54</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># input: 1024x4x4; output: 512x8x8</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_43</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_32</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_21</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X5</span><span class="p">,</span> <span class="n">X4</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X1</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_54</span><span class="p">(</span><span class="n">X5</span><span class="p">)</span> <span class="c1"># input: 1024x4x4; output: 512x8x8</span>
+        <span class="n">X4</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">X4</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Concatenate 512x8x8 with 512x8x8 to give 1024x8x8</span>
+        <span class="n">X4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer5</span><span class="p">(</span><span class="n">X4</span><span class="p">)</span>   <span class="c1"># Reduces the channels to 512x8x8</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_43</span><span class="p">(</span><span class="n">X4</span><span class="p">)</span>
+        <span class="n">X3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">X3</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer4</span><span class="p">(</span><span class="n">X3</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_32</span><span class="p">(</span><span class="n">X3</span><span class="p">)</span>
+        <span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">X2</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer3</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_sample_21</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+        <span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">X1</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>         <span class="c1"># final output should be 2x64x64)</span>
+
+        <span class="k">return</span> <span class="n">X</span>
+
+
+<span class="k">class</span> <span class="nc">unet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">down</span> <span class="o">=</span> <span class="n">contracting</span><span class="p">()</span>
+
+        <span class="c1"># Decoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">up</span> <span class="o">=</span> <span class="n">expansive</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="c1"># Encoder</span>
+        <span class="n">X5</span><span class="p">,</span> <span class="n">X4</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">down</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Decoder</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">(</span><span class="n">X5</span><span class="p">,</span> <span class="n">X4</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># check</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">unet</span><span class="p">()</span>
+<span class="n">tmpx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+<span class="n">model</span><span class="p">(</span><span class="n">tmpx</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 2, 64, 64])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="train-the-network">
+<h2><span class="section-number">18.6. </span>Train the Network<a class="headerlink" href="#train-the-network" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create network optimizer and loss function</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">unet</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">epoch_loss</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Epoch </span><span class="si">{}</span><span class="s1"> / </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">epochs</span><span class="p">))</span>
+
+    <span class="c1"># Set variables</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">overlap</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">union</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">_len</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Loop over the batches</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Batch </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># Call the model (image to mask)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Compute the loss</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">long</span><span class="p">())</span>
+
+        <span class="c1"># Do PyTorch stuff</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">L</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="c1"># Compute Stats</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">pred_sum</span><span class="p">,</span> <span class="n">label_sum</span><span class="p">,</span> <span class="n">overlap_sum</span> <span class="o">=</span> <span class="p">(</span><span class="n">pred</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="p">(</span><span class="n">Y</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="p">(</span><span class="n">pred</span><span class="o">*</span><span class="n">Y</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> label_sum </span><span class="si">{</span><span class="n">label_sum</span><span class="si">}</span><span class="s1">  pred_sum </span><span class="si">{</span><span class="n">pred_sum</span><span class="si">}</span><span class="s1">  overlap_sum </span><span class="si">{</span><span class="n">overlap_sum</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1">#         plt.figure(1)</span>
+<span class="c1">#         plt.subplot(1,2,1)</span>
+<span class="c1">#         plt.imshow(Y[0].cpu())</span>
+<span class="c1">#         plt.clim((0,1))</span>
+<span class="c1">#         plt.subplot(1,2,2)</span>
+<span class="c1">#         plt.imshow(pred[0].cpu())</span>
+<span class="c1">#         plt.clim((0,1))</span>
+<span class="c1">#         plt.show()</span>
+
+        <span class="n">union_sum</span> <span class="o">=</span> <span class="n">pred_sum</span><span class="o">+</span><span class="n">label_sum</span><span class="o">-</span><span class="n">overlap_sum</span>
+
+        <span class="c1"># IoU for accuracy</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="n">overlap</span><span class="o">+</span><span class="n">overlap_sum</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">union</span> <span class="o">=</span> <span class="n">union</span><span class="o">+</span><span class="n">union_sum</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">l</span><span class="o">+</span><span class="n">L</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="n">_loss</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="n">count</span>
+    <span class="n">_accuracy</span> <span class="o">=</span> <span class="n">overlap</span><span class="o">/</span><span class="n">union</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;epoch: </span><span class="si">{}</span><span class="s2">, accuracy: </span><span class="si">{}</span><span class="s2">, loss: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">_accuracy</span><span class="p">,</span> <span class="n">_loss</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="n">epoch_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_loss</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+Epoch 0 / 10
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>	Batch 0
+	 label_sum 19901  pred_sum 16  overlap_sum 0
+	Batch 1
+	 label_sum 19453  pred_sum 16  overlap_sum 0
+	Batch 2
+	 label_sum 19286  pred_sum 0  overlap_sum 0
+	Batch 3
+	 label_sum 20708  pred_sum 0  overlap_sum 0
+	Batch 4
+	 label_sum 21073  pred_sum 0  overlap_sum 0
+	Batch 5
+	 label_sum 19582  pred_sum 0  overlap_sum 0
+	Batch 6
+	 label_sum 19161  pred_sum 0  overlap_sum 0
+	Batch 7
+	 label_sum 20005  pred_sum 0  overlap_sum 0
+	Batch 8
+	 label_sum 18707  pred_sum 0  overlap_sum 0
+	Batch 9
+	 label_sum 19435  pred_sum 0  overlap_sum 0
+	Batch 10
+	 label_sum 18486  pred_sum 0  overlap_sum 0
+	Batch 11
+	 label_sum 19524  pred_sum 0  overlap_sum 0
+	Batch 12
+	 label_sum 19655  pred_sum 0  overlap_sum 0
+	Batch 13
+	 label_sum 20346  pred_sum 0  overlap_sum 0
+	Batch 14
+	 label_sum 19963  pred_sum 0  overlap_sum 0
+	Batch 15
+	 label_sum 20673  pred_sum 0  overlap_sum 0
+	Batch 16
+	 label_sum 18831  pred_sum 0  overlap_sum 0
+	Batch 17
+	 label_sum 18553  pred_sum 0  overlap_sum 0
+	Batch 18
+	 label_sum 21036  pred_sum 0  overlap_sum 0
+	Batch 19
+	 label_sum 19219  pred_sum 0  overlap_sum 0
+	Batch 20
+	 label_sum 18653  pred_sum 0  overlap_sum 0
+	Batch 21
+	 label_sum 19450  pred_sum 0  overlap_sum 0
+	Batch 22
+	 label_sum 20742  pred_sum 0  overlap_sum 0
+	Batch 23
+	 label_sum 18806  pred_sum 266  overlap_sum 265
+	Batch 24
+	 label_sum 19907  pred_sum 1526  overlap_sum 1403
+	Batch 25
+	 label_sum 18737  pred_sum 7302  overlap_sum 6142
+	Batch 26
+	 label_sum 20334  pred_sum 32548  overlap_sum 18777
+	Batch 27
+	 label_sum 20472  pred_sum 9054  overlap_sum 7211
+	Batch 28
+	 label_sum 19728  pred_sum 3238  overlap_sum 2783
+	Batch 29
+	 label_sum 20615  pred_sum 2773  overlap_sum 2392
+	Batch 30
+	 label_sum 19567  pred_sum 4261  overlap_sum 3626
+	Batch 31
+	 label_sum 4216  pred_sum 3831  overlap_sum 3257
+epoch: 0, accuracy: 0.07235101349165902, loss: 0.5556896096095443
+==============================
+Epoch 1 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 29146  overlap_sum 18353
+	Batch 1
+	 label_sum 19453  pred_sum 21029  overlap_sum 16304
+	Batch 2
+	 label_sum 19286  pred_sum 10758  overlap_sum 9505
+	Batch 3
+	 label_sum 20708  pred_sum 11144  overlap_sum 9861
+	Batch 4
+	 label_sum 21073  pred_sum 12725  overlap_sum 10707
+	Batch 5
+	 label_sum 19582  pred_sum 28609  overlap_sum 18142
+	Batch 6
+	 label_sum 19161  pred_sum 21538  overlap_sum 15481
+	Batch 7
+	 label_sum 20005  pred_sum 10629  overlap_sum 8982
+	Batch 8
+	 label_sum 18707  pred_sum 15723  overlap_sum 13386
+	Batch 9
+	 label_sum 19435  pred_sum 20889  overlap_sum 16155
+	Batch 10
+	 label_sum 18486  pred_sum 22068  overlap_sum 16139
+	Batch 11
+	 label_sum 19524  pred_sum 15868  overlap_sum 13676
+	Batch 12
+	 label_sum 19655  pred_sum 16774  overlap_sum 14319
+	Batch 13
+	 label_sum 20346  pred_sum 23159  overlap_sum 17565
+	Batch 14
+	 label_sum 19963  pred_sum 20095  overlap_sum 15965
+	Batch 15
+	 label_sum 20673  pred_sum 16624  overlap_sum 14877
+	Batch 16
+	 label_sum 18831  pred_sum 18962  overlap_sum 14278
+	Batch 17
+	 label_sum 18553  pred_sum 21839  overlap_sum 16579
+	Batch 18
+	 label_sum 21036  pred_sum 16080  overlap_sum 13778
+	Batch 19
+	 label_sum 19219  pred_sum 19611  overlap_sum 16002
+	Batch 20
+	 label_sum 18653  pred_sum 21800  overlap_sum 16548
+	Batch 21
+	 label_sum 19450  pred_sum 18788  overlap_sum 15974
+	Batch 22
+	 label_sum 20742  pred_sum 15188  overlap_sum 13781
+	Batch 23
+	 label_sum 18806  pred_sum 18781  overlap_sum 15668
+	Batch 24
+	 label_sum 19907  pred_sum 22217  overlap_sum 17898
+	Batch 25
+	 label_sum 18737  pred_sum 21804  overlap_sum 16960
+	Batch 26
+	 label_sum 20334  pred_sum 18253  overlap_sum 15771
+	Batch 27
+	 label_sum 20472  pred_sum 18250  overlap_sum 15439
+	Batch 28
+	 label_sum 19728  pred_sum 21485  overlap_sum 16982
+	Batch 29
+	 label_sum 20615  pred_sum 22933  overlap_sum 17895
+	Batch 30
+	 label_sum 19567  pred_sum 20096  overlap_sum 16175
+	Batch 31
+	 label_sum 4216  pred_sum 4026  overlap_sum 3520
+epoch: 1, accuracy: 0.6395575400852446, loss: 0.3033404001034796
+==============================
+Epoch 2 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 17079  overlap_sum 15078
+	Batch 1
+	 label_sum 19453  pred_sum 19785  overlap_sum 16534
+	Batch 2
+	 label_sum 19286  pred_sum 22282  overlap_sum 17354
+	Batch 3
+	 label_sum 20708  pred_sum 21810  overlap_sum 18179
+	Batch 4
+	 label_sum 21073  pred_sum 18735  overlap_sum 16269
+	Batch 5
+	 label_sum 19582  pred_sum 19617  overlap_sum 16536
+	Batch 6
+	 label_sum 19161  pred_sum 20054  overlap_sum 15789
+	Batch 7
+	 label_sum 20005  pred_sum 20432  overlap_sum 17099
+	Batch 8
+	 label_sum 18707  pred_sum 20846  overlap_sum 16289
+	Batch 9
+	 label_sum 19435  pred_sum 18201  overlap_sum 15664
+	Batch 10
+	 label_sum 18486  pred_sum 16435  overlap_sum 14199
+	Batch 11
+	 label_sum 19524  pred_sum 18662  overlap_sum 15963
+	Batch 12
+	 label_sum 19655  pred_sum 21832  overlap_sum 17395
+	Batch 13
+	 label_sum 20346  pred_sum 21396  overlap_sum 17679
+	Batch 14
+	 label_sum 19963  pred_sum 19312  overlap_sum 16187
+	Batch 15
+	 label_sum 20673  pred_sum 19247  overlap_sum 17042
+	Batch 16
+	 label_sum 18831  pred_sum 18496  overlap_sum 14390
+	Batch 17
+	 label_sum 18553  pred_sum 20289  overlap_sum 16466
+	Batch 18
+	 label_sum 21036  pred_sum 19743  overlap_sum 17089
+	Batch 19
+	 label_sum 19219  pred_sum 20019  overlap_sum 16693
+	Batch 20
+	 label_sum 18653  pred_sum 19754  overlap_sum 16478
+	Batch 21
+	 label_sum 19450  pred_sum 19337  overlap_sum 16460
+	Batch 22
+	 label_sum 20742  pred_sum 19033  overlap_sum 16950
+	Batch 23
+	 label_sum 18806  pred_sum 19532  overlap_sum 16441
+	Batch 24
+	 label_sum 19907  pred_sum 20577  overlap_sum 17690
+	Batch 25
+	 label_sum 18737  pred_sum 20237  overlap_sum 16665
+	Batch 26
+	 label_sum 20334  pred_sum 18704  overlap_sum 16287
+	Batch 27
+	 label_sum 20472  pred_sum 20029  overlap_sum 16860
+	Batch 28
+	 label_sum 19728  pred_sum 21178  overlap_sum 17303
+	Batch 29
+	 label_sum 20615  pred_sum 21401  overlap_sum 17912
+	Batch 30
+	 label_sum 19567  pred_sum 18793  overlap_sum 16020
+	Batch 31
+	 label_sum 4216  pred_sum 4415  overlap_sum 3784
+epoch: 2, accuracy: 0.7223733542836853, loss: 0.22777789225801826
+==============================
+Epoch 3 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 19658  overlap_sum 16884
+	Batch 1
+	 label_sum 19453  pred_sum 20159  overlap_sum 17205
+	Batch 2
+	 label_sum 19286  pred_sum 20232  overlap_sum 17062
+	Batch 3
+	 label_sum 20708  pred_sum 20966  overlap_sum 18202
+	Batch 4
+	 label_sum 21073  pred_sum 19088  overlap_sum 16816
+	Batch 5
+	 label_sum 19582  pred_sum 21167  overlap_sum 17476
+	Batch 6
+	 label_sum 19161  pred_sum 20445  overlap_sum 16352
+	Batch 7
+	 label_sum 20005  pred_sum 18055  overlap_sum 15942
+	Batch 8
+	 label_sum 18707  pred_sum 20661  overlap_sum 16640
+	Batch 9
+	 label_sum 19435  pred_sum 19786  overlap_sum 16880
+	Batch 10
+	 label_sum 18486  pred_sum 17775  overlap_sum 15277
+	Batch 11
+	 label_sum 19524  pred_sum 19027  overlap_sum 16574
+	Batch 12
+	 label_sum 19655  pred_sum 21407  overlap_sum 17631
+	Batch 13
+	 label_sum 20346  pred_sum 20860  overlap_sum 17867
+	Batch 14
+	 label_sum 19963  pred_sum 19984  overlap_sum 16959
+	Batch 15
+	 label_sum 20673  pred_sum 20839  overlap_sum 18217
+	Batch 16
+	 label_sum 18831  pred_sum 18840  overlap_sum 14951
+	Batch 17
+	 label_sum 18553  pred_sum 19587  overlap_sum 16526
+	Batch 18
+	 label_sum 21036  pred_sum 19829  overlap_sum 17501
+	Batch 19
+	 label_sum 19219  pred_sum 20964  overlap_sum 17390
+	Batch 20
+	 label_sum 18653  pred_sum 19992  overlap_sum 16942
+	Batch 21
+	 label_sum 19450  pred_sum 18968  overlap_sum 16541
+	Batch 22
+	 label_sum 20742  pred_sum 19494  overlap_sum 17546
+	Batch 23
+	 label_sum 18806  pred_sum 20196  overlap_sum 17085
+	Batch 24
+	 label_sum 19907  pred_sum 21018  overlap_sum 18205
+	Batch 25
+	 label_sum 18737  pred_sum 20535  overlap_sum 17190
+	Batch 26
+	 label_sum 20334  pred_sum 18884  overlap_sum 16763
+	Batch 27
+	 label_sum 20472  pred_sum 20133  overlap_sum 17302
+	Batch 28
+	 label_sum 19728  pred_sum 21958  overlap_sum 17898
+	Batch 29
+	 label_sum 20615  pred_sum 20901  overlap_sum 17992
+	Batch 30
+	 label_sum 19567  pred_sum 18310  overlap_sum 16143
+	Batch 31
+	 label_sum 4216  pred_sum 4609  overlap_sum 3921
+epoch: 3, accuracy: 0.7520172607105339, loss: 0.2053607814013958
+==============================
+Epoch 4 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 21267  overlap_sum 18045
+	Batch 1
+	 label_sum 19453  pred_sum 19796  overlap_sum 17338
+	Batch 2
+	 label_sum 19286  pred_sum 19555  overlap_sum 17228
+	Batch 3
+	 label_sum 20708  pred_sum 21759  overlap_sum 18937
+	Batch 4
+	 label_sum 21073  pred_sum 20789  overlap_sum 18232
+	Batch 5
+	 label_sum 19582  pred_sum 20443  overlap_sum 17542
+	Batch 6
+	 label_sum 19161  pred_sum 20040  overlap_sum 16533
+	Batch 7
+	 label_sum 20005  pred_sum 19059  overlap_sum 17108
+	Batch 8
+	 label_sum 18707  pred_sum 20821  overlap_sum 17025
+	Batch 9
+	 label_sum 19435  pred_sum 20006  overlap_sum 17390
+	Batch 10
+	 label_sum 18486  pred_sum 17045  overlap_sum 15275
+	Batch 11
+	 label_sum 19524  pred_sum 19553  overlap_sum 17370
+	Batch 12
+	 label_sum 19655  pred_sum 22955  overlap_sum 18670
+	Batch 13
+	 label_sum 20346  pred_sum 20382  overlap_sum 18131
+	Batch 14
+	 label_sum 19963  pred_sum 18563  overlap_sum 16785
+	Batch 15
+	 label_sum 20673  pred_sum 21113  overlap_sum 18679
+	Batch 16
+	 label_sum 18831  pred_sum 20848  overlap_sum 16520
+	Batch 17
+	 label_sum 18553  pred_sum 19243  overlap_sum 16872
+	Batch 18
+	 label_sum 21036  pred_sum 18654  overlap_sum 17072
+	Batch 19
+	 label_sum 19219  pred_sum 20977  overlap_sum 17796
+	Batch 20
+	 label_sum 18653  pred_sum 20530  overlap_sum 17587
+	Batch 21
+	 label_sum 19450  pred_sum 20105  overlap_sum 17750
+	Batch 22
+	 label_sum 20742  pred_sum 20503  overlap_sum 18577
+	Batch 23
+	 label_sum 18806  pred_sum 19156  overlap_sum 17086
+	Batch 24
+	 label_sum 19907  pred_sum 20356  overlap_sum 18306
+	Batch 25
+	 label_sum 18737  pred_sum 20730  overlap_sum 17702
+	Batch 26
+	 label_sum 20334  pred_sum 20507  overlap_sum 18241
+	Batch 27
+	 label_sum 20472  pred_sum 19908  overlap_sum 17886
+	Batch 28
+	 label_sum 19728  pred_sum 20593  overlap_sum 17921
+	Batch 29
+	 label_sum 20615  pred_sum 20807  overlap_sum 18601
+	Batch 30
+	 label_sum 19567  pred_sum 20288  overlap_sum 17851
+	Batch 31
+	 label_sum 4216  pred_sum 4503  overlap_sum 3966
+epoch: 4, accuracy: 0.7906522764124797, loss: 0.17321861116215587
+==============================
+Epoch 5 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 20541  overlap_sum 18227
+	Batch 1
+	 label_sum 19453  pred_sum 18644  overlap_sum 17199
+	Batch 2
+	 label_sum 19286  pred_sum 21961  overlap_sum 18382
+	Batch 3
+	 label_sum 20708  pred_sum 21000  overlap_sum 19091
+	Batch 4
+	 label_sum 21073  pred_sum 17842  overlap_sum 16775
+	Batch 5
+	 label_sum 19582  pred_sum 21278  overlap_sum 18383
+	Batch 6
+	 label_sum 19161  pred_sum 24410  overlap_sum 18417
+	Batch 7
+	 label_sum 20005  pred_sum 17109  overlap_sum 16149
+	Batch 8
+	 label_sum 18707  pred_sum 16233  overlap_sum 15175
+	Batch 9
+	 label_sum 19435  pred_sum 19775  overlap_sum 17921
+	Batch 10
+	 label_sum 18486  pred_sum 20807  overlap_sum 17781
+	Batch 11
+	 label_sum 19524  pred_sum 21682  overlap_sum 18788
+	Batch 12
+	 label_sum 19655  pred_sum 22209  overlap_sum 18915
+	Batch 13
+	 label_sum 20346  pred_sum 19113  overlap_sum 17930
+	Batch 14
+	 label_sum 19963  pred_sum 17738  overlap_sum 16822
+	Batch 15
+	 label_sum 20673  pred_sum 19800  overlap_sum 18444
+	Batch 16
+	 label_sum 18831  pred_sum 19921  overlap_sum 17140
+	Batch 17
+	 label_sum 18553  pred_sum 21102  overlap_sum 17942
+	Batch 18
+	 label_sum 21036  pred_sum 21441  overlap_sum 19325
+	Batch 19
+	 label_sum 19219  pred_sum 19879  overlap_sum 17759
+	Batch 20
+	 label_sum 18653  pred_sum 17803  overlap_sum 16719
+	Batch 21
+	 label_sum 19450  pred_sum 19189  overlap_sum 17730
+	Batch 22
+	 label_sum 20742  pred_sum 21738  overlap_sum 19630
+	Batch 23
+	 label_sum 18806  pred_sum 20152  overlap_sum 17839
+	Batch 24
+	 label_sum 19907  pred_sum 20370  overlap_sum 18711
+	Batch 25
+	 label_sum 18737  pred_sum 18866  overlap_sum 17270
+	Batch 26
+	 label_sum 20334  pred_sum 20139  overlap_sum 18565
+	Batch 27
+	 label_sum 20472  pred_sum 21946  overlap_sum 19499
+	Batch 28
+	 label_sum 19728  pred_sum 20825  overlap_sum 18444
+	Batch 29
+	 label_sum 20615  pred_sum 19757  overlap_sum 18493
+	Batch 30
+	 label_sum 19567  pred_sum 18810  overlap_sum 17611
+	Batch 31
+	 label_sum 4216  pred_sum 4624  overlap_sum 4072
+epoch: 5, accuracy: 0.8247567535788823, loss: 0.14396312390454113
+==============================
+Epoch 6 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 22198  overlap_sum 19054
+	Batch 1
+	 label_sum 19453  pred_sum 18375  overlap_sum 17325
+	Batch 2
+	 label_sum 19286  pred_sum 18180  overlap_sum 17183
+	Batch 3
+	 label_sum 20708  pred_sum 21474  overlap_sum 19498
+	Batch 4
+	 label_sum 21073  pred_sum 22868  overlap_sum 20010
+	Batch 5
+	 label_sum 19582  pred_sum 20096  overlap_sum 18379
+	Batch 6
+	 label_sum 19161  pred_sum 18730  overlap_sum 17079
+	Batch 7
+	 label_sum 20005  pred_sum 19474  overlap_sum 18161
+	Batch 8
+	 label_sum 18707  pred_sum 19737  overlap_sum 17634
+	Batch 9
+	 label_sum 19435  pred_sum 20626  overlap_sum 18469
+	Batch 10
+	 label_sum 18486  pred_sum 18633  overlap_sum 17066
+	Batch 11
+	 label_sum 19524  pred_sum 18075  overlap_sum 17377
+	Batch 12
+	 label_sum 19655  pred_sum 19949  overlap_sum 18237
+	Batch 13
+	 label_sum 20346  pred_sum 19536  overlap_sum 18449
+	Batch 14
+	 label_sum 19963  pred_sum 19629  overlap_sum 18404
+	Batch 15
+	 label_sum 20673  pred_sum 21540  overlap_sum 19641
+	Batch 16
+	 label_sum 18831  pred_sum 19335  overlap_sum 17164
+	Batch 17
+	 label_sum 18553  pred_sum 19795  overlap_sum 17636
+	Batch 18
+	 label_sum 21036  pred_sum 21121  overlap_sum 19379
+	Batch 19
+	 label_sum 19219  pred_sum 20063  overlap_sum 18079
+	Batch 20
+	 label_sum 18653  pred_sum 18473  overlap_sum 17272
+	Batch 21
+	 label_sum 19450  pred_sum 19347  overlap_sum 17950
+	Batch 22
+	 label_sum 20742  pred_sum 21029  overlap_sum 19441
+	Batch 23
+	 label_sum 18806  pred_sum 18759  overlap_sum 17476
+	Batch 24
+	 label_sum 19907  pred_sum 19390  overlap_sum 18420
+	Batch 25
+	 label_sum 18737  pred_sum 18485  overlap_sum 17290
+	Batch 26
+	 label_sum 20334  pred_sum 20620  overlap_sum 19128
+	Batch 27
+	 label_sum 20472  pred_sum 22065  overlap_sum 19786
+	Batch 28
+	 label_sum 19728  pred_sum 19594  overlap_sum 18187
+	Batch 29
+	 label_sum 20615  pred_sum 18937  overlap_sum 18111
+	Batch 30
+	 label_sum 19567  pred_sum 19889  overlap_sum 18298
+	Batch 31
+	 label_sum 4216  pred_sum 4636  overlap_sum 4104
+epoch: 6, accuracy: 0.8556492614092926, loss: 0.11515915510244668
+==============================
+Epoch 7 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 21851  overlap_sum 19191
+	Batch 1
+	 label_sum 19453  pred_sum 18204  overlap_sum 17409
+	Batch 2
+	 label_sum 19286  pred_sum 17647  overlap_sum 17022
+	Batch 3
+	 label_sum 20708  pred_sum 21249  overlap_sum 19512
+	Batch 4
+	 label_sum 21073  pred_sum 23439  overlap_sum 20375
+	Batch 5
+	 label_sum 19582  pred_sum 19451  overlap_sum 18198
+	Batch 6
+	 label_sum 19161  pred_sum 17541  overlap_sum 16599
+	Batch 7
+	 label_sum 20005  pred_sum 18957  overlap_sum 18146
+	Batch 8
+	 label_sum 18707  pred_sum 20275  overlap_sum 18045
+	Batch 9
+	 label_sum 19435  pred_sum 21007  overlap_sum 18733
+	Batch 10
+	 label_sum 18486  pred_sum 18695  overlap_sum 17244
+	Batch 11
+	 label_sum 19524  pred_sum 17811  overlap_sum 17155
+	Batch 12
+	 label_sum 19655  pred_sum 20042  overlap_sum 18522
+	Batch 13
+	 label_sum 20346  pred_sum 19989  overlap_sum 18825
+	Batch 14
+	 label_sum 19963  pred_sum 19745  overlap_sum 18618
+	Batch 15
+	 label_sum 20673  pred_sum 21015  overlap_sum 19566
+	Batch 16
+	 label_sum 18831  pred_sum 18697  overlap_sum 17196
+	Batch 17
+	 label_sum 18553  pred_sum 18738  overlap_sum 17337
+	Batch 18
+	 label_sum 21036  pred_sum 20951  overlap_sum 19510
+	Batch 19
+	 label_sum 19219  pred_sum 20031  overlap_sum 18234
+	Batch 20
+	 label_sum 18653  pred_sum 18876  overlap_sum 17526
+	Batch 21
+	 label_sum 19450  pred_sum 19334  overlap_sum 17994
+	Batch 22
+	 label_sum 20742  pred_sum 20829  overlap_sum 19499
+	Batch 23
+	 label_sum 18806  pred_sum 18532  overlap_sum 17452
+	Batch 24
+	 label_sum 19907  pred_sum 19506  overlap_sum 18579
+	Batch 25
+	 label_sum 18737  pred_sum 18597  overlap_sum 17496
+	Batch 26
+	 label_sum 20334  pred_sum 20316  overlap_sum 19098
+	Batch 27
+	 label_sum 20472  pred_sum 21437  overlap_sum 19702
+	Batch 28
+	 label_sum 19728  pred_sum 19691  overlap_sum 18303
+	Batch 29
+	 label_sum 20615  pred_sum 19248  overlap_sum 18494
+	Batch 30
+	 label_sum 19567  pred_sum 19729  overlap_sum 18364
+	Batch 31
+	 label_sum 4216  pred_sum 4546  overlap_sum 4096
+epoch: 7, accuracy: 0.8683587345922642, loss: 0.10284013347700238
+==============================
+Epoch 8 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 20897  overlap_sum 18988
+	Batch 1
+	 label_sum 19453  pred_sum 18544  overlap_sum 17731
+	Batch 2
+	 label_sum 19286  pred_sum 18005  overlap_sum 17292
+	Batch 3
+	 label_sum 20708  pred_sum 21193  overlap_sum 19598
+	Batch 4
+	 label_sum 21073  pred_sum 22296  overlap_sum 20147
+	Batch 5
+	 label_sum 19582  pred_sum 18795  overlap_sum 17916
+	Batch 6
+	 label_sum 19161  pred_sum 17842  overlap_sum 16982
+	Batch 7
+	 label_sum 20005  pred_sum 19569  overlap_sum 18557
+	Batch 8
+	 label_sum 18707  pred_sum 20205  overlap_sum 18127
+	Batch 9
+	 label_sum 19435  pred_sum 20220  overlap_sum 18658
+	Batch 10
+	 label_sum 18486  pred_sum 18128  overlap_sum 17153
+	Batch 11
+	 label_sum 19524  pred_sum 18059  overlap_sum 17460
+	Batch 12
+	 label_sum 19655  pred_sum 20620  overlap_sum 18819
+	Batch 13
+	 label_sum 20346  pred_sum 20315  overlap_sum 19048
+	Batch 14
+	 label_sum 19963  pred_sum 19213  overlap_sum 18506
+	Batch 15
+	 label_sum 20673  pred_sum 20262  overlap_sum 19315
+	Batch 16
+	 label_sum 18831  pred_sum 18630  overlap_sum 17512
+	Batch 17
+	 label_sum 18553  pred_sum 19412  overlap_sum 17680
+	Batch 18
+	 label_sum 21036  pred_sum 21001  overlap_sum 19698
+	Batch 19
+	 label_sum 19219  pred_sum 19319  overlap_sum 17989
+	Batch 20
+	 label_sum 18653  pred_sum 18490  overlap_sum 17471
+	Batch 21
+	 label_sum 19450  pred_sum 19471  overlap_sum 18187
+	Batch 22
+	 label_sum 20742  pred_sum 21030  overlap_sum 19691
+	Batch 23
+	 label_sum 18806  pred_sum 18681  overlap_sum 17666
+	Batch 24
+	 label_sum 19907  pred_sum 19603  overlap_sum 18756
+	Batch 25
+	 label_sum 18737  pred_sum 18351  overlap_sum 17433
+	Batch 26
+	 label_sum 20334  pred_sum 20257  overlap_sum 19173
+	Batch 27
+	 label_sum 20472  pred_sum 21517  overlap_sum 19790
+	Batch 28
+	 label_sum 19728  pred_sum 19348  overlap_sum 18226
+	Batch 29
+	 label_sum 20615  pred_sum 18927  overlap_sum 18362
+	Batch 30
+	 label_sum 19567  pred_sum 20109  overlap_sum 18554
+	Batch 31
+	 label_sum 4216  pred_sum 4484  overlap_sum 4093
+epoch: 8, accuracy: 0.8798525049805601, loss: 0.09189422405324876
+==============================
+Epoch 9 / 10
+	Batch 0
+	 label_sum 19901  pred_sum 20457  overlap_sum 19008
+	Batch 1
+	 label_sum 19453  pred_sum 19078  overlap_sum 18156
+	Batch 2
+	 label_sum 19286  pred_sum 18491  overlap_sum 17731
+	Batch 3
+	 label_sum 20708  pred_sum 21211  overlap_sum 19710
+	Batch 4
+	 label_sum 21073  pred_sum 21993  overlap_sum 20155
+	Batch 5
+	 label_sum 19582  pred_sum 18494  overlap_sum 17808
+	Batch 6
+	 label_sum 19161  pred_sum 18121  overlap_sum 17421
+	Batch 7
+	 label_sum 20005  pred_sum 19430  overlap_sum 18581
+	Batch 8
+	 label_sum 18707  pred_sum 19942  overlap_sum 18124
+	Batch 9
+	 label_sum 19435  pred_sum 20090  overlap_sum 18722
+	Batch 10
+	 label_sum 18486  pred_sum 18147  overlap_sum 17255
+	Batch 11
+	 label_sum 19524  pred_sum 18357  overlap_sum 17806
+	Batch 12
+	 label_sum 19655  pred_sum 20748  overlap_sum 18975
+	Batch 13
+	 label_sum 20346  pred_sum 20347  overlap_sum 19210
+	Batch 14
+	 label_sum 19963  pred_sum 19189  overlap_sum 18535
+	Batch 15
+	 label_sum 20673  pred_sum 20267  overlap_sum 19374
+	Batch 16
+	 label_sum 18831  pred_sum 18856  overlap_sum 17784
+	Batch 17
+	 label_sum 18553  pred_sum 19130  overlap_sum 17713
+	Batch 18
+	 label_sum 21036  pred_sum 20854  overlap_sum 19700
+	Batch 19
+	 label_sum 19219  pred_sum 19128  overlap_sum 17992
+	Batch 20
+	 label_sum 18653  pred_sum 18563  overlap_sum 17594
+	Batch 21
+	 label_sum 19450  pred_sum 19442  overlap_sum 18242
+	Batch 22
+	 label_sum 20742  pred_sum 20969  overlap_sum 19743
+	Batch 23
+	 label_sum 18806  pred_sum 18503  overlap_sum 17661
+	Batch 24
+	 label_sum 19907  pred_sum 19577  overlap_sum 18844
+	Batch 25
+	 label_sum 18737  pred_sum 18557  overlap_sum 17636
+	Batch 26
+	 label_sum 20334  pred_sum 20558  overlap_sum 19424
+	Batch 27
+	 label_sum 20472  pred_sum 21335  overlap_sum 19812
+	Batch 28
+	 label_sum 19728  pred_sum 19086  overlap_sum 18199
+	Batch 29
+	 label_sum 20615  pred_sum 19231  overlap_sum 18733
+	Batch 30
+	 label_sum 19567  pred_sum 20383  overlap_sum 18650
+	Batch 31
+	 label_sum 4216  pred_sum 4361  overlap_sum 4057
+epoch: 9, accuracy: 0.8906483882691372, loss: 0.0831722195725888
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-the-loss-curve">
+<h2><span class="section-number">18.7. </span>Plot the loss curve<a class="headerlink" href="#plot-the-loss-curve" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epoch_loss</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Epoch Loss&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Epoch Loss&#39;)
+</pre></div>
+</div>
+<img alt="_images/f6b79520a8a44a4475d1184584a7f8326bc12d63790c401cb9c3e36e5e61f8c7.png" src="_images/f6b79520a8a44a4475d1184584a7f8326bc12d63790c401cb9c3e36e5e61f8c7.png" />
+</div>
+</div>
+</section>
+<section id="plot-an-example">
+<h2><span class="section-number">18.8. </span>Plot an Example<a class="headerlink" href="#plot-an-example" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Plot the actual label</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;True Mask&#39;</span><span class="p">)</span>
+
+<span class="c1"># Show the predicted label</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Predicted Mask&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/16b9d799c29fcae7bf335ec609d27e9e1fc8ffdeb8c038fdc6cb30b366f433fc.png" src="_images/16b9d799c29fcae7bf335ec609d27e9e1fc8ffdeb8c038fdc6cb30b366f433fc.png" />
+</div>
+</div>
+</section>
+<section id="exercise">
+<h2><span class="section-number">18.9. </span>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Complete this notebook by dividing your dataset in training, validation and test datasets.</p></li>
+<li><p>Show learning curves.</p></li>
+<li><p>Retrain your network and do segmentation on test dataset.</p></li>
+<li><p>How do you assess the quality of your results?</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cfteach/NNDL_DATA621",
+            ref: "webpage-src",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lec12_cnn_regr-2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">17. </span>CNN for Regression - UTKface Dataset</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="referencesmc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-net">18.1. U-Net</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation">18.2. Explanation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-data">18.3. Load the Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiate-the-dataset-and-dataloader">18.4. Instantiate the Dataset and DataLoader</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-u-net-network">18.5. The U-Net Network</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-the-network">18.6. Train the Network</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-loss-curve">18.7. Plot the loss curve</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-an-example">18.8. Plot an Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">18.9. Exercise</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Cristiano Fanelli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  DATA621
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
