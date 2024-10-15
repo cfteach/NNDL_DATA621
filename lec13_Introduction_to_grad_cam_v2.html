@@ -1,0 +1,2405 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>19. Explainable AI (XAI) and Grad-CAM &#8212; Neural Networks and Deep Learning - DATA621</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "cfteach/NNDL_DATA621");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lec13_Introduction_to_grad_cam_v2';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/lec13_Introduction_to_grad_cam_v2.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="References" href="referencesmc.html" />
+    <link rel="prev" title="18. U-Net Convolutional Networks for Image Segmentation" href="lec12_UNet.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">This page is being updated</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logowm1.png" class="logo__image only-light" alt="Neural Networks and Deep Learning - DATA621 - Home"/>
+    <script>document.write(`<img src="_static/logowm1.png" class="logo__image only-dark" alt="Neural Networks and Deep Learning - DATA621 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to DATA621 - Neural Networks and Deep Learning
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Syllabus</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1ClOsYfLTa0Ts7wpULnnHOvemG2Vk36Nv/view?usp=share_link">Syllabus (last update 10/6/2024)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="schedule.html">Schedule</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1aW_ZdzN2D5W51rYIujfuqcMYzCYKRZzb/view?usp=sharing">Assignment 1, Deep Neural Networks from Scratch</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intro</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing">Welcome and Intro by Prof. C.Fanelli</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Intro to Modeling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1BV2-N-c1bq4yx1IsPMW4fhC9i1SCdRAU/edit?usp=sharing&amp;ouid=113195593718692427789&amp;rtpof=true&amp;sd=true">Linear Regression (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Linear_Regression_1_class.html">1. Linear Regression (Jupyter Notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Introduction to git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/GIT-course/intro_to_git.html">2. Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/VCS.html">2.1. Version Control System (VCS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/git_basics.html">2.2. What is Git?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/git_configure.html">2.3. Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/GIT-course/git_exercises.html">3. Exercises on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-1.html">3.1. Exercise 1: Basic Git Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-2.html">3.2. Exercise 2: Commits, push and branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-3.html">3.3. Advanced exercises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-4.html">3.4. GitHub Actions and Workflow Tutorial</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Using VS-Code</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Day-1/VS-code.html">Installing Visual Studio Code</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[8/29/2024] Introduction to High Performance Computing (HPC)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/HPC-course/intro_to_HPC_HTC.html">4. Introduction to High Performance Computing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/intro_to_HPC.html">4.1. High Performance Computing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/ssh_login.html">4.2. SSH into a Front-End Node Using Proxy Jump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/file_systems_WM.html">4.3. William &amp; Mary Research Computing: File Systems Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/SLURM_commands2.html">4.4. Introduction to SLURM</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/3/2024] Linear Classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1rEUGMhcfUyC5YCgrIRnqoRU6jNgzaO9EuvnxePEfo8k/edit?usp=sharing">Perceptrons (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1mU67w6GAhIWNFoO98AF7u8in2C-Op4Ag/view?usp=sharing">Perceptron - Proof of Convergence (PDF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec2_perceptron_DATA621.html">5. Training a Perceptron (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Ep46Bmw_bIr8PLAVPNzVlB0bExEvobGinLnNzCBHS7o/edit?usp=sharing">Adaline (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec2_adaline_DATA621.html">6. Training Adaline (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/5/2024] Gradient Descent, stochastic GD, Logistic Regression and Other classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1osZ2o-DtNNHuUGjDkurYuyrg439WBoucJrvMK5c4ibg/edit?usp=sharing">Stochastic Gradient Descent, Logistic Regression (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec3_GDvsSGD_DATA621.html">7. Gradient Descent, Stochastic Gradient Descent, Mini-batch GD (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec3_logistic_reg_DATA621.html">8. Logistic Regression, Regularization, linear (and non-linear) boundaries</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/10/2024] Building Training Datasets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1uPs3MhCrPNDglKWcaRBWm8ay_7EtlPWNzmQN6exYSDM/edit?usp=sharing">Building Training Datasets (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec4_datapreprocessing.html">9. Data Preprocessing (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparameter Tuning: Examples and Discussion</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">10. Model Evaluation, Hyperparameter Tuning (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/17/2024, 9/19/2024] Building Multi-Layer Neural Networks from scratch + discussion on assignment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1AmB1djkmLFcwzgfBoY0l1xe-gLEPx8wFj4OHZuqFg_Y/edit?usp=sharing"> Adding hidden layers + Math of Backprop (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec6_MLP_DATA621_sol.html">11. Multi-Layer Perceptron (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/24/2024] Building Multi-Layer Neural Networks with PyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec8_NN_preflight.html">12. Using PyTorch preflight (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec8_NN_pytorch_nosol.html">13. Using torch.nn (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/26/2024] PyTorch and Autograd</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec9_autograd_pytorch.html">14. Using PyTorch Autograd (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/1, 10/3, 10/8/2024] CNN with PyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec10_CNN_DATA621.html">15. Using PyTorch with CNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec11_cnn2_v2.html">16. Using CNN and Celeb Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec12_cnn_regr-2.html">17. Using CNN for Regression Tasks (age prediction based on images)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec12_UNet.html">18. Using U-Net for Image Segmentation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/15, 10/16/2024] Explainable AI using Grad-CAM for visual explanations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">19. Introduction to Grad-CAM</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="referencesmc.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/cfteach/NNDL_DATA621/blob/webpage-src/DATA621/DATA621/lec13_Introduction_to_grad_cam_v2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/edit/webpage-src/DATA621/DATA621/lec13_Introduction_to_grad_cam_v2.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/issues/new?title=Issue%20on%20page%20%2Flec13_Introduction_to_grad_cam_v2.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/lec13_Introduction_to_grad_cam_v2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Explainable AI (XAI) and Grad-CAM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-brief-recap-of-flagship-cnn-models">19.1. A brief recap of flagship CNN models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lenet-5-1998">19.2. 1. <strong>LeNet-5 (1998)</strong>:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alexnet-2012">19.3. 2. AlexNet (2012):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#googlenet-inception-v1-2014">19.4. 3. GoogLeNet/Inception v1 (2014):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resnet-2015">19.5. 4. ResNet (2015):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inception-v4-2016">19.6. 5. Inception v4 (2016)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#densenet-2017">19.7. 6. DenseNet (2017)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#efficientnet-2019">19.8. 7. EfficientNet (2019)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-dive-into-resnet-18">19.9. 2. Deep dive into ResNet-18</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-summary-layer-by-layer">19.10. Architecture Summary (Layer-by-Layer):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-connections">19.11. Residual Connections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-residual-connections-work-in-resnet-18">19.12. How Residual Connections Work in ResNet-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-benefits-of-residual-connections">19.12.1. Key Benefits of Residual Connections:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-normalization">19.13. Batch Normalization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benefits-of-batch-normalization">19.13.1. Benefits of Batch Normalization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-batch-normalization-works-in-practice">19.13.2. How Batch Normalization Works in Practice</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-normalization-during-training-vs-inference">19.13.3. Batch Normalization During Training vs Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-batch-normalization-in-resnet-18">19.13.4. Example of Batch Normalization in ResNet-18</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-explainable-ai-xai">19.14. 3. Introduction to Explainable AI (XAI)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diving-deep-into-torchvision-models">19.15. Diving deep into <code class="docutils literal notranslate"><span class="pre">torchvision.models</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-into-the-feature-maps">19.16. Looking into the feature maps.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#note-these-feature-maps-is-just-after-the-convolutions-as-we-go-down-further-in-the-model-the-spatial-dimensions-will-shrink-creating-higher-order-features">19.16.1. Note: These feature maps is just after the convolutions. As we go down further in the model, the spatial dimensions will shrink creating higher order features.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">19.17. Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-exercises">19.18. Optional Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-class-activation-mapping-cam">19.19. 4. What is Class Activation Mapping (CAM)?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-for-cam">19.20. Requirements for CAM</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grad-cam-overview">19.20.1. Grad-CAM Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-to-compute-grad-cam">19.20.2. Steps to compute Grad-CAM:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-grad-cam-for-cnn-explainability">19.21. 3. Why Grad-CAM for CNN Explainability?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lets-try-with-a-more-complex-image">19.22. Lets try with a more complex image</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#question-what-do-you-think-are-the-strengths-and-weaknesses-of-grad-cam-in-the-context-of-image-classification">19.22.1. Question: What do you think are the strengths and weaknesses of Grad-CAM in the context of image classification?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strengths-pros">19.23. Strengths (Pros):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weaknesses-cons">19.24. Weaknesses (Cons):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources-to-look">19.25. Resources to look</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="explainable-ai-xai-and-grad-cam">
+<h1><span class="section-number">19. </span>Explainable AI (XAI) and Grad-CAM<a class="headerlink" href="#explainable-ai-xai-and-grad-cam" title="Link to this heading">#</a></h1>
+<p>In this session we will be covering</p>
+<ol class="arabic simple">
+<li><p>A brief recap of selected flagship CNN models</p></li>
+<li><p>Deep dive into ResNet (2015)</p></li>
+<li><p>What is Explainable AI (xAI): Getting started with Looking Feature maps in a CNN model</p></li>
+<li><p>Class Activation Mapping (CAM) and Grad-CAM</p></li>
+</ol>
+<section id="a-brief-recap-of-flagship-cnn-models">
+<h2><span class="section-number">19.1. </span>A brief recap of flagship CNN models<a class="headerlink" href="#a-brief-recap-of-flagship-cnn-models" title="Link to this heading">#</a></h2>
+<p>Convolutional Neural Networks (CNNs) have been a foundational technology in the field of computer vision. They have evolved significantly since their inception, with each iteration introducing new architectures, techniques, and concepts to improve performance, efficiency, and scalability. Here is a chronological overview of the most influential CNN architectures, along with their unique and important features. This article on <a class="reference external" href="https://medium.com/analytics-vidhya/cnns-architectures-lenet-alexnet-vgg-googlenet-resnet-and-more-666091488df5">CNN architectures in medium</a> is a highly recommended quick read on various CNN models.</p>
+<p>Here is a brief outline of the various models with its unique features</p>
+<ol class="arabic simple">
+<li><p><strong>LeNet-5 (1998)</strong> laid the foundation for CNNs.</p></li>
+<li><p><strong>AlexNet (2012)</strong> demonstrated the power of deep learning on large datasets with 1000 classes ImageNet. This was also trained with <strong>drop out</strong> layers for regularization for the first time.</p></li>
+<li><p><strong>VGGNet (2014)</strong> emphasized the importance of depth and simplicity.</p></li>
+<li><p><strong>GoogLeNet (2014)</strong> introduced the concept of multi-scale feature learning through Inception modules.</p></li>
+<li><p><strong>ResNet (2015)</strong> tackled the vanishing gradient problem with residual connections. We will have a deep dive on this in the next section</p></li>
+<li><p><strong>DenseNet (2017)</strong> improved feature reuse with dense connections.</p></li>
+<li><p><strong>EfficientNet (2019)</strong> optimized scaling for efficiency and performance.</p></li>
+</ol>
+</section>
+<section id="lenet-5-1998">
+<h2><span class="section-number">19.2. </span>1. <strong>LeNet-5 (1998)</strong>:<a class="headerlink" href="#lenet-5-1998" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Yann LeCun et al.</p></li>
+<li><p>Key paper: <a class="reference external" href="https://ieeexplore.ieee.org/document/726791">Gradient-based learning applied to document recognition</a></p></li>
+</ul>
+<p>LeNet-5 is considered the first successful application of a convolutional neural network, designed primarily for handwritten digit classification (the MNIST dataset). It introduced the basic building blocks of CNNs, such as convolutional layers, pooling layers, and fully connected layers.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Convolutional and pooling layers: LeNet-5 used 2 convolutional layers followed by average pooling, allowing the network to learn spatial hierarchies in images.</p></li>
+<li><p>Tanh activations: The network used the tanh activation function, which has since been replaced by rectified linear unit (ReLU) in modern architectures.</p></li>
+<li><p>Small and shallow: LeNet-5 had only 60,000 parameters, making it lightweight and easy to train on limited hardware.</p></li>
+</ul>
+<p>LeNet-5 established the basic building blocks of modern CNNs, even though it was a relatively simple model by today’s standards.</p>
+<p><img alt="Image of LeNet-5 from here" src="https://miro.medium.com/v2/resize:fit:1100/format:webp/0*MU7G1aH1jw-6eFiD.png" /></p>
+</section>
+<section id="alexnet-2012">
+<h2><span class="section-number">19.3. </span>2. AlexNet (2012):<a class="headerlink" href="#alexnet-2012" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Alex Krizhevsky, Ilya Sutskever, and <strong>Geoffrey Hinton</strong></p></li>
+<li><p>Key paper: <a class="reference external" href="https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">ImageNet Classification with Deep Convolutional Neural Networks</a></p></li>
+</ul>
+<p>AlexNet marked a revolutionary moment in deep learning and computer vision by winning the 2012 <a class="reference external" href="https://www.image-net.org/challenges/LSVRC/">ImageNet Large Scale Visual Recognition Challenge (ILSVRC)</a> by a large margin. It showcased the power of deep learning when combined with modern hardware, specifically GPUs.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Deeper architecture: AlexNet had 8 layers (5 convolutional, 3 fully connected), compared to the 5 layers in LeNet-5, making it the first deep CNN.</p></li>
+<li><p>ReLU activations: AlexNet replaced tanh and sigmoid activations with ReLU, significantly speeding up training and preventing the vanishing gradient problem.</p></li>
+<li><p>Dropout regularization: To prevent overfitting, AlexNet introduced <strong>dropout layers</strong> in the fully connected layers, randomly deactivating neurons during training.</p></li>
+<li><p>Data augmentation: Techniques like image translation and flipping were used to artificially increase the dataset size, further reducing overfitting.</p></li>
+<li><p>Use of GPUs: AlexNet was one of the first models to be trained on GPUs, which significantly reduced training time and made deeper networks feasible.</p></li>
+</ul>
+<p>AlexNet’s success reignited interest in deep learning and demonstrated the power of CNNs for large-scale image classification tasks.</p>
+<p><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Comparison_image_neural_networks.svg/1920px-Comparison_image_neural_networks.svg.png" /></p>
+</section>
+<section id="googlenet-inception-v1-2014">
+<h2><span class="section-number">19.4. </span>3. GoogLeNet/Inception v1 (2014):<a class="headerlink" href="#googlenet-inception-v1-2014" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Christian Szegedy et al.</p></li>
+<li><p>Key paper: <a class="reference external" href="https://arxiv.org/abs/1409.4842">Going Deeper with Convolutions</a></p></li>
+</ul>
+<p>GoogLeNet, also known as Inception v1, introduced a radically new architecture that focused on computational efficiency and depth without drastically increasing the number of parameters.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Inception modules: The main innovation in GoogLeNet was the Inception module, which performed convolutions with different filter sizes (1x1, 3x3, 5x5) and max-pooling in parallel. These outputs were concatenated to capture multi-scale features.</p></li>
+<li><p>1x1 convolutions: To reduce computational cost, GoogLeNet used 1x1 convolutions to reduce dimensionality before applying larger convolutions.</p></li>
+<li><p>Global average pooling: Instead of fully connected layers at the end of the network, GoogLeNet used global average pooling, which reduced the parameter count and made the model more efficient.</p></li>
+<li><p>Smaller parameter count: Despite being deeper than previous models, GoogLeNet had only around 5 million parameters, making it more efficient.</p></li>
+</ul>
+<p>GoogLeNet pioneered the use of modular architectures in CNNs, leading to more efficient and scalable models.</p>
+<p><img alt="" src="https://www.researchgate.net/publication/347680043/figure/fig1/AS:986174105591808&#64;1612133637019/Inception-V1-architecture.ppm" /></p>
+<p><img alt="" src="https://media.licdn.com/dms/image/C4E12AQE6biIwKxVfNA/article-cover_image-shrink_720_1280/0/1601128854140?e=2147483647&amp;v=beta&amp;t=Yh68GHOM3Zj75qv5H3JYJu3VDzbANpo00iJaqro27L0" /></p>
+</section>
+<section id="resnet-2015">
+<h2><span class="section-number">19.5. </span>4. ResNet (2015):<a class="headerlink" href="#resnet-2015" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Kaiming He et al. (Microsoft)</p></li>
+<li><p>Key paper: <a class="reference external" href="https://arxiv.org/abs/1512.03385">Deep Residual Learning for Image Recognition</a></p></li>
+</ul>
+<p>ResNet (Residual Networks) solved a critical issue in deep learning: the vanishing gradient problem. As networks became deeper, it became difficult to propagate gradients through many layers. ResNet introduced residual connections to address this.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Residual connections: ResNet introduced shortcut or skip connections, where the input of one layer was added directly to the output of another layer. This allowed for gradients to flow more easily during backpropagation and helped train very deep networks.</p></li>
+<li><p>Very deep networks: ResNet successfully trained networks with over 100 layers (e.g., ResNet-50, ResNet-101, ResNet-152), something that was previously unfeasible due to the vanishing gradient problem.</p></li>
+<li><p>Bottleneck layers: To make deeper networks computationally feasible, ResNet used bottleneck layers that applied 1x1 convolutions to reduce the number of channels before applying larger convolutions.</p></li>
+</ul>
+<p>ResNet became a foundational architecture for modern CNNs, as its residual learning concept has been adopted in many subsequent models.</p>
+</section>
+<section id="inception-v4-2016">
+<h2><span class="section-number">19.6. </span>5. Inception v4 (2016)<a class="headerlink" href="#inception-v4-2016" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Christian Szegedy et al.</p></li>
+<li><p>Key paper: <a class="reference external" href="https://arxiv.org/abs/1512.00567">Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning</a></p></li>
+</ul>
+<p>Inception v4 built on the success of GoogLeNet/Inception v3 and ResNet but incorporated several optimizations to improve performance and reduce computational cost.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>ResNet-style skip connections: Inception v4 introduced residual connections (similar to those in ResNet) to help gradient flow through the network and make deeper networks easier to train.</p></li>
+<li><p>Inception-ResNet: A hybrid model that combines the Inception modules with ResNet-like shortcut connections. This allowed for the benefits of both networks: the efficiency of Inception and the ease of training provided by ResNet.</p></li>
+<li><p>Label smoothing: A regularization technique that introduced uncertainty into the network’s predictions to prevent overfitting.</p></li>
+<li><p>Residual connections: Shortcuts between layers to avoid vanishing gradient problems in deep networks</p></li>
+<li><p>Inception modules: Similar to previous Inception modules, but now augmented with skip connections.</p></li>
+<li><p>RMSProp optimizer: Inception v4 switched to the RMSProp optimizer, which showed improved performance over other optimizers like SGD.</p></li>
+</ul>
+<p>Inception v4 continued the trend of modular design while improving computational efficiency and accuracy. There was also another network called <strong>ResNeXt</strong> proposed by Saining Xie et al. in the paper <a class="reference external" href="https://arxiv.org/abs/1611.05431">Aggregated Residual Transformations for Deep Neural Networks</a> that extended the concepts introduced by ResNet by introducing a new dimension called cardinality (the number of parallel convolutional branches). ResNeXt provided a more flexible and scalable way to increase the model’s capacity, making it highly effective for various vision tasks.</p>
+<p><img alt="" src="https://production-media.paperswithcode.com/methods/Screen_Shot_2020-06-12_at_1.03.34_PM_s0XaBC1.png" /></p>
+</section>
+<section id="densenet-2017">
+<h2><span class="section-number">19.7. </span>6. DenseNet (2017)<a class="headerlink" href="#densenet-2017" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Gao Huang et al.</p></li>
+<li><p>Key paper: <a class="reference external" href="https://arxiv.org/pdf/1608.06993">Densely Connected Convolutional Networks</a></p></li>
+</ul>
+<p>DenseNet (Densely Connected Networks) addressed the issue of feature reuse in CNNs. Unlike previous architectures, DenseNet connected each layer to every other layer in a feed-forward fashion.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Dense connections: In DenseNet, each layer receives input from all preceding layers and passes its output to all subsequent layers. This allows for maximum feature reuse and helps to mitigate the vanishing gradient problem.</p></li>
+<li><p>Compact model: Despite its dense connections, DenseNet is compact because the number of parameters is relatively small, due to the reuse of features across layers.</p></li>
+<li><p>Improved gradient flow: Dense connections help improve gradient flow, making DenseNet easier to train than very deep networks without such connections.</p></li>
+</ul>
+<p>DenseNet became popular for tasks where parameter efficiency was crucial.</p>
+<p><img alt="" src="https://miro.medium.com/v2/resize:fit:1400/1*BJM5Ht9D5HcP5CFpu8bn7g.png" /></p>
+</section>
+<section id="efficientnet-2019">
+<h2><span class="section-number">19.8. </span>7. EfficientNet (2019)<a class="headerlink" href="#efficientnet-2019" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Introduced by: Mingxing Tan and Quoc V. Le</p></li>
+<li><p>Key paper: <a class="reference external" href="https://arxiv.org/pdf/1905.11946">EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks</a></p></li>
+</ul>
+<p>EfficientNet introduced a novel scaling approach that balanced network depth, width, and resolution to optimize performance while reducing computational cost.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Compound scaling: EfficientNet used a compound scaling method that uniformly scales depth, width, and resolution. This was shown to be more effective than simply scaling any one dimension.</p></li>
+<li><p>Efficient building blocks: Based on MobileNet’s inverted bottleneck blocks, EfficientNet used squeeze-and-excitation modules to improve the efficiency of feature extraction.</p></li>
+<li><p>State-of-the-art performance: EfficientNet achieved state-of-the-art results on ImageNet with far fewer parameters than models like ResNet and Inception.</p></li>
+</ul>
+<p>EfficientNet is widely used in resource-constrained environments and has become a go-to model for tasks requiring high accuracy with low computational overhead.</p>
+<p><img alt="" src="https://vitalab.github.io/article/images/efficientnet/sc02.jpg" /></p>
+</section>
+<section id="deep-dive-into-resnet-18">
+<h2><span class="section-number">19.9. </span>2. Deep dive into ResNet-18<a class="headerlink" href="#deep-dive-into-resnet-18" title="Link to this heading">#</a></h2>
+<p>ResNet came with different flavours.</p>
+<p><img alt="" src="https://pytorch.org/assets/images/resnet.png" /></p>
+<p>ResNet-18 has a total of 18 layers, which include convolutional layers and fully connected layers, structured as follows:</p>
+<ul>
+<li><p><strong>Input</strong>: Image size is typically $224 \times 224$.</p></li>
+<li><p><strong>First Layer (Convolution + MaxPool)</strong>:</p>
+<ul class="simple">
+<li><p>7x7 convolution, 64 filters, stride 2, followed by a <span class="math notranslate nohighlight">\(3\times 3\)</span> max pooling layer.</p></li>
+</ul>
+</li>
+<li><p><strong>Residual Blocks</strong>: These are the core building blocks. Each residual block consists of two convolutional layers followed by batch normalization and ReLU activation. ResNet-18 contains 8 of these residual blocks (4 stages with 2 residual blocks per stage):</p>
+<ol class="arabic simple">
+<li><p><strong>Stage 1</strong>: 2 residual blocks, each with two 3x3 convolutions, 64 filters.</p></li>
+<li><p><strong>Stage 2</strong>: 2 residual blocks, each with two 3x3 convolutions, 128 filters.</p></li>
+<li><p><strong>Stage 3</strong>: 2 residual blocks, each with two 3x3 convolutions, 256 filters.</p></li>
+<li><p><strong>Stage 4</strong>: 2 residual blocks, each with two 3x3 convolutions, 512 filters.</p></li>
+</ol>
+<p>In each of these stages, the first block increases the number of filters and reduces the spatial dimensions (when moving between stages), while the second block maintains the dimensions. When dimensions change, the identity connection (skip connection) is adjusted using a <span class="math notranslate nohighlight">\(1\times 1\)</span> convolution.</p>
+</li>
+<li><p><strong>Fully Connected Layer</strong>:</p>
+<ul class="simple">
+<li><p>After the final residual block, the network applies global average pooling, followed by a fully connected (dense) layer with 1000 output units (for classification tasks like ImageNet).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="architecture-summary-layer-by-layer">
+<h2><span class="section-number">19.10. </span>Architecture Summary (Layer-by-Layer):<a class="headerlink" href="#architecture-summary-layer-by-layer" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer</p></th>
+<th class="head"><p>Output Size</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Conv1</p></td>
+<td><p>112x112</p></td>
+<td><p>7x7, 64, stride 2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Max Pool</p></td>
+<td><p>56x56</p></td>
+<td><p>3x3 max pool, stride 2</p></td>
+</tr>
+<tr class="row-even"><td><p>Layer 1</p></td>
+<td><p>56x56</p></td>
+<td><p>2 x (3x3, 64)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Layer 2</p></td>
+<td><p>28x28</p></td>
+<td><p>2 x (3x3, 128), stride 2</p></td>
+</tr>
+<tr class="row-even"><td><p>Layer 3</p></td>
+<td><p>14x14</p></td>
+<td><p>2 x (3x3, 256), stride 2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Layer 4</p></td>
+<td><p>7x7</p></td>
+<td><p>2 x (3x3, 512), stride 2</p></td>
+</tr>
+<tr class="row-even"><td><p>Avg Pool</p></td>
+<td><p>1x1</p></td>
+<td><p>Global average pool</p></td>
+</tr>
+<tr class="row-odd"><td><p>FC</p></td>
+<td><p>1,000</p></td>
+<td><p>Fully connected layer, 1,000 classes (ImageNet)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img alt="" src="https://www.researchgate.net/profile/Srimanta-Mandal/publication/353655307/figure/fig2/AS:1052590150279171&#64;1627968456686/Architecture-Diagram-of-ResNet-18-21.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="residual-connections">
+<h2><span class="section-number">19.11. </span>Residual Connections<a class="headerlink" href="#residual-connections" title="Link to this heading">#</a></h2>
+<p>Residual connections and layers are fundamental components in the design of <strong>ResNet-18</strong> (Residual Network with 18 layers), which is one of the architectures proposed to solve the problem of vanishing gradients and allow the training of much deeper networks. A <strong>residual connection</strong>, or a <strong>skip connection</strong>, is the hallmark feature of ResNet. The idea behind residual connections is to allow information to bypass one or more layers by adding the input directly to the output of a block of layers, creating a shortcut. This helps to alleviate the issue of vanishing or exploding gradients, enabling more effective training of deep networks.</p>
+<p>A residual block typically looks like this:</p>
+<ul>
+<li><p><strong>Input (x) → Series of transformations (F(x)) → Output</strong></p></li>
+<li><p>Instead of only passing through the layers, ResNet adds a shortcut connection:</p>
+<div class="math notranslate nohighlight">
+\[
+  \text{Output} = F(x) + x
+  \]</div>
+<p>where <span class="math notranslate nohighlight">\(F(x)\)</span> is the result of a sequence of operations like convolution, batch normalization, and ReLU activation. The identity connection (the term <span class="math notranslate nohighlight">\(x\)</span>) allows gradients to flow more easily during backpropagation, preventing them from becoming too small.</p>
+</li>
+</ul>
+</section>
+<section id="how-residual-connections-work-in-resnet-18">
+<h2><span class="section-number">19.12. </span>How Residual Connections Work in ResNet-18<a class="headerlink" href="#how-residual-connections-work-in-resnet-18" title="Link to this heading">#</a></h2>
+<p>Each residual block in ResNet-18 has a structure like this:</p>
+<ul>
+<li><p><strong>Convolution 1 (3x3) → BatchNorm → ReLU → Convolution 2 (3x3) → BatchNorm</strong>.</p></li>
+<li><p>The input to the block <span class="math notranslate nohighlight">\(x\)</span> is added to the output of the block <span class="math notranslate nohighlight">\(F(x)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+  \text{Output} = F(x) + x
+  \]</div>
+<p>Then, a ReLU activation is applied to the final output.</p>
+</li>
+</ul>
+<section id="key-benefits-of-residual-connections">
+<h3><span class="section-number">19.12.1. </span>Key Benefits of Residual Connections:<a class="headerlink" href="#key-benefits-of-residual-connections" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Ease of optimization</strong>: Residual connections help gradients flow through deeper networks, making optimization easier.</p></li>
+<li><p><strong>Addressing vanishing gradients</strong>: By adding skip connections, gradients have a clearer path during backpropagation, preventing them from becoming too small (vanishing gradients problem).</p></li>
+<li><p><strong>Training deeper networks</strong>: With residual connections, ResNet enables the training of very deep networks, such as ResNet-50, ResNet-101, and beyond, without suffering from significant degradation in performance.</p></li>
+</ol>
+<p>In ResNet-18, this combination of residual blocks and skip connections allows the model to be trained efficiently, even with a depth of 18 layers, while still being less prone to overfitting and gradient-related issues.</p>
+</section>
+</section>
+<section id="batch-normalization">
+<h2><span class="section-number">19.13. </span>Batch Normalization<a class="headerlink" href="#batch-normalization" title="Link to this heading">#</a></h2>
+<p><strong>Batch normalization</strong> is a technique that normalizes the input to each layer in a neural network, improving the stability and speed of training. It was introduced to address the problem of <strong>internal covariate shift</strong>, where the distribution of inputs to a layer changes during training, causing slower convergence and making it harder to train deep networks.</p>
+<p>Batch normalization works by normalizing the input of each mini-batch to have a mean of 0 and a standard deviation of 1. This ensures that the inputs to each layer have consistent distributions throughout the training process.</p>
+<p>For an input (x) to a layer, batch normalization performs the following steps:</p>
+<ol class="arabic">
+<li><p><strong>Compute mean and variance</strong> for the mini-batch:</p>
+<div class="math notranslate nohighlight">
+\[
+   \mu_B = \frac{1}{m} \sum_{i=1}^{m} x_i
+   \]</div>
+<div class="math notranslate nohighlight">
+\[
+   \sigma_B^2 = \frac{1}{m} \sum_{i=1}^{m} (x_i - \mu_B)^2
+   \]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span> is the number of samples in the mini-batch, <span class="math notranslate nohighlight">\(\mu_B\)</span> is the batch mean, and <span class="math notranslate nohighlight">\(\sigma_B^2\)</span> is the batch variance.</p>
+</li>
+<li><p><strong>Normalize</strong> each input by subtracting the mean and dividing by the standard deviation:</p>
+<div class="math notranslate nohighlight">
+\[
+   \hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}
+   \]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is a small constant added to avoid division by zero.</p>
+</li>
+<li><p><strong>Apply learnable scaling and shifting parameters</strong> <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span>, which allow the network to learn the optimal scale and shift for each input:</p>
+<div class="math notranslate nohighlight">
+\[
+   y_i = \gamma \hat{x}_i + \beta
+   \]</div>
+<p>These parameters enable the model to recover the original distribution of the inputs if necessary.</p>
+</li>
+</ol>
+<section id="benefits-of-batch-normalization">
+<h3><span class="section-number">19.13.1. </span>Benefits of Batch Normalization<a class="headerlink" href="#benefits-of-batch-normalization" title="Link to this heading">#</a></h3>
+<p>Batch normalization provides several key advantages:</p>
+<ul class="simple">
+<li><p><strong>Faster Training</strong>: By normalizing the inputs, the network can use higher learning rates without causing gradients to explode or vanish. This speeds up the convergence of the model.</p></li>
+<li><p><strong>Reduced Sensitivity to Initialization</strong>: Neural networks typically need careful weight initialization, but batch normalization reduces the sensitivity of the network to the initial parameters.</p></li>
+<li><p><strong>Regularization</strong>: Batch normalization adds a slight regularization effect because the noise introduced by mini-batch statistics during training acts as a form of stochastic noise, reducing the need for other regularization techniques like dropout.</p></li>
+<li><p><strong>Alleviates Internal Covariate Shift</strong>: By keeping the distribution of the inputs to each layer more stable during training, batch normalization helps the network converge more smoothly.</p></li>
+</ul>
+</section>
+<section id="how-batch-normalization-works-in-practice">
+<h3><span class="section-number">19.13.2. </span>How Batch Normalization Works in Practice<a class="headerlink" href="#how-batch-normalization-works-in-practice" title="Link to this heading">#</a></h3>
+<p>Batch normalization is typically applied <strong>after the linear transformation (convolution or fully connected layer)</strong> but <strong>before the non-linear activation function</strong> (like ReLU or Sigmoid). This sequence allows batch normalization to normalize the activations that will be fed into the non-linearity.</p>
+<p>In a layer where batch normalization is applied, the order of operations is typically:</p>
+<ol class="arabic simple">
+<li><p>Convolution/Fully Connected Layer</p></li>
+<li><p>Batch Normalization</p></li>
+<li><p>Activation Function (ReLU, Sigmoid, etc.)</p></li>
+</ol>
+</section>
+<section id="batch-normalization-during-training-vs-inference">
+<h3><span class="section-number">19.13.3. </span>Batch Normalization During Training vs Inference<a class="headerlink" href="#batch-normalization-during-training-vs-inference" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>During training</strong>: The mean and variance are computed for each mini-batch. The running averages of the mean and variance are maintained to be used later for inference.</p></li>
+<li><p><strong>During inference</strong>: Instead of using the statistics of the current batch, the running mean and variance (computed during training) are used to normalize the inputs. This ensures consistency between training and inference.</p></li>
+</ul>
+</section>
+<section id="example-of-batch-normalization-in-resnet-18">
+<h3><span class="section-number">19.13.4. </span>Example of Batch Normalization in ResNet-18<a class="headerlink" href="#example-of-batch-normalization-in-resnet-18" title="Link to this heading">#</a></h3>
+<p>In <strong>ResNet-18</strong>, batch normalization is applied after every convolution layer and before the ReLU activation. Each convolutional layer produces output feature maps, and batch normalization ensures that these feature maps have a stable distribution of values, improving training dynamics.</p>
+<p>For example, in a residual block:</p>
+<ul class="simple">
+<li><p><strong>Convolution 1 → BatchNorm → ReLU → Convolution 2 → BatchNorm → Addition with Skip Connection → ReLU</strong>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">torch</span> <span class="n">torchvision</span> <span class="n">matplotlib</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: torch in /usr/local/lib/python3.10/dist-packages (2.4.1+cu121)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.10/dist-packages (0.19.1+cu121)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.10/dist-packages (3.7.1)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch) (3.16.1)
+Requirement already satisfied: typing-extensions&gt;=4.8.0 in /usr/local/lib/python3.10/dist-packages (from torch) (4.12.2)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch) (1.13.3)
+Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch) (3.4)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from torch) (3.1.4)
+Requirement already satisfied: fsspec in /usr/local/lib/python3.10/dist-packages (from torch) (2024.6.1)
+Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from torchvision) (1.26.4)
+Requirement already satisfied: pillow!=8.3.*,&gt;=5.3.0 in /usr/local/lib/python3.10/dist-packages (from torchvision) (10.4.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (1.3.0)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (4.54.1)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (1.4.7)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (24.1)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (3.1.4)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (2.8.2)
+Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2-&gt;torch) (3.0.1)
+Requirement already satisfied: mpmath&lt;1.4,&gt;=1.1.0 in /usr/local/lib/python3.10/dist-packages (from sympy-&gt;torch) (1.3.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">list_models</span>
+<span class="c1"># torchvision provides a number of models that one can explore.</span>
+<span class="c1"># check out https://pytorch.org/vision/stable/models.html</span>
+<span class="nb">print</span> <span class="p">(</span><span class="o">*</span><span class="n">list_models</span><span class="p">(),</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alexnet
+convnext_base
+convnext_large
+convnext_small
+convnext_tiny
+deeplabv3_mobilenet_v3_large
+deeplabv3_resnet101
+deeplabv3_resnet50
+densenet121
+densenet161
+densenet169
+densenet201
+efficientnet_b0
+efficientnet_b1
+efficientnet_b2
+efficientnet_b3
+efficientnet_b4
+efficientnet_b5
+efficientnet_b6
+efficientnet_b7
+efficientnet_v2_l
+efficientnet_v2_m
+efficientnet_v2_s
+fasterrcnn_mobilenet_v3_large_320_fpn
+fasterrcnn_mobilenet_v3_large_fpn
+fasterrcnn_resnet50_fpn
+fasterrcnn_resnet50_fpn_v2
+fcn_resnet101
+fcn_resnet50
+fcos_resnet50_fpn
+googlenet
+inception_v3
+keypointrcnn_resnet50_fpn
+lraspp_mobilenet_v3_large
+maskrcnn_resnet50_fpn
+maskrcnn_resnet50_fpn_v2
+maxvit_t
+mc3_18
+mnasnet0_5
+mnasnet0_75
+mnasnet1_0
+mnasnet1_3
+mobilenet_v2
+mobilenet_v3_large
+mobilenet_v3_small
+mvit_v1_b
+mvit_v2_s
+quantized_googlenet
+quantized_inception_v3
+quantized_mobilenet_v2
+quantized_mobilenet_v3_large
+quantized_resnet18
+quantized_resnet50
+quantized_resnext101_32x8d
+quantized_resnext101_64x4d
+quantized_shufflenet_v2_x0_5
+quantized_shufflenet_v2_x1_0
+quantized_shufflenet_v2_x1_5
+quantized_shufflenet_v2_x2_0
+r2plus1d_18
+r3d_18
+raft_large
+raft_small
+regnet_x_16gf
+regnet_x_1_6gf
+regnet_x_32gf
+regnet_x_3_2gf
+regnet_x_400mf
+regnet_x_800mf
+regnet_x_8gf
+regnet_y_128gf
+regnet_y_16gf
+regnet_y_1_6gf
+regnet_y_32gf
+regnet_y_3_2gf
+regnet_y_400mf
+regnet_y_800mf
+regnet_y_8gf
+resnet101
+resnet152
+resnet18
+resnet34
+resnet50
+resnext101_32x8d
+resnext101_64x4d
+resnext50_32x4d
+retinanet_resnet50_fpn
+retinanet_resnet50_fpn_v2
+s3d
+shufflenet_v2_x0_5
+shufflenet_v2_x1_0
+shufflenet_v2_x1_5
+shufflenet_v2_x2_0
+squeezenet1_0
+squeezenet1_1
+ssd300_vgg16
+ssdlite320_mobilenet_v3_large
+swin3d_b
+swin3d_s
+swin3d_t
+swin_b
+swin_s
+swin_t
+swin_v2_b
+swin_v2_s
+swin_v2_t
+vgg11
+vgg11_bn
+vgg13
+vgg13_bn
+vgg16
+vgg16_bn
+vgg19
+vgg19_bn
+vit_b_16
+vit_b_32
+vit_h_14
+vit_l_16
+vit_l_32
+wide_resnet101_2
+wide_resnet50_2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transforms</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">ResNet18_Weights</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Load a pre-trained model</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">ResNet18_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets look into the model</span>
+<span class="c1"># eval() Sets the module in evaluation mode.</span>
+<span class="c1"># This has any effect only on certain modules.</span>
+<span class="c1"># See documentations of particular modules for details of their behaviors in training/evaluation mode,</span>
+<span class="c1"># if they are affected, e.g. Dropout, BatchNorm, etc.</span>
+<span class="c1"># https://discuss.pytorch.org/t/where-to-use-model-eval/89200</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ResNet(
+  (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+  (layer1): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer2): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer3): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer4): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  (fc): Linear(in_features=512, out_features=1000, bias=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="introduction-to-explainable-ai-xai">
+<h2><span class="section-number">19.14. </span>3. Introduction to Explainable AI (XAI)<a class="headerlink" href="#introduction-to-explainable-ai-xai" title="Link to this heading">#</a></h2>
+<p>Artificial Intelligence (AI) has become ubiquitous in many industries, from healthcare to finance, where decisions made by AI systems can have significant impacts. However, many AI models, especially deep learning models, are often considered “black boxes” because they do not provide insights into how they arrive at their predictions. This lack of transparency leads to a critical question:</p>
+<p><strong>How do we trust AI systems if we cannot understand their decision-making process?</strong></p>
+<p>Explainable AI (XAI) seeks to address this issue by providing methods to interpret and explain the decisions of AI models. With XAI, we can:</p>
+<ul class="simple">
+<li><p>Increase trust and accountability of AI models</p></li>
+<li><p>Detect biases or potential errors in predictions</p></li>
+<li><p>Comply with regulatory requirements, especially in sensitive domains like healthcare and finance</p></li>
+</ul>
+<p>We will explore one such method: <strong>Class Activation Mapping (CAM)</strong>, particularly <strong>Gradient-weighted Class Activation Mapping (Grad-CAM)</strong>, which is used for explaining the predictions of Convolutional Neural Networks (CNNs).</p>
+</section>
+<section id="diving-deep-into-torchvision-models">
+<h2><span class="section-number">19.15. </span>Diving deep into <code class="docutils literal notranslate"><span class="pre">torchvision.models</span></code><a class="headerlink" href="#diving-deep-into-torchvision-models" title="Link to this heading">#</a></h2>
+<p>We will learn on how to get various aspects of a built model in pytorch. We will be using <code class="docutils literal notranslate"><span class="pre">ResNet</span></code> in <code class="docutils literal notranslate"><span class="pre">torchvision.models</span></code> for this purpose.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">resnet18</span><span class="p">,</span> <span class="n">ResNet18_Weights</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">resnet18</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">ResNet18_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+  <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="n">child</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>name: conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: maxpool, type: &lt;class &#39;torch.nn.modules.pooling.MaxPool2d&#39;&gt;
+name: layer1, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer2, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer3, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer4, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: avgpool, type: &lt;class &#39;torch.nn.modules.pooling.AdaptiveAvgPool2d&#39;&gt;
+name: fc, type: &lt;class &#39;torch.nn.modules.linear.Linear&#39;&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can pick out all the modules from the model as</span>
+<span class="c1"># check out this https://pytorch.org/docs/stable/notes/modules.html</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+  <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>name: , type: &lt;class &#39;torchvision.models.resnet.ResNet&#39;&gt;
+name: conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: maxpool, type: &lt;class &#39;torch.nn.modules.pooling.MaxPool2d&#39;&gt;
+name: layer1, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer1.0, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer1.0.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer1.0.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer1.0.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer1.0.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer1.0.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer1.1, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer1.1.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer1.1.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer1.1.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer1.1.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer1.1.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer2, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer2.0, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer2.0.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer2.0.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer2.0.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer2.0.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer2.0.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer2.0.downsample, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer2.0.downsample.0, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer2.0.downsample.1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer2.1, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer2.1.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer2.1.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer2.1.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer2.1.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer2.1.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer3, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer3.0, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer3.0.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer3.0.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer3.0.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer3.0.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer3.0.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer3.0.downsample, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer3.0.downsample.0, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer3.0.downsample.1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer3.1, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer3.1.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer3.1.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer3.1.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer3.1.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer3.1.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer4, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer4.0, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer4.0.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer4.0.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer4.0.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer4.0.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer4.0.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer4.0.downsample, type: &lt;class &#39;torch.nn.modules.container.Sequential&#39;&gt;
+name: layer4.0.downsample.0, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer4.0.downsample.1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer4.1, type: &lt;class &#39;torchvision.models.resnet.BasicBlock&#39;&gt;
+name: layer4.1.conv1, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer4.1.bn1, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: layer4.1.relu, type: &lt;class &#39;torch.nn.modules.activation.ReLU&#39;&gt;
+name: layer4.1.conv2, type: &lt;class &#39;torch.nn.modules.conv.Conv2d&#39;&gt;
+name: layer4.1.bn2, type: &lt;class &#39;torch.nn.modules.batchnorm.BatchNorm2d&#39;&gt;
+name: avgpool, type: &lt;class &#39;torch.nn.modules.pooling.AdaptiveAvgPool2d&#39;&gt;
+name: fc, type: &lt;class &#39;torch.nn.modules.linear.Linear&#39;&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each residual block can have an optional downsample layer if the input and output dimensions of the block do not match. Downsampling is typically used to:</p>
+<ul class="simple">
+<li><p>Reduce the spatial size (height and width) of the feature maps</p></li>
+<li><p>Match the input and output feature map dimensions when their sizes differ.</p></li>
+</ul>
+<p>In the case of <code class="docutils literal notranslate"><span class="pre">layer4</span></code>, it applies a downsampling operation because the input dimensions need to be adjusted before being passed into the residual block.</p>
+<p>Breaking Down <code class="docutils literal notranslate"><span class="pre">layer4.0.downsample.0</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">layer4</span></code>: Refers to the fourth and final group of residual blocks in ResNet18. Each of these layers contains multiple residual blocks, and layer4 reduces the spatial dimensions significantly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">layer4.0</span></code>: This refers to the first residual block in layer4. The indexing (.0) means it’s the first block in this layer.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">downsample</span></code>: The downsample operation is included in some residual blocks to match the dimensions between the block’s input and output. This operation is necessary because when the spatial dimensions of the input change (typically through strided convolutions), the residual connection also needs to downsample the input to make the addition possible.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">downsample.0</span></code>: This indicates the first layer inside the downsample operation. In most cases, this layer is a convolutional layer (Conv2d) that performs the downsampling. In ResNet, downsampling is often done using a convolution with a stride of 2, which halves the spatial dimensions (height and width) of the feature maps.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Accessing layer4.0.downsample.0</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">downsample</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let us store all the convolutional layers and their weights.</span>
+
+<span class="n">model_weights</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">conv_layers</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># one can directly loop through all named modules</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;downsample&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+    <span class="n">conv_layers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
+    <span class="n">model_weights</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">weight</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, </span><span class="se">\n</span><span class="s2"> : </span><span class="si">{</span><span class="n">conv_layers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> : weight shape: </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>conv1, 
+ : Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False) 
+ : weight shape: torch.Size([64, 3, 7, 7])
+layer1.0.conv1, 
+ : Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([64, 64, 3, 3])
+layer1.0.conv2, 
+ : Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([64, 64, 3, 3])
+layer1.1.conv1, 
+ : Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([64, 64, 3, 3])
+layer1.1.conv2, 
+ : Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([64, 64, 3, 3])
+layer2.0.conv1, 
+ : Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([128, 64, 3, 3])
+layer2.0.conv2, 
+ : Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([128, 128, 3, 3])
+layer2.1.conv1, 
+ : Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([128, 128, 3, 3])
+layer2.1.conv2, 
+ : Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([128, 128, 3, 3])
+layer3.0.conv1, 
+ : Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([256, 128, 3, 3])
+layer3.0.conv2, 
+ : Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([256, 256, 3, 3])
+layer3.1.conv1, 
+ : Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([256, 256, 3, 3])
+layer3.1.conv2, 
+ : Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([256, 256, 3, 3])
+layer4.0.conv1, 
+ : Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([512, 256, 3, 3])
+layer4.0.conv2, 
+ : Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([512, 512, 3, 3])
+layer4.1.conv1, 
+ : Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([512, 512, 3, 3])
+layer4.1.conv2, 
+ : Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
+ : weight shape: torch.Size([512, 512, 3, 3])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets visualize all the weights from the first input layer</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                         <span class="n">sharex</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Weights from the first input layer and 0th channel&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">model_weights</span><span class="p">[</span><span class="s1">&#39;conv1&#39;</span><span class="p">][</span><span class="n">cnt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/9f9be6d809fb08f88831b6a42dd919ecbaef20e6d834c100734dd35929869996.png" src="_images/9f9be6d809fb08f88831b6a42dd919ecbaef20e6d834c100734dd35929869996.png" />
+</div>
+</div>
+</section>
+<section id="looking-into-the-feature-maps">
+<h2><span class="section-number">19.16. </span>Looking into the feature maps.<a class="headerlink" href="#looking-into-the-feature-maps" title="Link to this heading">#</a></h2>
+<p>One of the ways to start making sense of a CNN model is to look into the convolutions dones at each stage of the CNN. One can pass an input and try to visualize the image as it passes through various convolutions. As the image passes through this CNN model, the spatial dimensions keeps going down.</p>
+<p>Let us first load and image of a cat. And try to visualize what happens to it as it pipes down in to the <code class="docutils literal notranslate"><span class="pre">ResNet</span></code> model</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets load an image</span>
+
+<span class="n">cat_url</span> <span class="o">=</span> <span class="s2">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/449px-Cat_November_2010-1a.jpg&quot;</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="k">def</span> <span class="nf">fetch_and_transform</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">image</span> <span class="o">=</span> <span class="s2">&quot;image.jpg&quot;</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36&#39;</span>
+        <span class="c1"># Replace with your desired User-Agent string</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">imgtensor</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">),</span> <span class="n">imgtensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">imgtensor</span>
+
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">((</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">])</span>
+<span class="p">])</span>
+
+<span class="n">img</span><span class="p">,</span> <span class="n">imgtensor</span> <span class="o">=</span> <span class="n">fetch_and_transform</span><span class="p">(</span><span class="n">cat_url</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">imgtensor</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7b6134911f925050b798cc2dff166375780a70ec65ff7bc7e08dd76cdeb7992c.png" src="_images/7b6134911f925050b798cc2dff166375780a70ec65ff7bc7e08dd76cdeb7992c.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 3, 224, 224])
+(224, 224, 3)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># @title Question: What is the output dimension when the above image is passed through first input layer</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image dimension: </span><span class="si">{</span><span class="n">imgtensor</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convolution at the first input layer&quot;</span><span class="p">,</span> <span class="n">conv_layers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;conv1&#39;</span><span class="p">))</span>
+
+<span class="c1">#result = conv_layers[&#39;conv1&#39;](imgtensor)</span>
+<span class="c1">#print (f&quot;Output dimension: {result.shape}&quot;)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Image dimension: torch.Size([1, 3, 224, 224])
+Convolution at the first input layer Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualizing the feature map just after the first input layer convolution</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">conv_layers</span><span class="p">[</span><span class="s1">&#39;conv1&#39;</span><span class="p">](</span><span class="n">imgtensor</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                         <span class="n">sharex</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Feature maps from the first input conv layer&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">cnt</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/8106ce8bf605493ec3616a516228589b0867d5a2a9e156a363b56d9febdfcc77.png" src="_images/8106ce8bf605493ec3616a516228589b0867d5a2a9e156a363b56d9febdfcc77.png" />
+</div>
+</div>
+<section id="note-these-feature-maps-is-just-after-the-convolutions-as-we-go-down-further-in-the-model-the-spatial-dimensions-will-shrink-creating-higher-order-features">
+<h3><span class="section-number">19.16.1. </span>Note: These feature maps is just after the convolutions. As we go down further in the model, the spatial dimensions will shrink creating higher order features.<a class="headerlink" href="#note-these-feature-maps-is-just-after-the-convolutions-as-we-go-down-further-in-the-model-the-spatial-dimensions-will-shrink-creating-higher-order-features" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># An example with all the feature maps for this network</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">conv_layers</span><span class="p">[</span><span class="s1">&#39;conv1&#39;</span><span class="p">](</span><span class="n">imgtensor</span><span class="p">)]</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">conv_layers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+  <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;conv1&#39;</span><span class="p">:</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of feature maps: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Lets look into feature maps at 0, 8 and 17</span>
+
+<span class="n">num_layer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">num_layer</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2"> Shape of feature map at layer </span><span class="si">{</span><span class="n">layer</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                         <span class="n">sharex</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature maps : </span><span class="si">{</span><span class="n">layer</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">th conv layer, </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">layer</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">cnt</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of feature maps: 17
+
+
+ Shape of feature map at layer 1: torch.Size([1, 64, 112, 112])
+</pre></div>
+</div>
+<img alt="_images/aa3e75d3e7eddfedb2700aef6ec272ebfbf037f9a738f7739fb1640e13e9134d.png" src="_images/aa3e75d3e7eddfedb2700aef6ec272ebfbf037f9a738f7739fb1640e13e9134d.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Shape of feature map at layer 8: torch.Size([1, 128, 56, 56])
+</pre></div>
+</div>
+<img alt="_images/14c7b2e1d12f3165bc91df90cfdecd6b37123bf4ce50f90509404f033b66d7e1.png" src="_images/14c7b2e1d12f3165bc91df90cfdecd6b37123bf4ce50f90509404f033b66d7e1.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Shape of feature map at layer 17: torch.Size([1, 512, 14, 14])
+</pre></div>
+</div>
+<img alt="_images/207657a6ba3ad8700ad52eef12b80469de607731ed509d88ef3a384ddfa4ae0a.png" src="_images/207657a6ba3ad8700ad52eef12b80469de607731ed509d88ef3a384ddfa4ae0a.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="notes">
+<h2><span class="section-number">19.17. </span>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>What do you notice when looking at the feature maps at the beginning, middle, and end of the model?</p></li>
+<li><p>We only plotted a tiny subset of the feature maps for one specific image! How much work would it be to review all the feature maps and kernels to understand why a model makes a specific prediction?</p></li>
+</ul>
+</section>
+<section id="optional-exercises">
+<h2><span class="section-number">19.18. </span>Optional Exercises<a class="headerlink" href="#optional-exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Play around with plotting pretrained filters in different layers and get a high-level understanding of the region each filter concentrates on in an image as you move up the convolutional layers.
+Note that we only look at a third of the features in the first layer’s feature visualization as we have size 3 in dimension 1. What do the other features look like?</p></li>
+<li><p>Similarly, feel free to explore the feature maps at different layers and try to understand the evolution of feature maps and the depth of the image in recognizing features that are important for classification.</p></li>
+<li><p>Think about passing the image through a non-trained, randomly initialized network (without pretrained weights). Would you find any difference?</p></li>
+</ol>
+</section>
+<section id="what-is-class-activation-mapping-cam">
+<h2><span class="section-number">19.19. </span>4. What is Class Activation Mapping (CAM)?<a class="headerlink" href="#what-is-class-activation-mapping-cam" title="Link to this heading">#</a></h2>
+<p><strong>Class Activation Mapping (CAM)</strong> is a technique used to highlight regions in an input image that are important for the CNN’s prediction of a specific class. This method essentially provides <strong>visual explanations</strong> by generating a heatmap over the input image, showing the areas that contributed most to the final prediction.</p>
+<p>Originally, CAM required some modifications to the CNN architecture, such as the addition of global average pooling layers. However, <strong>Grad-CAM</strong> extends CAM to work with any CNN architecture by leveraging the gradients of the predicted class with respect to the feature maps in the convolutional layers.</p>
+</section>
+<section id="requirements-for-cam">
+<h2><span class="section-number">19.20. </span>Requirements for CAM<a class="headerlink" href="#requirements-for-cam" title="Link to this heading">#</a></h2>
+<p>Before implementing CAM, ensure that the network architecture has:</p>
+<ul class="simple">
+<li><p>CAM requires the network to have a GAP layer after the last convolutional layer, which reduces each feature map to a single value. The output of the GAP is then fed to a fully connected (FC) layer to produce class scores. However, in a model like VGG16, there is no GAP; instead, the network uses fully connected layers after flattening the convolutional feature maps.</p></li>
+<li><p>Without GAP, we don’t have the class-specific weights directly connected to each feature map, which makes CAM inapplicable.</p></li>
+<li><p>For instance, a CNN model like <code class="docutils literal notranslate"><span class="pre">VCG16</span></code> need to be flattened in Fully Connected Layers: VGG16 and similar networks use a flattening operation to convert the 3D feature maps (width × height × channels) into a 1D vector before passing it to the FC layers. This breaks the spatial correspondence between feature maps and class scores, making it impossible to directly apply CAM, as CAM depends on maintaining spatial correspondence.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;http://cnnlocalization.csail.mit.edu/framework.jpg&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ea674b42d29b29d8c28b8b9fb1bc97eea179266092502fa49c2d02b6c15b9df6.jpg" src="_images/ea674b42d29b29d8c28b8b9fb1bc97eea179266092502fa49c2d02b6c15b9df6.jpg" />
+</div>
+</div>
+<section id="grad-cam-overview">
+<h3><span class="section-number">19.20.1. </span>Grad-CAM Overview<a class="headerlink" href="#grad-cam-overview" title="Link to this heading">#</a></h3>
+<p>Grad-CAM uses the gradients flowing into the a convolutional layer to assign importance values to each neuron for a particular decision. In essence, it creates a <strong>coarse</strong> localization map highlighting important regions in the image for a specific class prediction. The original version of Grad-CAM can be found in <a class="reference external" href="https://arxiv.org/pdf/1610.02391">arxiv:1610.02391</a>.</p>
+</section>
+<section id="steps-to-compute-grad-cam">
+<h3><span class="section-number">19.20.2. </span>Steps to compute Grad-CAM:<a class="headerlink" href="#steps-to-compute-grad-cam" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Forward Pass</strong>: Perform a forward pass through the network to obtain the class scores (logits) for the input image.</p></li>
+<li><p><strong>Compute Gradients</strong>: Compute the gradients (<span class="math notranslate nohighlight">\(y^{k}\)</span>) of the predicted class score with respect to the feature maps of the last convolutional layer (<span class="math notranslate nohighlight">\(k\)</span>) i.e. <span class="math notranslate nohighlight">\(\frac{\delta y^{k}}{\delta A_{ij}^{k}}\)</span></p></li>
+<li><p><strong>Weighted Feature Map</strong>: The gradients are globally averaged to obtain the importance weights. Global average pool over the width dimension (<span class="math notranslate nohighlight">\(i\)</span>) and the height dimension (<span class="math notranslate nohighlight">\(j\)</span>) to obtain the weights <span class="math notranslate nohighlight">\(w_{k}^{c}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+w_{k}^{c} = \frac{1}{Z} \sum_{i}\sum_{j} \frac{\delta y^{c}}{ \delta A_{ij}^{k} }
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p><strong>Calculate Final Grad-CAM localisation map</strong></p></li>
+</ol>
+<p>Perform a weighted combination of the feature map activations <span class="math notranslate nohighlight">\(A^{k}\)</span> where the weights are the <span class="math notranslate nohighlight">\(w_{k}^{c}\)</span> we just calculate the positive contributions by applying a ReLU function. Grad-CAM uses the global average of these gradients to assign an importance weight to each feature map. The intuition here is that the higher the gradient, the more important that feature map is for the final prediction.</p>
+<div class="math notranslate nohighlight">
+\[
+L_{\text{Grad-CAM}}^{c} = \text{ReLU}(\sum_{k} w_{k}^{c} A^{k})
+\]</div>
+<ol class="arabic simple" start="5">
+<li><p><strong>Generate Heatmap</strong>: These weights are combined with the feature maps to produce a heatmap, highlighting the areas of the input image most relevant to the prediction.</p></li>
+<li><p><strong>Overlay on Input</strong>: Finally, the heatmap is superimposed on the input image for visualization, For this step, the heatmap has to be rescaled to the size of the input.</p></li>
+</ol>
+</section>
+</section>
+<section id="why-grad-cam-for-cnn-explainability">
+<h2><span class="section-number">19.21. </span>3. Why Grad-CAM for CNN Explainability?<a class="headerlink" href="#why-grad-cam-for-cnn-explainability" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Gradients, in this context, are computed during backpropagation and indicate how much the output of a layer (here, the feature maps) needs to change to affect the final output (e.g., the class score).</p></li>
+<li><p>Physically, gradients tell us how sensitive the final prediction is to changes in the feature maps. If the gradient is large for a particular feature map, it means that changing the values in that feature map will have a large effect on the class score.  it shows where the model “looked” in the image to make its decision. These are the areas that the CNN considers most relevant for classifying the input as a specific class.</p></li>
+<li><p>The heatmap generated by Grad-CAM highlights which regions in the input image were most influential in determining the predicted class.
+Physically,</p></li>
+<li><p>In Grad-CAM, when we backpropagate from the predicted class, we are computing partial derivatives of the class score with respect to the feature maps from the last convolutional layer. These derivatives (or gradients) indicate how much the class score would change if the values in the feature maps were changed slightly.</p></li>
+</ul>
+<p>CNNs, being hierarchical in nature, learn abstract features as we go deeper into the network. Grad-CAM provides insight into <strong>what part of the image</strong> the model focuses on while making a prediction, allowing us to visually understand the model’s reasoning. This can be especially useful in applications like:</p>
+<ul class="simple">
+<li><p><strong>Medical Imaging</strong>: Understanding which regions of an image are associated with a diagnosis. <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0165027021000339">Grad-CAM for DL models classify multiple sclerosis types using brain MRI</a></p></li>
+<li><p><strong>Autonomous Driving</strong>: Checking whether the network is paying attention to relevant objects, like pedestrians or traffic signs. <a class="reference external" href="https://jacobgil.github.io/deeplearning/vehicle-steering-angle-visualizations">vechicle steering angle visualization</a></p></li>
+<li><p><strong>Object Classification</strong>: Ensuring that the model focuses on the correct part of the image for classifications</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="c1"># URL of an example image from ImageNet (or you can replace it with any image URL)</span>
+<span class="n">image_url</span> <span class="o">=</span> <span class="s2">&quot;https://upload.wikimedia.org/wikipedia/commons/9/9a/Pug_600.jpg&quot;</span>  <span class="c1"># Example: a pug image</span>
+<span class="n">image_url_cat</span> <span class="o">=</span> <span class="s2">&quot;https://user-images.githubusercontent.com/7392509/29206419-7a5eef52-7eb4-11e7-975c-98d0d7b6da99.JPG&quot;</span>
+<span class="n">image_url_cat_dog</span> <span class="o">=</span> <span class="s2">&quot;https://media.istockphoto.com/id/1435010849/photo/labrador-retriever-dog-panting-and-ginger-cat-sitting-in-front-of-dark-yellow-background.jpg?s=612x612&amp;w=0&amp;k=20&amp;c=obpeW_Aw7cIpQ8SfVHX9lMwLeLa00W1qmSFcOTVMEZ4=&quot;</span>
+<span class="n">image_url_boat_dog_human</span> <span class="o">=</span> <span class="s2">&quot;https://www.stockvault.net/data/2018/10/17/255259/preview16.jpg&quot;</span>
+
+
+<span class="c1"># define function to download and perform trasnsformation</span>
+
+<span class="k">def</span> <span class="nf">fetch_and_transform</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">image</span> <span class="o">=</span> <span class="s2">&quot;image.jpg&quot;</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36&#39;</span>
+        <span class="c1"># Replace with your desired User-Agent string</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">imgtensor</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">),</span> <span class="n">imgtensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">imgtensor</span>
+
+<span class="c1"># Preprocessing for the input image (as used in ImageNet)</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">((</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">])</span>
+<span class="p">])</span>
+
+<span class="n">pug_url</span> <span class="o">=</span> <span class="s2">&quot;https://upload.wikimedia.org/wikipedia/commons/9/9a/Pug_600.jpg&quot;</span>
+<span class="n">pug_image</span><span class="p">,</span> <span class="n">pug_tensor</span> <span class="o">=</span> <span class="n">fetch_and_transform</span><span class="p">(</span><span class="n">pug_url</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/32f9ba379212ea14c118ff12aeae7865425702799024320f0141828c5ba05787.png" src="_images/32f9ba379212ea14c118ff12aeae7865425702799024320f0141828c5ba05787.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pug_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># 1 x channels x 224 x 224</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 3, 224, 224])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transforms</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">perform_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a forward pass through the model and capture gradients and feature maps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Hook for gradients and feature maps</span>
+    <span class="n">gradients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">activations</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Define a function to capture the Gradients</span>
+    <span class="k">def</span> <span class="nf">save_gradient</span><span class="p">(</span><span class="n">grad</span><span class="p">):</span>
+        <span class="n">gradients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span>
+
+    <span class="c1"># Hook to capture the feature maps</span>
+    <span class="k">def</span> <span class="nf">forward_hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="n">activations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span><span class="n">save_gradient</span><span class="p">)</span> <span class="c1"># Hook to capture gradients</span>
+
+    <span class="n">hook</span> <span class="o">=</span> <span class="n">target_layer</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="n">forward_hook</span><span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="c1"># remove the hook</span>
+    <span class="n">hook</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">output</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">ResNet18_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="c1"># Register the hook to the last convolutional layer</span>
+<span class="n">target_layer</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv2</span>
+
+<span class="n">gradients</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">output</span> <span class="o">=</span> <span class="n">perform_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span><span class="p">,</span> <span class="n">pug_tensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># @title labels</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">requests</span>
+<span class="n">label_url</span> <span class="o">=</span> <span class="s2">&quot;https://gist.githubusercontent.com/yrevar/942d3a0ac09ec9e5eb3a/raw/238f720ff059c1f82f368259d1ca4ffa5dd8f9f5/imagenet1000_clsidx_to_labels.txt&quot;</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label_url</span><span class="p">,</span> <span class="n">stream</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="n">reverse_labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">labels</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets print the best 10 results.</span>
+<span class="nb">print</span> <span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+         <span class="n">output</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">descending</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+         <span class="p">],</span>
+       <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pug, pug-dog
+bull mastiff
+French bulldog
+Brabancon griffon
+Saint Bernard, St Bernard
+Norwegian elkhound, elkhound
+Pekinese, Pekingese, Peke
+chow, chow chow
+Lhasa, Lhasa apso
+Shih-Tzu
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets take the max prediction</span>
+<span class="n">pred_class</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+<span class="c1"># Backward pass to get gradients of the predicted class</span>
+<span class="n">model</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<span class="c1"># Set all others except pred_class to 0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">pred_class</span><span class="p">:</span>
+        <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pred_class</span><span class="p">])</span>
+<span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pred_class</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+<span class="c1"># Now the gradients and feature maps are saved in the lists `gradients` and `activations`</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(20.6269, grad_fn=&lt;SelectBackward0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets check whatis the size of the gradients and activations</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gradients</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">activations</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="p">(</span><span class="n">gradients</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">activations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 512, 7, 7])
+torch.Size([1, 512, 7, 7])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the gradients and feature maps</span>
+
+<span class="c1"># gradients w.r.t c^{th} label</span>
+<span class="n">gradient</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Gradients captured during backward pass</span>
+
+<span class="c1"># Get all the k activations</span>
+<span class="n">feature_maps</span> <span class="o">=</span> <span class="n">activations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Feature maps captured during forward pass</span>
+
+<span class="c1"># sum over the spatial dimensions i, j in the k activations.</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Average pooling over spatial dimensions</span>
+
+<span class="c1"># Weighted sum of feature maps to get the Grad-CAM heatmap Perform weighted sum of activations</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span> <span class="o">*</span> <span class="n">feature_maps</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;cam shap eis :&quot;</span><span class="p">,</span> <span class="n">cam</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Apply ReLU and normalize the cam</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># ReLU</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">cam</span> <span class="o">/</span> <span class="n">cam</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>  <span class="c1"># Normalize to [0, 1]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cam shap eis : (7, 7)
+</pre></div>
+</div>
+<img alt="_images/f77f809294663ac535f0f814d7769af87e9f6d8ce387a431fccfa35b9ddd1ee3.png" src="_images/f77f809294663ac535f0f814d7769af87e9f6d8ce387a431fccfa35b9ddd1ee3.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rescale heatmap to match the input image size</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="p">(</span><span class="n">pug_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pug_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+<span class="n">in_image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pug_image</span><span class="p">),</span> <span class="p">(</span><span class="n">pug_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pug_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize the heatmap</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">in_image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># Overlay heatmap with transparency</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3e616c83d1ee58218925e29da816bf363357a1046996cd08346b9d772d4dec48.png" src="_images/3e616c83d1ee58218925e29da816bf363357a1046996cd08346b9d772d4dec48.png" />
+</div>
+</div>
+</section>
+<section id="lets-try-with-a-more-complex-image">
+<h2><span class="section-number">19.22. </span>Lets try with a more complex image<a class="headerlink" href="#lets-try-with-a-more-complex-image" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image_url_cat_dog</span> <span class="o">=</span> <span class="s2">&quot;https://media.istockphoto.com/id/1435010849/photo/labrador-retriever-dog-panting-and-ginger-cat-sitting-in-front-of-dark-yellow-background.jpg?s=612x612&amp;w=0&amp;k=20&amp;c=obpeW_Aw7cIpQ8SfVHX9lMwLeLa00W1qmSFcOTVMEZ4=&quot;</span>
+<span class="n">image_url_boat_dog_human</span> <span class="o">=</span> <span class="s2">&quot;https://www.stockvault.net/data/2018/10/17/255259/preview16.jpg&quot;</span>
+
+<span class="n">cat_dog_image</span><span class="p">,</span> <span class="n">cat_dog_tensor</span> <span class="o">=</span> <span class="n">fetch_and_transform</span><span class="p">(</span><span class="n">image_url_cat_dog</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1afc109f0de5621c4543a452e297101afe5e8c642b5ca088689fec7ec799bac7.png" src="_images/1afc109f0de5621c4543a452e297101afe5e8c642b5ca088689fec7ec799bac7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">target_layer</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv2</span>
+<span class="n">gradients</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">output</span> <span class="o">=</span> <span class="n">perform_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span><span class="p">,</span> <span class="n">cat_dog_tensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets print the best 10 results.</span>
+<span class="nb">print</span> <span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+         <span class="n">output</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">descending</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+         <span class="p">],</span>
+       <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Labrador retriever
+golden retriever
+Rhodesian ridgeback
+Chesapeake Bay retriever
+tennis ball
+kuvasz
+redbone
+English foxhound
+bull mastiff
+bloodhound, sleuthhound
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transforms</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">ResNet18_Weights</span>
+
+<span class="c1"># Define Grad-CAM class</span>
+<span class="k">class</span> <span class="nc">GradCAM</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_layer</span> <span class="o">=</span> <span class="n">target_layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_output</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hook_layers</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">hook_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">forward_hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">forward_output</span> <span class="o">=</span> <span class="n">output</span>
+
+        <span class="k">def</span> <span class="nf">backward_hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">grad_in</span><span class="p">,</span> <span class="n">grad_out</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span> <span class="o">=</span> <span class="n">grad_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">target_layer</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">())[</span><span class="bp">self</span><span class="o">.</span><span class="n">target_layer</span><span class="p">]</span>
+        <span class="n">target_layer</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="n">forward_hook</span><span class="p">)</span>
+        <span class="n">target_layer</span><span class="o">.</span><span class="n">register_full_backward_hook</span><span class="p">(</span><span class="n">backward_hook</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">class_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_image</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">class_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">class_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">class_score</span> <span class="o">=</span> <span class="n">output</span><span class="p">[:,</span> <span class="n">class_index</span><span class="p">]</span>
+        <span class="n">class_score</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="n">gradients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">forward_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="c1"># Global average pooling of gradients</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gradients</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">cam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">forward_output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+            <span class="n">cam</span> <span class="o">+=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">forward_output</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="n">cam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="p">(</span><span class="n">input_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">input_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="n">cam</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cam</span><span class="p">)</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="n">cam</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cam</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cam</span>
+
+<span class="c1"># Visualization function for heatmap</span>
+<span class="k">def</span> <span class="nf">visualize_cam</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">heatmap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">applyColorMap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">cam</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLORMAP_JET</span><span class="p">)</span>
+    <span class="n">heatmap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">heatmap</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+    <span class="n">cam_image</span> <span class="o">=</span> <span class="n">heatmap</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">cam_image</span> <span class="o">=</span> <span class="n">cam_image</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cam_image</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">cam_image</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fetch_and_transform</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">image</span> <span class="o">=</span> <span class="s2">&quot;image.jpg&quot;</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36&#39;</span>
+        <span class="c1"># Replace with your desired User-Agent string</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">imgtensor</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">),</span> <span class="n">imgtensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">imgtensor</span>
+<span class="c1"># Preprocessing for the input image (as used in ImageNet)</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">((</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">])</span>
+<span class="p">])</span>
+
+
+<span class="c1"># Load pre-trained model (ResNet18)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">ResNet18_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">)</span>
+
+<span class="c1"># Load an image and preprocess</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">image_url_cat_dog</span>  <span class="c1"># Set the path to an image</span>
+<span class="n">original_image</span><span class="p">,</span> <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">fetch_and_transform</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+<span class="c1"># Instantiate Grad-CAM</span>
+<span class="n">gradcam</span> <span class="o">=</span> <span class="n">GradCAM</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span><span class="o">=</span><span class="s1">&#39;layer4&#39;</span><span class="p">)</span>
+<span class="c1"># Perform Grad-CAM</span>
+<span class="n">cat</span> <span class="o">=</span> <span class="mi">281</span> <span class="c1"># also, 282 283 284 285 286 287 are all cats</span>
+<span class="n">dog</span> <span class="o">=</span> <span class="mi">208</span> <span class="c1"># for labrador retriever</span>
+<span class="n">labls</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">]</span>
+<span class="n">cams</span> <span class="o">=</span> <span class="p">[</span><span class="n">gradcam</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">cat</span><span class="p">),</span> <span class="n">gradcam</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">dog</span><span class="p">)]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cams</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cam</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cams</span><span class="p">):</span>
+    <span class="n">cam_image</span> <span class="o">=</span> <span class="n">visualize_cam</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">original_image</span> <span class="o">/</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cam_image</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Grad-CAM </span><span class="si">{</span><span class="n">labls</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1afc109f0de5621c4543a452e297101afe5e8c642b5ca088689fec7ec799bac7.png" src="_images/1afc109f0de5621c4543a452e297101afe5e8c642b5ca088689fec7ec799bac7.png" />
+<img alt="_images/b945c1b40aee65a1fd8a2d0e7499fd2b8eb2a9af068509bfee543d7d569409e2.png" src="_images/b945c1b40aee65a1fd8a2d0e7499fd2b8eb2a9af068509bfee543d7d569409e2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load an image and preprocess</span>
+<span class="n">image_url</span> <span class="o">=</span> <span class="s2">&quot;https://img.freepik.com/premium-photo/happy-cat-dog-relaxing-beach-with-cocktail-ball-with-beautiful-ocean-view-boats_127746-11865.jpg&quot;</span>  <span class="c1"># Set the path to an image</span>
+<span class="n">original_image</span><span class="p">,</span> <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">fetch_and_transform</span><span class="p">(</span><span class="n">image_url</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+<span class="c1"># Instantiate Grad-CAM</span>
+<span class="n">gradcam</span> <span class="o">=</span> <span class="n">GradCAM</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span><span class="o">=</span><span class="s1">&#39;layer4&#39;</span><span class="p">)</span>
+<span class="c1"># Perform Grad-CAM</span>
+<span class="n">cat</span> <span class="o">=</span> <span class="mi">281</span> <span class="c1"># also, 282 283 284 285 286 287 are all cats</span>
+<span class="n">dog</span> <span class="o">=</span> <span class="mi">208</span> <span class="c1"># for labrador retriever</span>
+<span class="n">canoe</span> <span class="o">=</span> <span class="mi">724</span>
+<span class="n">labls</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;pirate ship&quot;</span><span class="p">]</span>
+<span class="n">cams</span> <span class="o">=</span> <span class="p">[</span><span class="n">gradcam</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">cat</span><span class="p">),</span> <span class="n">gradcam</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">dog</span><span class="p">),</span> <span class="n">gradcam</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">canoe</span><span class="p">)]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cams</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cam</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cams</span><span class="p">):</span>
+    <span class="n">cam_image</span> <span class="o">=</span> <span class="n">visualize_cam</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">original_image</span> <span class="o">/</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cam_image</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Grad-CAM </span><span class="si">{</span><span class="n">labls</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/11cb6bce1aad3ef789a685fce3052543486c7e57619bee70aaf4a60e53274f36.png" src="_images/11cb6bce1aad3ef789a685fce3052543486c7e57619bee70aaf4a60e53274f36.png" />
+<img alt="_images/c38fd8b316b349ba87a6bef25cf157ab34a09c8df21510fdd36a74051e2970b3.png" src="_images/c38fd8b316b349ba87a6bef25cf157ab34a09c8df21510fdd36a74051e2970b3.png" />
+</div>
+</div>
+<section id="question-what-do-you-think-are-the-strengths-and-weaknesses-of-grad-cam-in-the-context-of-image-classification">
+<h3><span class="section-number">19.22.1. </span>Question: What do you think are the strengths and weaknesses of Grad-CAM in the context of image classification?<a class="headerlink" href="#question-what-do-you-think-are-the-strengths-and-weaknesses-of-grad-cam-in-the-context-of-image-classification" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="strengths-pros">
+<h2><span class="section-number">19.23. </span>Strengths (Pros):<a class="headerlink" href="#strengths-pros" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Effective Localization:</strong> Grad-CAM is highly effective in highlighting the specific regions in an image that contribute most to the model’s prediction. This allows users to visually identify which parts of the input the model considers important, enhancing transparency.</p></li>
+<li><p><strong>Improved Interpretability:</strong> By generating heatmaps overlaid on the original image, Grad-CAM offers intuitive visual explanations. This can help users better understand and trust the decision-making process of the model, especially in critical domains like healthcare or autonomous driving.</p></li>
+<li><p><strong>Architecture Agnostic:</strong> One of the strengths of Grad-CAM is that it can be applied to a wide variety of Convolutional Neural Network (CNN) architectures without requiring major alterations to the network. This versatility makes it a widely-used tool for model explainability across different tasks and domains.</p></li>
+<li><p><strong>Non-Intrusive Method:</strong> Grad-CAM is non-invasive as it does not require retraining or altering the original model architecture. This is advantageous because users can apply Grad-CAM to an already trained model without needing to modify it, thus saving time and computational resources.</p></li>
+<li><p><strong>Simplicity of Implementation:</strong> The method is relatively straightforward to implement with existing libraries and tools. Even researchers and practitioners with limited expertise in model interpretability can easily integrate it into their workflow.</p></li>
+<li><p><strong>Wide Range of Applications:</strong> Although primarily used for image classification, Grad-CAM’s utility extends to other vision-related tasks such as object detection, semantic segmentation, and visual question answering. This broad applicability makes it useful in various contexts within computer vision.</p></li>
+</ul>
+</section>
+<section id="weaknesses-cons">
+<h2><span class="section-number">19.24. </span>Weaknesses (Cons):<a class="headerlink" href="#weaknesses-cons" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Qualitative Rather Than Quantitative:</strong> One of the limitations of Grad-CAM is that it provides qualitative visualizations through heatmaps, which are subjective and lack a clear quantitative measure of feature importance. As a result, the method does not quantify how much each region contributes to the prediction.</p></li>
+<li><p><strong>Resolution Constraints:</strong> The heatmaps generated by Grad-CAM typically have lower resolution compared to the original input image. This can reduce the precision of localization, especially for fine-grained details in high-resolution images, which might be critical in applications such as medical imaging.</p></li>
+<li><p><strong>Dependence on Model Accuracy:</strong> The reliability of the explanations produced by Grad-CAM is dependent on the model’s accuracy. If the model makes an incorrect prediction, the highlighted regions may not be meaningful or relevant, leading to potentially misleading interpretations.</p></li>
+<li><p><strong>Primarily Suited for CNNs:</strong> Grad-CAM is inherently designed for use with Convolutional Neural Networks (CNNs), making it less applicable to other types of deep learning models, such as fully connected networks or transformers, without significant modifications.</p></li>
+<li><p><strong>Challenges with Complex Structures:</strong> In cases where images contain complex spatial structures or intricate relationships between objects, Grad-CAM may struggle to accurately capture these nuances. This can lead to less reliable localization, especially for tasks requiring precise object boundaries.</p></li>
+<li><p><strong>Limited to Single-Image Context:</strong> Grad-CAM focuses on providing explanations for individual images and does not account for broader contextual information, such as time-series data or sequences of images. This limits its applicability in tasks that require a deeper understanding of context, such as video classification or temporal event prediction.</p></li>
+</ul>
+</section>
+<section id="resources-to-look">
+<h2><span class="section-number">19.25. </span>Resources to look<a class="headerlink" href="#resources-to-look" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://jacobgil.github.io/pytorch-gradcam-book/introduction.html">Advanced Explainable AI for computer vision</a></p></li>
+<li><p><a class="reference external" href="https://towardsdatascience.com/grad-cam-in-pytorch-use-of-forward-and-backward-hooks-7eba5e38d569">Grad-CAM in PyTorch</a></p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cfteach/NNDL_DATA621",
+            ref: "webpage-src",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lec12_UNet.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">18. </span>U-Net Convolutional Networks for Image Segmentation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="referencesmc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-brief-recap-of-flagship-cnn-models">19.1. A brief recap of flagship CNN models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lenet-5-1998">19.2. 1. <strong>LeNet-5 (1998)</strong>:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alexnet-2012">19.3. 2. AlexNet (2012):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#googlenet-inception-v1-2014">19.4. 3. GoogLeNet/Inception v1 (2014):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resnet-2015">19.5. 4. ResNet (2015):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inception-v4-2016">19.6. 5. Inception v4 (2016)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#densenet-2017">19.7. 6. DenseNet (2017)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#efficientnet-2019">19.8. 7. EfficientNet (2019)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-dive-into-resnet-18">19.9. 2. Deep dive into ResNet-18</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-summary-layer-by-layer">19.10. Architecture Summary (Layer-by-Layer):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-connections">19.11. Residual Connections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-residual-connections-work-in-resnet-18">19.12. How Residual Connections Work in ResNet-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-benefits-of-residual-connections">19.12.1. Key Benefits of Residual Connections:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-normalization">19.13. Batch Normalization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benefits-of-batch-normalization">19.13.1. Benefits of Batch Normalization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-batch-normalization-works-in-practice">19.13.2. How Batch Normalization Works in Practice</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-normalization-during-training-vs-inference">19.13.3. Batch Normalization During Training vs Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-batch-normalization-in-resnet-18">19.13.4. Example of Batch Normalization in ResNet-18</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-explainable-ai-xai">19.14. 3. Introduction to Explainable AI (XAI)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diving-deep-into-torchvision-models">19.15. Diving deep into <code class="docutils literal notranslate"><span class="pre">torchvision.models</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-into-the-feature-maps">19.16. Looking into the feature maps.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#note-these-feature-maps-is-just-after-the-convolutions-as-we-go-down-further-in-the-model-the-spatial-dimensions-will-shrink-creating-higher-order-features">19.16.1. Note: These feature maps is just after the convolutions. As we go down further in the model, the spatial dimensions will shrink creating higher order features.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">19.17. Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-exercises">19.18. Optional Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-class-activation-mapping-cam">19.19. 4. What is Class Activation Mapping (CAM)?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-for-cam">19.20. Requirements for CAM</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grad-cam-overview">19.20.1. Grad-CAM Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-to-compute-grad-cam">19.20.2. Steps to compute Grad-CAM:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-grad-cam-for-cnn-explainability">19.21. 3. Why Grad-CAM for CNN Explainability?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lets-try-with-a-more-complex-image">19.22. Lets try with a more complex image</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#question-what-do-you-think-are-the-strengths-and-weaknesses-of-grad-cam-in-the-context-of-image-classification">19.22.1. Question: What do you think are the strengths and weaknesses of Grad-CAM in the context of image classification?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strengths-pros">19.23. Strengths (Pros):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weaknesses-cons">19.24. Weaknesses (Cons):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources-to-look">19.25. Resources to look</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Cristiano Fanelli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  DATA621
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
