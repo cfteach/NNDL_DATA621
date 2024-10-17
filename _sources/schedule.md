@@ -124,7 +124,11 @@ Last update: (9/30/2024)
 <td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 2 due Oct 22</strong></span></td>
 </tr>
 </table>
-
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings for Oct 22 and Oct 24 Lectures: Raschka, Chap. 15</strong></span></td>
+</tr>
+</table>
 
 ## Week 10 (Mon, Oct 28 - Sun, Nov 3)
 
