@@ -138,11 +138,6 @@ Last update: (9/30/2024)
 | 2:00pm-3:20pm  | | **Lecture:** Introduction to Generative Adversarial Networks <br> **What to learn:** Implementing GAN from scratch |  |  **Lecture:** Generative Adversarial Networks <br>  **What to learn:** Training, implementing generator and discriminator networks | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 3 (assigned Nov 3; due Nov 16)</strong></span></td>
-</tr>
-</table>
-<table>
-<tr>
 <td colspan="7" align="center"><span style="color:purple"><strong>Readings: Raschka, Chap. 17</strong></span></td>
 </tr>
 </table>
@@ -156,6 +151,11 @@ Last update: (9/30/2024)
 </table>
 <table>
 <tr>
+<td colspan="7" align="center"><span style="color:red"><strong>Assignment 3 (assigned Nov 5; due Nov 13)</strong></span></td>
+</tr>
+</table>
+<table>
+<tr>
 <td colspan="7" align="center"><span style="color:purple"><strong>Readings: Raschka, Chap. 17</strong></span></td>
 </tr>
 </table>
@@ -165,10 +165,10 @@ Last update: (9/30/2024)
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
-| 2:00pm-3:20pm  | | **Lecture:**  Graph Neural Networks <br> **What to learn:** Undirected graphs, directed graphs, understanding graph convolutions |  |  **Lecture:** Graph Neural Networks <br> **What to learn:** Implementation of a GNN from scratch using Pytorch | |
+| 2:00pm-3:20pm  | | **Lecture:** conditional GAN | |  **Lecture:**  Graph Neural Networks <br> **What to learn:** Undirected graphs, directed graphs, understanding graph convolutions | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 3 due Nov 16</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 3 due Nov 13</strong></span></td>
 </tr>
 </table>
 
@@ -178,7 +178,7 @@ Last update: (9/30/2024)
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
-| 2:00pm-3:20pm  | | **Lecture:** Transfer Learning (tentative)  |  |  **Lecture:** Intro to Transformers (tentative) | |
+| 2:00pm-3:20pm  | |  **Lecture:** Graph Neural Networks <br> **What to learn:** Implementation of a GNN from scratch using Pytorch  |  |  **Lecture:** GNN   | |
 <table>
 <tr>
 <td colspan="7" align="center"><span style="color:red"><strong>Assignment 4 (assigned Nov 18; due Nov 28)</strong></span></td>
@@ -190,7 +190,7 @@ Last update: (9/30/2024)
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
-| 2:00pm-3:20pm  | | **Lecture:** Intro to Transformers (tentative) |  |  **Lecture:**  Intro to Normalizing Flows  (tentative) | |
+| 2:00pm-3:20pm  | | **Lecture:** Intro to Transfer Learning (tentative) |  |  **Lecture:**  Intro to Transformers  (tentative) | |
 <table>
 <tr>
 <td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 4 due Nov 28</strong></span></td>
@@ -203,7 +203,7 @@ Last update: (9/30/2024)
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
-| 2:00pm-3:20pm  | | **Lecture:**  Intro to Normalizing Flows  (tentative) |  |  **Lecture:**  Intro to Normalizing Flows  (tentative); Recap  | |
+| 2:00pm-3:20pm  | | **Lecture:**  Intro to Transformers  (tentative) |  |  **Lecture:**  (tentative) Recap  | |
 <table>
 <tr>
 <td colspan="7" align="center"><span style="color:red"><strong>Final project due Dec 9 </strong></span></td>
