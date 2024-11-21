@@ -171,7 +171,11 @@ Last update: (9/30/2024)
 <td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 3 due Nov 13</strong></span></td>
 </tr>
 </table>
-
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings: Raschka, Chap. 18</strong></span></td>
+</tr>
+</table>
 
 ## Week 13 (Mon, Nov 18 - Sun, Nov 24)
 
@@ -182,6 +186,11 @@ Last update: (9/30/2024)
 <table>
 <tr>
 <td colspan="7" align="center"><span style="color:red"><strong>Assignment 4 (assigned Nov 18; due Nov 28)</strong></span></td>
+</tr>
+</table>
+<table>
+<tr>
+<td colspan="7" align="center"><span style="color:purple"><strong>Readings: Raschka, Chap. 18</strong></span></td>
 </tr>
 </table>
 

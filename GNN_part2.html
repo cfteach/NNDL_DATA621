@@ -1,0 +1,1313 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>27. Implementing a GNN using the PyTorch Geometric library &#8212; Neural Networks and Deep Learning - DATA621</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "cfteach/NNDL_DATA621");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'GNN_part2';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="canonical" href="https://cfteach.github.io/NNDL_DATA621/GNN_part2.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="References" href="referencesmc.html" />
+    <link rel="prev" title="26. A (Very) Preliminary Introuduction to Graph Neural Networks" href="GNN_part1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">This page is being updated</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logowm1.png" class="logo__image only-light" alt="Neural Networks and Deep Learning - DATA621 - Home"/>
+    <script>document.write(`<img src="_static/logowm1.png" class="logo__image only-dark" alt="Neural Networks and Deep Learning - DATA621 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to DATA621 - Neural Networks and Deep Learning
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Syllabus</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1ClOsYfLTa0Ts7wpULnnHOvemG2Vk36Nv/view?usp=share_link">Syllabus (last update 10/6/2024)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Schedule</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="schedule.html">Schedule</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1aW_ZdzN2D5W51rYIujfuqcMYzCYKRZzb/view?usp=sharing">Assignment 1, Deep Neural Networks from Scratch</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1Y-S7VpZ1MsFRatsiY1olyFh_D0TMFS1d/view?usp=sharing">Assignment 2, Convolutional Neural Networks</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intro</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1nF3Y5hcuumYLgekjGXFy1ATGehg7gov_IXzJahMwOS0/edit?usp=sharing">Welcome and Intro by Prof. C.Fanelli</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Intro to Modeling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1BV2-N-c1bq4yx1IsPMW4fhC9i1SCdRAU/edit?usp=sharing&amp;ouid=113195593718692427789&amp;rtpof=true&amp;sd=true">Linear Regression (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Linear_Regression_1_class.html">1. Linear Regression (Jupyter Notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Introduction to git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/GIT-course/intro_to_git.html">2. Brief course on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/VCS.html">2.1. Version Control System (VCS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/git_basics.html">2.2. What is Git?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/git_configure.html">2.3. Configuring your <code class="docutils literal notranslate"><span class="pre">git</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/GIT-course/git_exercises.html">3. Exercises on <code class="docutils literal notranslate"><span class="pre">git</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-1.html">3.1. Exercise 1: Basic Git Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-2.html">3.2. Exercise 2: Commits, push and branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-3.html">3.3. Advanced exercises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/GIT-course/Exercise-4.html">3.4. GitHub Actions and Workflow Tutorial</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[Pre-flight] Using VS-Code</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Day-1/VS-code.html">Installing Visual Studio Code</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[8/29/2024] Introduction to High Performance Computing (HPC)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="Day-1/HPC-course/intro_to_HPC_HTC.html">4. Introduction to High Performance Computing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/intro_to_HPC.html">4.1. High Performance Computing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/ssh_login.html">4.2. SSH into a Front-End Node Using Proxy Jump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/file_systems_WM.html">4.3. William &amp; Mary Research Computing: File Systems Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Day-1/HPC-course/SLURM_commands2.html">4.4. Introduction to SLURM</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/3/2024] Linear Classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1rEUGMhcfUyC5YCgrIRnqoRU6jNgzaO9EuvnxePEfo8k/edit?usp=sharing">Perceptrons (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1mU67w6GAhIWNFoO98AF7u8in2C-Op4Ag/view?usp=sharing">Perceptron - Proof of Convergence (PDF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec2_perceptron_DATA621.html">5. Training a Perceptron (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Ep46Bmw_bIr8PLAVPNzVlB0bExEvobGinLnNzCBHS7o/edit?usp=sharing">Adaline (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec2_adaline_DATA621.html">6. Training Adaline (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/5/2024] Gradient Descent, stochastic GD, Logistic Regression and Other classifiers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1osZ2o-DtNNHuUGjDkurYuyrg439WBoucJrvMK5c4ibg/edit?usp=sharing">Stochastic Gradient Descent, Logistic Regression (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec3_GDvsSGD_DATA621.html">7. Gradient Descent, Stochastic Gradient Descent, Mini-batch GD (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec3_logistic_reg_DATA621.html">8. Logistic Regression, Regularization, linear (and non-linear) boundaries</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/10/2024] Building Training Datasets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1uPs3MhCrPNDglKWcaRBWm8ay_7EtlPWNzmQN6exYSDM/edit?usp=sharing">Building Training Datasets (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec4_datapreprocessing.html">9. Data Preprocessing (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/12/2024] Model Evaluation, Hyperparameter Tuning: Examples and Discussion</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec5_modeleval.html">10. Model Evaluation, Hyperparameter Tuning (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/17/2024, 9/19/2024] Building Multi-Layer Neural Networks from scratch + discussion on assignment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1AmB1djkmLFcwzgfBoY0l1xe-gLEPx8wFj4OHZuqFg_Y/edit?usp=sharing"> Adding hidden layers + Math of Backprop (lecture slides)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec6_MLP_DATA621_sol.html">11. Multi-Layer Perceptron (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/24/2024] Building Multi-Layer Neural Networks with PyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec8_NN_preflight.html">12. Using PyTorch preflight (Jupyter notebook)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec8_NN_pytorch_nosol.html">13. Using torch.nn (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[9/26/2024] PyTorch and Autograd</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec9_autograd_pytorch.html">14. Using PyTorch Autograd (Jupyter notebook)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/1, 10/3, 10/8/2024] CNN with PyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec10_CNN_DATA621.html">15. Using PyTorch with CNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec11_cnn2_v2.html">16. Using CNN and Celeb Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec12_cnn_regr-2.html">17. Using CNN for Regression Tasks (age prediction based on images)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec12_UNet.html">18. Using U-Net for Image Segmentation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/15, 10/17/2024] Explainable AI using Grad-CAM for visual explanations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lec13_Introduction_to_grad_cam_v2.html">19. Introduction to Grad-CAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec14_Introduction_to_grad_cam_part2.html">20. Grad-CAM (part 2)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/22, 10/24/2024] Recurrent Neural Network</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nobel2024.html">21. 2024 Nobel Prize in Physics: Hopfield NN and Boltzmann Machines</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1AZqcNV08TLWh2SCa8t3LdPqASWdr_icJvrEbGVe_NiE/edit?usp=sharing">Introduction to Sequential Data and Time Series Data; Intro to RNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec16_RNN.html">22. LSTM Recurrent Neural Networks</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[10/29, 10/31/2024, 1/7/2024] Generative Adversarial Networks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1N9vpHqzhD9yrAc3NuMr1XeH7gSnpy3fxlsGT_gDzQrE/edit?usp=sharing">Introduction to GAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec17_GAN_part1.html">23. GAN Notebook (part1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec17_GAN_part2.html">24. DCGAN and Wasserstein GAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lec17_cGAN.html">25. Conditional GAN</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">[11/24] Graph Neural Networks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="GNN_part1.html">26. GNN Notebook (part1)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">27. GNN Notebook (part2)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="referencesmc.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/cfteach/NNDL_DATA621/blob/webpage-src/DATA621/DATA621/GNN_part2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/edit/webpage-src/DATA621/DATA621/GNN_part2.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cfteach/NNDL_DATA621/issues/new?title=Issue%20on%20page%20%2FGNN_part2.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/GNN_part2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Implementing a GNN using the PyTorch Geometric library</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qm9-dataset">27.1. QM9 Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-structure-in-qm9">27.2. Data Structure in QM9</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#details-of-each-attribute">27.3. Details of Each Attribute</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x-node-features">27.3.1. <code class="docutils literal notranslate"><span class="pre">x</span></code> (Node Features)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-index-edge-connectivity">27.3.2. <code class="docutils literal notranslate"><span class="pre">edge_index</span></code> (Edge Connectivity)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-attr-edge-features">27.3.3. <code class="docutils literal notranslate"><span class="pre">edge_attr</span></code> (Edge Features)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#y-molecular-properties">27.3.4. <code class="docutils literal notranslate"><span class="pre">y</span></code> (Molecular Properties)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pos-3d-atomic-positions">27.3.5. <code class="docutils literal notranslate"><span class="pre">pos</span></code> (3D Atomic Positions)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#z-atomic-numbers">27.3.6. <code class="docutils literal notranslate"><span class="pre">z</span></code> (Atomic Numbers)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#idx-molecule-index">27.3.7. <code class="docutils literal notranslate"><span class="pre">idx</span></code> (Molecule Index)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#name-molecule-name">27.3.8. <code class="docutils literal notranslate"><span class="pre">name</span></code> (Molecule Name)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pointers-to-advanced-graph-neural-network-literature">27.4. Pointers to advanced graph neural network literature</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="implementing-a-gnn-using-the-pytorch-geometric-library">
+<h1><span class="section-number">27. </span>Implementing a GNN using the PyTorch Geometric library<a class="headerlink" href="#implementing-a-gnn-using-the-pytorch-geometric-library" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>torch-geometric<span class="w"> </span>networkx<span class="w"> </span>matplotlib
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: torch in /usr/local/lib/python3.10/dist-packages (2.5.1+cu121)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.10/dist-packages (0.20.1+cu121)
+Requirement already satisfied: torchaudio in /usr/local/lib/python3.10/dist-packages (2.5.1+cu121)
+Collecting torch-geometric
+  Downloading torch_geometric-2.6.1-py3-none-any.whl.metadata (63 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">63.1/63.1 kB</span> <span class=" -Color -Color-Red">1.4 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (3.4.2)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.10/dist-packages (3.8.0)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch) (3.16.1)
+Requirement already satisfied: typing-extensions&gt;=4.8.0 in /usr/local/lib/python3.10/dist-packages (from torch) (4.12.2)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from torch) (3.1.4)
+Requirement already satisfied: fsspec in /usr/local/lib/python3.10/dist-packages (from torch) (2024.10.0)
+Requirement already satisfied: sympy==1.13.1 in /usr/local/lib/python3.10/dist-packages (from torch) (1.13.1)
+Requirement already satisfied: mpmath&lt;1.4,&gt;=1.1.0 in /usr/local/lib/python3.10/dist-packages (from sympy==1.13.1-&gt;torch) (1.3.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from torchvision) (1.26.4)
+Requirement already satisfied: pillow!=8.3.*,&gt;=5.3.0 in /usr/local/lib/python3.10/dist-packages (from torchvision) (11.0.0)
+Requirement already satisfied: aiohttp in /usr/local/lib/python3.10/dist-packages (from torch-geometric) (3.11.2)
+Requirement already satisfied: psutil&gt;=5.8.0 in /usr/local/lib/python3.10/dist-packages (from torch-geometric) (5.9.5)
+Requirement already satisfied: pyparsing in /usr/local/lib/python3.10/dist-packages (from torch-geometric) (3.2.0)
+Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (from torch-geometric) (2.32.3)
+Requirement already satisfied: tqdm in /usr/local/lib/python3.10/dist-packages (from torch-geometric) (4.66.6)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (1.3.1)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (4.55.0)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (1.4.7)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (24.2)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /usr/local/lib/python3.10/dist-packages (from matplotlib) (2.8.2)
+Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+Requirement already satisfied: aiohappyeyeballs&gt;=2.3.0 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (2.4.3)
+Requirement already satisfied: aiosignal&gt;=1.1.2 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (1.3.1)
+Requirement already satisfied: attrs&gt;=17.3.0 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (24.2.0)
+Requirement already satisfied: frozenlist&gt;=1.1.1 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (1.5.0)
+Requirement already satisfied: multidict&lt;7.0,&gt;=4.5 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (6.1.0)
+Requirement already satisfied: propcache&gt;=0.2.0 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (0.2.0)
+Requirement already satisfied: yarl&lt;2.0,&gt;=1.17.0 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (1.17.2)
+Requirement already satisfied: async-timeout&lt;6.0,&gt;=4.0 in /usr/local/lib/python3.10/dist-packages (from aiohttp-&gt;torch-geometric) (4.0.3)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2-&gt;torch) (3.0.2)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;torch-geometric) (3.4.0)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;torch-geometric) (3.10)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;torch-geometric) (2.2.3)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;torch-geometric) (2024.8.30)
+Downloading torch_geometric-2.6.1-py3-none-any.whl (1.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">1.1/1.1 MB</span> <span class=" -Color -Color-Red">7.4 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hInstalling collected packages: torch-geometric
+Successfully installed torch-geometric-2.6.1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+
+<span class="kn">from</span> <span class="nn">torch_geometric.datasets</span> <span class="kn">import</span> <span class="n">QM9</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.loader</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.nn</span> <span class="kn">import</span> <span class="n">NNConv</span><span class="p">,</span> <span class="n">global_add_pool</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dset</span> <span class="o">=</span> <span class="n">QM9</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">dset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading https://data.pyg.org/datasets/qm9_v3.zip
+Extracting ./raw/qm9_v3.zip
+Processing...
+Using a pre-processed version of the dataset. Please install &#39;rdkit&#39; to alternatively process the raw data.
+Done!
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>130831
+</pre></div>
+</div>
+</div>
+</div>
+<section id="qm9-dataset">
+<h2><span class="section-number">27.1. </span>QM9 Dataset<a class="headerlink" href="#qm9-dataset" title="Link to this heading">#</a></h2>
+<p>The <strong>QM9 dataset</strong> is a widely-used benchmark dataset in computational chemistry and machine learning for molecular property prediction. It contains quantum mechanical calculations for 134,000+ small organic molecules composed of hydrogen (H), carbon ©, nitrogen (N), oxygen (O), and fluorine (F). The dataset is a valuable resource for training models to predict quantum chemical properties of molecules.</p>
+</section>
+<hr class="docutils" />
+<section id="data-structure-in-qm9">
+<h2><span class="section-number">27.2. </span>Data Structure in QM9<a class="headerlink" href="#data-structure-in-qm9" title="Link to this heading">#</a></h2>
+<p>Each molecule in the QM9 dataset is represented as a <strong>graph</strong>, where:</p>
+<ul class="simple">
+<li><p><strong>Nodes</strong> represent atoms (H, C, N, O, F).</p></li>
+<li><p><strong>Edges</strong> represent bonds between the atoms.</p></li>
+</ul>
+<p>In <strong>PyTorch Geometric</strong>, the dataset is stored in a <code class="docutils literal notranslate"><span class="pre">Data</span></code> object, which contains the following attributes:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Attribute</strong></p></th>
+<th class="head"><p><strong>Shape</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">x</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[num_atoms,</span> <span class="pre">num_features]</span></code></p></td>
+<td><p>Node feature matrix describing properties of each atom.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">edge_index</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[2,</span> <span class="pre">num_edges]</span></code></p></td>
+<td><p>Connectivity matrix defining which atoms are connected by bonds (source and target nodes).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">edge_attr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[num_edges,</span> <span class="pre">num_features]</span></code></p></td>
+<td><p>Edge feature matrix describing properties of the bonds (e.g., bond type, aromaticity, etc.).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">y</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">num_targets]</span></code></p></td>
+<td><p>Molecular property vector containing 19 quantum mechanical properties for the molecule.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pos</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[num_atoms,</span> <span class="pre">3]</span></code></p></td>
+<td><p>3D Cartesian coordinates (x, y, z) of each atom in the molecule.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[num_atoms]</span></code></p></td>
+<td><p>Atomic numbers of the atoms (e.g., 1 for H, 6 for C).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">idx</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[1]</span></code></p></td>
+<td><p>Index of the molecule in the dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Name of the molecule (e.g., <code class="docutils literal notranslate"><span class="pre">gdb_128</span></code>), corresponding to its GDB identifier.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">dset</span><span class="p">[</span><span class="mi">124</span><span class="p">]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data(x=[13, 11], edge_index=[2, 24], edge_attr=[24, 4], y=[1, 19], pos=[13, 3], idx=[1], name=&#39;gdb_128&#39;, z=[13])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="details-of-each-attribute">
+<h2><span class="section-number">27.3. </span>Details of Each Attribute<a class="headerlink" href="#details-of-each-attribute" title="Link to this heading">#</a></h2>
+<section id="x-node-features">
+<h3><span class="section-number">27.3.1. </span><code class="docutils literal notranslate"><span class="pre">x</span></code> (Node Features)<a class="headerlink" href="#x-node-features" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">x</span></code> matrix contains features describing each atom in the molecule.</p></li>
+<li><p>Example features may include:</p>
+<ul>
+<li><p><strong>Atomic number (Z):</strong> Numerical identifier for the atom (e.g., H = 1, C = 6).</p></li>
+<li><p><strong>Hybridization state:</strong> sp, sp2, sp3, etc.</p></li>
+<li><p><strong>Formal charge:</strong> Charge on the atom.</p></li>
+<li><p><strong>Number of valence electrons:</strong> Total electrons available for bonding.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="edge-index-edge-connectivity">
+<h3><span class="section-number">27.3.2. </span><code class="docutils literal notranslate"><span class="pre">edge_index</span></code> (Edge Connectivity)<a class="headerlink" href="#edge-index-edge-connectivity" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>This is a sparse matrix in COO (Coordinate List) format that defines the connections (bonds) between atoms.</p>
+<ul>
+<li><p>The first row contains the <strong>source nodes</strong> of the edges.</p></li>
+<li><p>The second row contains the <strong>target nodes</strong> of the edges.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="edge-attr-edge-features">
+<h3><span class="section-number">27.3.3. </span><code class="docutils literal notranslate"><span class="pre">edge_attr</span></code> (Edge Features)<a class="headerlink" href="#edge-attr-edge-features" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>This matrix contains features describing each bond in the molecule.</p></li>
+<li><p>Example features may include:</p>
+<ul>
+<li><p><strong>Bond type:</strong> Single, double, triple, aromatic.</p></li>
+<li><p><strong>Bond length:</strong> Distance between the connected atoms.</p></li>
+<li><p><strong>Aromaticity:</strong> Whether the bond is part of an aromatic ring.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="y-molecular-properties">
+<h3><span class="section-number">27.3.4. </span><code class="docutils literal notranslate"><span class="pre">y</span></code> (Molecular Properties)<a class="headerlink" href="#y-molecular-properties" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">y</span></code> attribute is a vector of 19 quantum mechanical properties for the molecule, computed using <strong>Density Functional Theory (DFT)</strong>.</p></li>
+<li><p>Examples of these properties include:</p>
+<ul>
+<li><p><strong>HOMO:</strong> Energy of the Highest Occupied Molecular Orbital.</p></li>
+<li><p><strong>LUMO:</strong> Energy of the Lowest Unoccupied Molecular Orbital.</p></li>
+<li><p><strong>Dipole moment:</strong> Measure of the separation of positive and negative charges in the molecule.</p></li>
+<li><p><strong>Atomization energy:</strong> Energy required to break a molecule into individual atoms.</p></li>
+<li><p><strong>Polarizability:</strong> Molecule’s ability to polarize in an electric field.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="pos-3d-atomic-positions">
+<h3><span class="section-number">27.3.5. </span><code class="docutils literal notranslate"><span class="pre">pos</span></code> (3D Atomic Positions)<a class="headerlink" href="#pos-3d-atomic-positions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">pos</span></code> attribute contains the 3D Cartesian coordinates of each atom in the molecule.</p></li>
+<li><p>These are crucial for tasks involving spatial and geometric properties, such as force fields or molecular dynamics.</p></li>
+</ul>
+</section>
+<section id="z-atomic-numbers">
+<h3><span class="section-number">27.3.6. </span><code class="docutils literal notranslate"><span class="pre">z</span></code> (Atomic Numbers)<a class="headerlink" href="#z-atomic-numbers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">z</span></code> attribute stores the atomic numbers of the atoms in the molecule.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Atomic Number (Z)</strong></p></th>
+<th class="head"><p><strong>Element</strong></p></th>
+<th class="head"><p><strong>Symbol</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Hydrogen</p></td>
+<td><p>H</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>Carbon</p></td>
+<td><p>C</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>Nitrogen</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Oxygen</p></td>
+<td><p>O</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>Fluorine</p></td>
+<td><p>F</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="idx-molecule-index">
+<h3><span class="section-number">27.3.7. </span><code class="docutils literal notranslate"><span class="pre">idx</span></code> (Molecule Index)<a class="headerlink" href="#idx-molecule-index" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>This is the unique index of the molecule in the dataset, useful for tracking or referencing specific molecules.</p></li>
+</ul>
+</section>
+<section id="name-molecule-name">
+<h3><span class="section-number">27.3.8. </span><code class="docutils literal notranslate"><span class="pre">name</span></code> (Molecule Name)<a class="headerlink" href="#name-molecule-name" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The name corresponds to the GDB identifier of the molecule (e.g., <code class="docutils literal notranslate"><span class="pre">gdb_128</span></code> this is ethanol.).</p></li>
+</ul>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets visualize a few samples</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">to_networkx</span>
+
+<span class="c1"># Convert the PyTorch Geometric graph to a NetworkX graph</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">to_networkx</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">node_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">edge_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Inspect the graph</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(0, {&#39;x&#39;: [0.0, 1.0, 0.0, 0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 3.0]}), (1, {&#39;x&#39;: [0.0, 1.0, 0.0, 0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 2.0]}), (2, {&#39;x&#39;: [0.0, 1.0, 0.0, 0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 2.0]}), (3, {&#39;x&#39;: [0.0, 1.0, 0.0, 0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0]}), (4, {&#39;x&#39;: [0.0, 0.0, 0.0, 1.0, 0.0, 8.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (5, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (6, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (7, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (8, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (9, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (10, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (11, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]}), (12, {&#39;x&#39;: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]})]
+[(0, 1, {}), (0, 5, {}), (0, 6, {}), (0, 7, {}), (1, 0, {}), (1, 2, {}), (1, 8, {}), (1, 9, {}), (2, 1, {}), (2, 3, {}), (2, 10, {}), (2, 11, {}), (3, 2, {}), (3, 4, {}), (3, 12, {}), (4, 3, {}), (5, 0, {}), (6, 0, {}), (7, 0, {}), (8, 1, {}), (9, 1, {}), (10, 2, {}), (11, 2, {}), (12, 3, {})]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">to_networkx</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="c1"># Mapping atomic numbers to elements and colors</span>
+<span class="n">atomic_number_to_element</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="s1">&#39;F&#39;</span><span class="p">}</span>
+<span class="n">atomic_number_to_color</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="s1">&#39;purple&#39;</span><span class="p">}</span>
+
+<span class="c1"># Convert PyTorch Geometric graph to NetworkX</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">to_networkx</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Extract atomic numbers and corresponding elements/colors</span>
+<span class="n">atomic_numbers</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># Assuming column 5 contains atomic numbers</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomic_number_to_element</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">atomic_numbers</span><span class="p">]</span>
+<span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomic_number_to_color</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">atomic_numbers</span><span class="p">]</span>
+
+<span class="c1"># Create a legend</span>
+<span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">atomic_number_to_element</span><span class="p">[</span><span class="n">element</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">atomic_number_to_color</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">]</span>
+
+<span class="c1"># Node labels using element symbols</span>
+<span class="n">node_labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">))}</span>
+
+<span class="c1"># Plot the graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">G</span><span class="p">,</span>
+    <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span>
+    <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Add the legend</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Atomic Elements&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Molecular Graph with Element Symbols and Legend&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bdc68565c3a9cabd203a44a0be6e1dba2bb7fdb24d8e48af9226f8be99961782.png" src="_images/bdc68565c3a9cabd203a44a0be6e1dba2bb7fdb24d8e48af9226f8be99961782.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># New information can be added as</span>
+
+<span class="n">data</span><span class="o">.</span><span class="n">new_attribute</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data(x=[5, 11], edge_index=[2, 8], edge_attr=[8, 4], y=[1, 19], pos=[5, 3], idx=[1], name=&#39;gdb_1&#39;, z=[5], new_attribute=[3])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">new_attribute</span><span class="o">.</span><span class="n">is_cuda</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleNet</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">num_node_features</span><span class="p">,</span><span class="n">num_edge_features</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">conv1_net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_edge_features</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+                                  <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                                  <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">num_node_features</span><span class="o">*</span><span class="mi">32</span><span class="p">))</span>
+        <span class="n">conv2_net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_edge_features</span><span class="p">,</span><span class="mi">32</span><span class="p">),</span>
+                                  <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                                  <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="o">*</span><span class="mi">16</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">NNConv</span><span class="p">(</span><span class="n">num_node_features</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">conv1_net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">NNConv</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">conv2_net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">batch</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_attr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">batch</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_attr</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_attr</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_attr</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">global_add_pool</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">random_split</span>
+
+
+<span class="n">train_set</span><span class="p">,</span> <span class="n">valid_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="o">=</span> <span class="n">random_split</span><span class="p">(</span><span class="n">dset</span><span class="p">,[</span><span class="mi">110000</span><span class="p">,</span> <span class="mi">10831</span><span class="p">,</span> <span class="mi">10000</span><span class="p">])</span>
+
+<span class="n">trainloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">validloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">valid_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">testloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">test_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qm9_node_feats</span><span class="p">,</span> <span class="n">qm9_edge_feats</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">ExampleNet</span><span class="p">(</span><span class="n">qm9_node_feats</span><span class="p">,</span> <span class="n">qm9_edge_feats</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">target_idx</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># index position of the polarizability label</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ExampleNet(
+  (conv1): NNConv(11, 32, aggr=add, nn=Sequential(
+    (0): Linear(in_features=4, out_features=32, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=32, out_features=352, bias=True)
+  ))
+  (conv2): NNConv(32, 16, aggr=add, nn=Sequential(
+    (0): Linear(in_features=4, out_features=32, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=32, out_features=512, bias=True)
+  ))
+  (fc_1): Linear(in_features=16, out_features=32, bias=True)
+  (out): Linear(in_features=32, out_features=1, bias=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">total_epochs</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+
+    <span class="n">epoch_loss</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_graphs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">trainloader</span><span class="p">:</span>
+        <span class="n">batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="n">target_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">epoch_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">total_graphs</span> <span class="o">+=</span> <span class="n">batch</span><span class="o">.</span><span class="n">num_graphs</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="n">train_avg_loss</span> <span class="o">=</span> <span class="n">epoch_loss</span> <span class="o">/</span> <span class="n">total_graphs</span>
+    <span class="n">val_loss</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_graphs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">validloader</span><span class="p">:</span>
+        <span class="n">batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="n">batch</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="n">target_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">val_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">total_graphs</span> <span class="o">+=</span> <span class="n">batch</span><span class="o">.</span><span class="n">num_graphs</span>
+    <span class="n">val_avg_loss</span> <span class="o">=</span> <span class="n">val_loss</span> <span class="o">/</span> <span class="n">total_graphs</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epochs: </span><span class="si">{</span><span class="n">total_epochs</span><span class="si">}</span><span class="s2"> | epoch avg. loss: </span><span class="si">{</span><span class="n">train_avg_loss</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> | validation avg. loss: </span><span class="si">{</span><span class="n">val_avg_loss</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epochs: 0 | epoch avg. loss: 0.42 | validation avg. loss: 0.15
+Epochs: 1 | epoch avg. loss: 0.14 | validation avg. loss: 0.14
+Epochs: 2 | epoch avg. loss: 0.11 | validation avg. loss: 0.08
+Epochs: 3 | epoch avg. loss: 0.10 | validation avg. loss: 0.19
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">real</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">testloader</span><span class="p">:</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+    <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="n">real</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="n">target_idx</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+<span class="n">real</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">real</span><span class="p">[:</span><span class="mi">500</span><span class="p">],</span><span class="n">predictions</span><span class="p">[:</span><span class="mi">500</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Predicted isotropic polarizability&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Isotropic polarizability&#39;</span><span class="p">)</span>
+<span class="c1">#plt.savefig(&#39;figures/18_12.png&#39;, dpi=300)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Isotropic polarizability&#39;)
+</pre></div>
+</div>
+<img alt="_images/8835fd2f68acfaa6f24792ad7436c25de1484dd4f6259ba822250a7e8c6daddc.png" src="_images/8835fd2f68acfaa6f24792ad7436c25de1484dd4f6259ba822250a7e8c6daddc.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="pointers-to-advanced-graph-neural-network-literature">
+<h2><span class="section-number">27.4. </span>Pointers to advanced graph neural network literature<a class="headerlink" href="#pointers-to-advanced-graph-neural-network-literature" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cfteach/NNDL_DATA621",
+            ref: "webpage-src",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="GNN_part1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">26. </span>A (Very) Preliminary Introuduction to Graph Neural Networks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="referencesmc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qm9-dataset">27.1. QM9 Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-structure-in-qm9">27.2. Data Structure in QM9</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#details-of-each-attribute">27.3. Details of Each Attribute</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x-node-features">27.3.1. <code class="docutils literal notranslate"><span class="pre">x</span></code> (Node Features)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-index-edge-connectivity">27.3.2. <code class="docutils literal notranslate"><span class="pre">edge_index</span></code> (Edge Connectivity)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-attr-edge-features">27.3.3. <code class="docutils literal notranslate"><span class="pre">edge_attr</span></code> (Edge Features)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#y-molecular-properties">27.3.4. <code class="docutils literal notranslate"><span class="pre">y</span></code> (Molecular Properties)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pos-3d-atomic-positions">27.3.5. <code class="docutils literal notranslate"><span class="pre">pos</span></code> (3D Atomic Positions)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#z-atomic-numbers">27.3.6. <code class="docutils literal notranslate"><span class="pre">z</span></code> (Atomic Numbers)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#idx-molecule-index">27.3.7. <code class="docutils literal notranslate"><span class="pre">idx</span></code> (Molecule Index)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#name-molecule-name">27.3.8. <code class="docutils literal notranslate"><span class="pre">name</span></code> (Molecule Name)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pointers-to-advanced-graph-neural-network-literature">27.4. Pointers to advanced graph neural network literature</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Cristiano Fanelli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  DATA621
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
