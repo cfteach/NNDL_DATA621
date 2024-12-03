@@ -185,7 +185,7 @@ Last update: (9/30/2024)
 | 2:00pm-3:20pm  | |  **Lecture:** Graph Neural Networks <br> **What to learn:** Implementation of a GNN from scratch using Pytorch  |  |  **Lecture:** GNN   | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Assignment 4 (assigned Nov 18; due Nov 28)</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Assignment 4 (assigned Nov 25; due Dec 1)</strong></span></td>
 </tr>
 </table>
 <table>
@@ -199,10 +199,10 @@ Last update: (9/30/2024)
 | Time           | Monday                                          | Tuesday                          | Wednesday                               | Thursday                                      | Friday                                   |
 |----------------|-------------------------------------------------|----------------------------------|-----------------------------------------|-----------------------------------------------|------------------------------------------|
 | 9:30am-11:30am|       |                 |              |    | Office hours  | 
-| 2:00pm-3:20pm  | | **Lecture:** Intro to Transfer Learning (tentative) |  |  **Lecture:**  Intro to Transformers  (tentative) | |
+| 2:00pm-3:20pm  | | **Lecture:** Discussion Final Project |  | Thanksgiving | |
 <table>
 <tr>
-<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 4 due Nov 28</strong></span></td>
+<td colspan="7" align="center"><span style="color:red"><strong>Reminder Assignment 4 due Dec 1</strong></span></td>
 </tr>
 </table>
 
